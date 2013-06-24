@@ -6,4 +6,9 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 */
 
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
 #define NUM_OF_AGENTS  10
+
+#endif
