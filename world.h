@@ -16,8 +16,8 @@
 
 class world {
 public:
-    agent* a[];
-    cells
+    agent* agents_master[NUM_OF_AGENTS];
+    cells[DOMAIN_DIM_1][DOMAIN_DIM_2];
     
 private:
     
