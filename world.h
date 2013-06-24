@@ -13,6 +13,7 @@
 
 #include "constants.h"
 #include "agent.h"
+#include "cell.h"
 
 class world {
 public:
