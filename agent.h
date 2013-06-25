@@ -31,8 +31,8 @@ public:
 
     agent();
     agent(int TEST);
-    agent(double x, double y, double v_x, double v_y);
-    agent(double x, double y, double v_x, double v_y, double q);
+    agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH]);
+    agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double q, double q_c[HIST_LENGTH]);
     
     //Mutator Functions:
     void set_x_coord(double x);
