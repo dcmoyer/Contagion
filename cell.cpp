@@ -18,6 +18,8 @@
 cell::cell(){
     
     top = NULL;
+ current = NULL;
+	neighbors = NULL;
     center_x = 0;
     center_y = 0;
     
@@ -30,11 +32,71 @@ cell::cell(){
  instantiation of the world class.
  
  */
-cell::cell(vector<cell*> &neighbors, vector<agents*> &agents){
+cell::cell(vector<agents*> &agents){
     
-    
+	center_x = 0;
+	center_y = 0;
+	neighbors = NULL;
+	top = &agents[0];
+	current = top;
+	for (int i = 1; i < &agents.size(); i++) {
+		add_top(&agents[i]);
+	}
+	reset_current();
     
 }
+
+	/*
+	Set neighbors
+	*/
+    void set_neighbors(vector<cell*>) {
+	
+		neighbors = neighbors;
+	}
+    
+	/*
+	Add to the beginning of the list
+	*/
+	void add_top(cell_node new_node) {
+
+		new_node.set_next(top);
+		*top = new_node;
+	}
+
+	/*
+	Remove the first node in the list
+	*/
+	void remove_top() {
+
+		delete *top;
+		top = top->get_next();
+	}
+
+
+	/*
+	Get the first node in the list
+	*/
+	cell_node get_top() {
+
+		return *top;
+	}
+
+	/*
+	Move the current pointer to the next node
+	*/
+	void next() {
+
+		current = current->get_next();
+	}
+
+	/*
+	Reset current pointer to the top
+	*/
+	void reset_current() {
+
+		current = top;
+	}
+
 
 /*
  
@@ -43,8 +105,7 @@ cell::cell(vector<cell*> &neighbors, vector<agents*> &agents){
  */
 cell_node::cell_node(){
     
-    toward_top = NULL;
-    away_from_top = NULL;
+    next = NULL;
     target_agent = NULL;
     
 }
@@ -58,30 +119,16 @@ cell_node::cell_node(){
 cell_node::cell_node(agent* target){
     
     target_agent = target;
-    toward_top = NULL;
-    away_from_top = NULL;
+    next = NULL;
     
 }
 
-/*
- 
- Mutator Functions.
- 
- */
+void cell_node::set_next(cell_node* &next_node) {
 
-void cell_node::set_toward_top(cell_node* &up){
-
-    toward_top = up;
-    
+	next = &next_node;
 }
 
-void cell_node::set_away_from_top(cell_node* &down){
-    
-    away_from_top = down;
-    
-}
-
-void cell_node::set_target_agent(agent* &target){
+void cell_node::set_agent(agent* &target){
     
     target_agent = target;
     
@@ -93,20 +140,14 @@ void cell_node::set_target_agent(agent* &target){
  
  */
 
-cell_node* cell_node::get_toward_top(){
-    
-    return toward_top;
-    
+cell_node* cell_node::get_next() {
+
+	return next;
 }
 
-cell_node* cell_node::get_away_from(){
-    
-    return away_from_top;
-    
-}
-
-agent* cell_node::get_target_agent(){
+agent* cell_node::get_agent(){
     
     return target_agent;
     
 }
+
