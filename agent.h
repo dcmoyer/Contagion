@@ -4,7 +4,8 @@ This is the agent class for the Contagion Project, UCLA REU 2013.
 
 062413 1153 Created. (DM)
 062513 0957 Added accessor functions and second constructor.
-
+062513 1200 Retro Post. Added History Length.
+ 
 */
 
 #ifndef AGENT_H

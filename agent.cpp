@@ -3,6 +3,7 @@
     This is the agent class implemenation for the Contagion Project, UCLA REU 2013.
 
 062413 1341 Created (DM).
+062513 1200 Retro Post. Added Imp. for Accessor and Mutator Functions.
 
 */
 
