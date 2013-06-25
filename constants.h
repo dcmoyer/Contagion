@@ -4,6 +4,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 062413 1447 Created (DM).
 062513 1200 Retro post. Added HIST_LENGTH.
+ 
 
 */
 
