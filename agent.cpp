@@ -15,13 +15,37 @@
  
  */
 agent::agent(){
+    //Assign Coordinates
     x_coord = 0;
     for(int i = 0; i < HIST_LENGTH; i++)
         x_veloc[i] = 0;
     y_coord = 0;
     for(int i = 0; i < HIST_LENGTH; i++)
         y_veloc[i] = 0;
+    z_coord = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0;
+    
+    //Assign Contagion
     q_mag = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        q_change[i] = 0;
+    
+    //Assign Forward Values
+    forward_v_x = 0;
+    forward_v_y = 0;
+    forward_v_z = 0;
+    forward_q_c = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = NULL;
+    
 }
 
 /*
@@ -30,12 +54,37 @@ agent::agent(){
  
  */
 agent::agent(int TEST){
+    //Assign Coordinates
     x_coord = TEST;
     for(int i = 0; i < HIST_LENGTH; i++)
         x_veloc[i] = TEST;
     y_coord = TEST;
     for(int i = 0; i < HIST_LENGTH; i++)
         y_veloc[i] = TEST;
+    z_coord = TEST;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = TEST;
+    
+    //Assign Contagion
+    q_mag = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        q_change[i] = 0;
+    
+    //Assign Forward Values
+    forward_v_x = 0;
+    forward_v_y = 0;
+    forward_v_z = 0;
+    forward_q_c = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = NULL;
+    
 }   
 
 /*
@@ -50,9 +99,30 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     y_coord = y;
     for(int i = 0; i < HIST_LENGTH; i++)
         y_veloc[i] = v_y[i];
+    z_coord = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0;
+    
+    //Assign Contagion
     q_mag = 0;
     for(int i = 0; i < HIST_LENGTH; i++)
         q_change[i] = 0;
+    
+    //Assign Forward Values
+    forward_v_x = 0;
+    forward_v_y = 0;
+    forward_v_z = 0;
+    forward_q_c = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = NULL;
+    
 }
 
 /*
@@ -60,16 +130,39 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
  Constructor. Contains arguments for position, velocity, and contagion.
  
  */
-agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double q, double q_c[HIST_LENGTH]){
+agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, double q_c[HIST_LENGTH], char a_type, double (* up)(agent*,agent*) ){
+
+    //Assign Coordinates
     x_coord = x;
     for(int i = 0; i < HIST_LENGTH; i++)
-        x_veloc[i] = v_x[i];
+        x_veloc[i] = v_x[HIST_LENGTH];
     y_coord = y;
     for(int i = 0; i < HIST_LENGTH; i++)
-        y_veloc[i] = v_y[i];
+        y_veloc[i] = v_y[HIST_LENGTH];
+    z_coord = z;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = v_z[HIST_LENGTH];
+    
+    //Assign Contagion
     q_mag = q;
     for(int i = 0; i < HIST_LENGTH; i++)
         q_change[i] = q_c[i];
+    
+    //Assign Forward Values
+    forward_v_x = 0;
+    forward_v_y = 0;
+    forward_v_z = 0;
+    forward_q_c = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = NULL;
+    
 }
 
 /* 
@@ -82,32 +175,74 @@ void agent::set_x_coord(double x){
     x_coord = x;
     
 }
+
 void agent::set_y_coord(double y){
     
     y_coord = y;
     
 }
+
+void agent::set_z_coord(double z){
+    
+    z_coord = z;
+    
+}
+
 void agent::set_x_veloc(double v_x[HIST_LENGTH]){
     
     for(int i = 0; i < HIST_LENGTH; i++)
         x_veloc[i] = v_x[i];
 
 }
+
 void agent::set_y_veloc(double v_y[HIST_LENGTH]){
     
     for(int i = 0; i < HIST_LENGTH; i++)
         y_veloc[i] = v_y[i];
     
 }
+
+void agent::set_z_veloc(double v_z[HIST_LENGTH]){
+    
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = v_y[i];
+    
+}
+
 void agent::set_q_mag(double q){
     
     q_mag = q;
     
 }
+
 void agent::set_q_change(double q_c[HIST_LENGTH]){
     
     for(int i = 0; i < HIST_LENGTH; i++)
         q_change[i] = q_c[i];
+    
+}
+
+double agent::forward_v_x(double for_v_x){
+ 
+    forward_v_x = for_v_x;
+    
+}
+
+double agent::forward_v_y(double for_v_y){
+    
+    forward_v_y = for_v_y;
+    
+}
+
+double agent::forward_v_z(double for_v_z){
+    
+    forward_v_z = for_v_z;
+    
+}
+
+double agent::forward_q_c(double for_q_c){
+    
+    forward_q_c = for_q_c;
     
 }
 
@@ -121,21 +256,58 @@ double agent::get_x_coord(){
     return x_coord;
     
 }
+
 double agent::get_y_coord(){
     
     return y_coord;
     
 }
+
+double agent::get_z_coord(){
+    
+    return z_coord;
+    
+}
+
 double* agent::get_x_veloc(){
     
     return &x_veloc[0];
     
 }
+
 double* agent::get_y_veloc(){
     
     return &y_veloc[0];
     
 }
+
+double* agent::get_z_veloc(){
+    
+    return &z_veloc[0];
+    
+}
+
+double get_x_veloc_index(int index){
+    
+    assert(index < HIST_LENGTH && index > -1)
+    return x_veloc[index];
+    
+}
+
+double get_y_veloc_index(int index){
+    
+    assert(index < HIST_LENGTH && index > -1)
+    return y_veloc[index];
+    
+}
+double get_z_veloc_index(int index){
+    
+    assert(index < HIST_LENGTH && index > -1)
+    return z_veloc[index];
+    
+}
+
+
 double agent::get_q_mag(){
     
     return q_mag;
