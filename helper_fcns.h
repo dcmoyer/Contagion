@@ -59,3 +59,4 @@ void euler_update(agent smith)
   smith.set_y_coord(new_y);
   smith.set_z_coord(new_z);
 }
+#endif

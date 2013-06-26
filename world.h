@@ -19,9 +19,9 @@ class world {
 public:
     agent* agents_master[NUM_OF_AGENTS];
     cell  cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
-    
+    void print();
 private:
-    
+    void refresh();
 };
 
 

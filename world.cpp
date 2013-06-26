@@ -1,5 +1,6 @@
 #include "world.h"
-
+#include <iostream>
+#include <fstream>
 
 
 //default constructor
@@ -79,6 +80,17 @@ void refresh()
 {
 		for (int i = 0; i < NUM_OF_AGENTS; i ++)
 		{
-			helper_fcns::euler_update(agents_master[i]);
+			helper_fcns::euler_update(*agents_master[i]).;
 		}
+}
+
+
+void print(ostream &strm)
+{
+	for (int i = 0; i < NUM_OF_AGENTS; i ++)
+		{
+			strm<< 0 << "," << (*agents_master[i])get_x_coord() 
+				<<"," << (*agents_master[i])get_y_coord() <<"," << (*agents_master[i])get_z_coord() << ",";
+		}
+	strm << endl;
 }
