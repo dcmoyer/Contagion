@@ -5,6 +5,7 @@ This is the agent class for the Contagion Project, UCLA REU 2013.
 062413 1153 Created. (DM)
 062513 0957 Added accessor functions and second constructor.
 062513 1200 Retro Post. Added History Length.
+062513 1448 Added Z dim. and fixed bugs. Compiles.
  
 */
 
@@ -38,14 +39,14 @@ public:
      */
     char agent_type;
     
-    double (* update)(agent*, agent*)
+    double (* update)(agent*, agent*);
 
 //public:
 
     agent();
     agent(int TEST);
     agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH]);
-    agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, double q_c[HIST_LENGTH], char a_type, double (* up)(agent*,agent*) )
+    agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, double q_c[HIST_LENGTH], char a_type, double (* up)(agent*,agent*) );
     
     //Mutator Functions:
     void set_x_coord(double x);
@@ -56,6 +57,11 @@ public:
     void set_z_veloc(double v_z[HIST_LENGTH]);
     void set_q_mag(double q);
     void set_q_change(double q_c[HIST_LENGTH]);
+    
+    void set_forward_v_x(double for_v_x);
+    void set_forward_v_y(double for_v_y);
+    void set_forward_v_z(double for_v_z);
+    void set_forward_q_c(double for_q_c);
     
     //Accessor Functions:
     double get_x_coord();
@@ -74,6 +80,12 @@ public:
     /*
      NOTE: Because an array cannot be returned, a double pointer is returned instead.
      */
+    
+    double get_forward_v_x();
+    double get_forward_v_y();
+    double get_forward_v_z();
+    double get_forward_q_c();
+    
 };
 
 #endif

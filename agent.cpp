@@ -4,10 +4,13 @@
 
 062413 1341 Created (DM).
 062513 1200 Retro Post. Added Imp. for Accessor and Mutator Functions.
+062513 1448 Added Z dim. and fixed bugs. Compiles.
+
 
 */
 
 #include "agent.h"
+#include <cassert>
 
 /*
  
@@ -44,7 +47,7 @@ agent::agent(){
     agent_type = 'd';
     
     //Assign Update Rull
-    update = NULL;
+    update = 0; //NULL 
     
 }
 
@@ -83,7 +86,7 @@ agent::agent(int TEST){
     agent_type = 'd';
     
     //Assign Update Rull
-    update = NULL;
+    update = 0; //NULL
     
 }   
 
@@ -121,7 +124,7 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     agent_type = 'd';
     
     //Assign Update Rull
-    update = NULL;
+    update = 0; //NULL
     
 }
 
@@ -161,7 +164,7 @@ agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[H
     agent_type = 'd';
     
     //Assign Update Rull
-    update = NULL;
+    update = 0; //NULL
     
 }
 
@@ -205,7 +208,7 @@ void agent::set_y_veloc(double v_y[HIST_LENGTH]){
 void agent::set_z_veloc(double v_z[HIST_LENGTH]){
     
     for(int i = 0; i < HIST_LENGTH; i++)
-        z_veloc[i] = v_y[i];
+        z_veloc[i] = v_z[i];
     
 }
 
@@ -222,25 +225,25 @@ void agent::set_q_change(double q_c[HIST_LENGTH]){
     
 }
 
-double agent::forward_v_x(double for_v_x){
+void agent::set_forward_v_x(double for_v_x){
  
     forward_v_x = for_v_x;
     
 }
 
-double agent::forward_v_y(double for_v_y){
+void agent::set_forward_v_y(double for_v_y){
     
     forward_v_y = for_v_y;
     
 }
 
-double agent::forward_v_z(double for_v_z){
+void agent::set_forward_v_z(double for_v_z){
     
     forward_v_z = for_v_z;
     
 }
 
-double agent::forward_q_c(double for_q_c){
+void agent::set_forward_q_c(double for_q_c){
     
     forward_q_c = for_q_c;
     
@@ -287,26 +290,26 @@ double* agent::get_z_veloc(){
     
 }
 
-double get_x_veloc_index(int index){
+double agent::get_x_veloc_index(int index){
     
-    assert(index < HIST_LENGTH && index > -1)
+    assert(index < HIST_LENGTH && index > -1);
     return x_veloc[index];
     
 }
 
-double get_y_veloc_index(int index){
+double agent::get_y_veloc_index(int index){
     
-    assert(index < HIST_LENGTH && index > -1)
+    assert(index < HIST_LENGTH && index > -1);
     return y_veloc[index];
     
 }
-double get_z_veloc_index(int index){
+
+double agent::get_z_veloc_index(int index){
     
-    assert(index < HIST_LENGTH && index > -1)
+    assert(index < HIST_LENGTH && index > -1);
     return z_veloc[index];
     
 }
-
 
 double agent::get_q_mag(){
     
@@ -320,3 +323,26 @@ double* agent::get_q_change(){
     
 }
 
+double agent::get_forward_v_x(){
+    
+    return forward_v_x;
+    
+}
+
+double agent::get_forward_v_y(){
+    
+    return forward_v_y;
+    
+}
+
+double agent::get_forward_v_z(){
+    
+    return forward_v_z;
+    
+}
+
+double agent::get_forward_q_c(){
+    
+    return forward_q_c;
+    
+}

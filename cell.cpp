@@ -10,6 +10,8 @@
 
 #include "cell.h"
 
+//**********CELL CLASS***********//
+
 /*
  
  Default constructor for cell.
@@ -18,10 +20,9 @@
 cell::cell(){
     
     top = NULL;
- current = NULL;
-	neighbors = NULL;
     center_x = 0;
     center_y = 0;
+    //neighbors is empty
     
 }
 
@@ -32,74 +33,117 @@ cell::cell(){
  instantiation of the world class.
  
  */
-cell::cell(vector<agents*> &agents){
+cell::cell(std::vector<agent*> &agents){
     
+    int len = agents.size();
 	center_x = 0;
 	center_y = 0;
-	neighbors = NULL;
-	top = &agents[0];
-	current = top;
-	for (int i = 1; i < &agents.size(); i++) {
-		add_top(&agents[i]);
+    top = 0; //NULL
+    
+    if(len == 0)
+        return;
+        
+    //BUG
+	for (int i = 1; i < len; i++) {
+		add_top(agents[i]);
 	}
-	reset_current();
     
 }
 
-	/*
-	Set neighbors
-	*/
-    void set_neighbors(vector<cell*>) {
-	
-		neighbors = neighbors;
-	}
+/*
+ 
+ Destructor
+ 
+ */
+
+cell::~cell(){
     
-	/*
-	Add to the beginning of the list
-	*/
-	void add_top(cell_node new_node) {
-
-		new_node.set_next(top);
-		*top = new_node;
-	}
-
-	/*
-	Remove the first node in the list
-	*/
-	void remove_top() {
-
-		delete *top;
-		top = top->get_next();
-	}
-
-
-	/*
-	Get the first node in the list
-	*/
-	cell_node get_top() {
-
-		return *top;
-	}
-
-	/*
-	Move the current pointer to the next node
-	*/
-	void next() {
-
-		current = current->get_next();
-	}
-
-	/*
-	Reset current pointer to the top
-	*/
-	void reset_current() {
-
-		current = top;
-	}
-
+    cell_node* temp;
+    
+    while(! isempty()){
+        temp = top->next;
+        delete top;
+        top = temp;
+    }
+    
+}
 
 /*
  
+Set neighbors
+
+ */
+void cell::set_neighbors(std::vector<cell*> &neigh){
+
+    neighbors = neigh;
+
+}
+
+/*
+Add to the beginning of the list
+*/
+void cell::add_top(cell_node* new_node) {
+
+    new_node->next = top;
+    top = new_node;
+    
+}
+
+void cell::add_top(agent* new_node) {
+    
+    cell_node* new_top = new cell_node;
+    new_top->next = top;
+    new_top->target_agent = new_node;
+    top = new_top;
+    
+}
+
+/*
+Remove the first node in the list
+*/
+cell_node* cell::remove_top() {
+
+    cell_node* out = top;
+    top = top->next;
+    return out;
+
+}
+
+/*
+Get the first node in the list
+*/
+cell_node* cell::get_top(){
+    
+    return top;
+
+}
+
+/*
+ 
+ Checks if empty.
+ 
+ */
+
+bool cell::isempty(){
+    
+    return top == 0;
+    
+}
+
+void cell::move_top(cell* target){
+    
+    if(isempty())
+        return;
+    cell_node* temp = top->next;
+    target->add_top(top);
+    top = temp;
+    
+}
+
+//**********CELL NODE CLASS***********//
+
+/*
+
  Default constructor for the cell_nodes. 
  
  */
@@ -123,9 +167,16 @@ cell_node::cell_node(agent* target){
     
 }
 
+/*
+ 
+ Mutator Functions.
+ 
+ */
+
 void cell_node::set_next(cell_node* &next_node) {
 
-	next = &next_node;
+	next = next_node;
+    
 }
 
 void cell_node::set_agent(agent* &target){
@@ -151,3 +202,37 @@ agent* cell_node::get_agent(){
     
 }
 
+//**********CELL NODE ITERATOR CLASS***********//
+
+
+cell_node_iterator::cell_node_iterator(){
+    
+    home_cell = 0;
+    current = 0;
+    
+}
+
+cell_node_iterator::cell_node_iterator(cell* home){
+
+    home_cell = home;
+    current = home->top;
+
+}
+
+void cell_node_iterator::next(){
+    
+    current = current->next;
+    
+}
+
+void cell_node_iterator::reset_current(){
+    
+    current = home_cell->top;
+    
+}
+
+agent* cell_node_iterator::get_current(){
+    
+    return current->target_agent;
+    
+}
