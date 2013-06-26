@@ -5,7 +5,7 @@
  062413 1503 Created (DM)
  062413 1649 Added constructors, accessors, and mutators for cell_node, and a
     default constructor for cell. (DM)
- 
+
  */
 
 #include "cell.h"
@@ -18,85 +18,95 @@
 cell::cell(){
     
     top = NULL;
- current = NULL;
-	neighbors = NULL;
     center_x = 0;
     center_y = 0;
     
 }
 
 /*
- 
- Constructor for cells. Takes two vectors, one of pointers to the cell neighbors,
- and one of pointers to the agents of the cell. This is meant to be used in the
- instantiation of the world class.
- 
- */
-cell::cell(vector<agents*> &agents){
-    
-	center_x = 0;
-	center_y = 0;
-	neighbors = NULL;
-	top = &agents[0];
-	current = top;
-	for (int i = 1; i < &agents.size(); i++) {
-		add_top(&agents[i]);
-	}
-	reset_current();
-    
+Destructor
+*/
+cell::~cell() {
+	clear();
 }
 
-	/*
-	Set neighbors
-	*/
-    void set_neighbors(vector<cell*>) {
-	
-		neighbors = neighbors;
+/*
+Copy constructor
+*/
+cell::cell(const cell& rhs) {
+
+	if (rhs.top == NULL) {
+		top = NULL;
+	} else {
+		top = new cell_node(rhs.top->get_agent());
+
+		cell_node* finger = rhs.top->get_next();
+		cell_node* current = head;
+
+		while (finger != NULL) {
+			current->set_next(new cell_node(finger->get_agent()));
+			current = current->get_next();
+			finger = finger->get_next();
+		}
 	}
-    
-	/*
-	Add to the beginning of the list
-	*/
-	void add_top(cell_node new_node) {
+}
 
-		new_node.set_next(top);
-		*top = new_node;
+/*
+Assignment operator
+*/
+const cell::cell& operator=(const cell& rhs) {
+	if (this != &rhs) {
+		clear();
+
+		if (rhs.top == NULL) {
+			top == NULL;
+		} else {
+			top = new cell_node(rhs.top->get_agent());
+
+			cell_node* finger = rhs.top->get_next();
+			cell_node* current = head;
+
+			while (finger != NULL) {
+				current->set_next(new cell_node(finger->get_agent()));
+				current = current->get_next();
+				finger = finger->get_next();
+			}
+		}
 	}
+	return *this;
+}
 
-	/*
-	Remove the first node in the list
-	*/
-	void remove_top() {
+/*
+Add to the beginning of the list	
+*/
+void add_top(cell_node new_node) {
 
-		delete *top;
-		top = top->get_next();
-	}
+	new_node.set_next(top);
+	*top = new_node;
+}
+
+/*
+Remove the first node in the list
+*/
+void remove_top() {
+
+	delete *top;
+	top = top->get_next();
+}
 
 
-	/*
-	Get the first node in the list
-	*/
-	cell_node get_top() {
+/*
+Get the first node in the list
+*/
+cell_node get_top() const {
 
-		return *top;
-	}
+	return *top;
+}
 
-	/*
-	Move the current pointer to the next node
-	*/
-	void next() {
+bool is_empty() {
 
-		current = current->get_next();
-	}
-
-	/*
-	Reset current pointer to the top
-	*/
-	void reset_current() {
-
-		current = top;
-	}
-
+	return (top == NULL);
+}
 
 /*
  
@@ -145,9 +155,8 @@ cell_node* cell_node::get_next() {
 	return next;
 }
 
-agent* cell_node::get_agent(){
+agent* cell_node::get_agent() const{
     
     return target_agent;
     
 }
-
