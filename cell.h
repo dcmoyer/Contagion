@@ -92,7 +92,7 @@ public:
 	/*
 	Fancy constructor
 	*/
-    cell_node(agent* target);
+    cell_node(agent &target);
 
 	/*
 	Set the next node
@@ -112,7 +112,7 @@ public:
 	/*
 	Return the agent
 	*/
-    agent* get_agent() const;
+    agent get_agent() const;
     
     friend class cell; 
     
