@@ -6,8 +6,6 @@
  062413 1649 Added constructors, accessors, and mutators for cell_node, and a
     default constructor for cell. (DM)
 
- THE COPY CONSTRUCTOR, ASSIGNMENT OPERATOR AND DESTRUCTOR ARE MISSING!
- 
 */
 #ifndef CELL_H
 #define CELL_H
@@ -21,32 +19,35 @@
  
 */
 class cell{
-//private:
+
+private:
+	cell_node* top;
+	double center_x;
+    double center_y; 
 
 public:
     cell_node* top; 
-	cell_node* current; 
-
-    std::vector<cell*> neighbors; 
-    
-    double center_x;
-    double center_y; 
     
 	/*
 	Default constructor
 	*/
     cell();
+    
+	/*
+	Destructor
+	*/
+	~cell();
 
 	/*
-	Fancy constructor
+	Copy constructor
 	*/
-    cell(vector<agents*> &agents);
-    
+	cell(const cell& rhs);
+
 	/*
-	Set neighbors
+	Assignment operator
 	*/
-    void set_neighbors(vector<cell*> &neighbors); 
-    
+	const cell& operator=(const cell& rhs);
+
 	/*
 	Add to the beginning of the list
 	*/
@@ -60,19 +61,14 @@ public:
 	/*
 	Get the first node in the list
 	*/
-	cell_node get_top();
+	cell_node get_top() const;
 
 	/*
-	Move the current pointer to the next node
+	Check whether the list is empty
 	*/
-	void next();
+	bool is_empty();
 
-	/*
-	Reset current pointer to the top
-	*/
-	void reset_current();
-
-    friend class cell_node; //Yes, bad practice, but they're tied. Don't do this at home kids.
+    friend class cell_node; 
 };
 
 
@@ -82,10 +78,12 @@ public:
  
  */
 class cell_node{
+
 private:
     cell_node* next;
     agent* target_agent;
-    
+
+public:
 	/*
 	Default constructor
 	*/
@@ -114,9 +112,9 @@ private:
 	/*
 	Return the agent
 	*/
-    agent* get_agent();
+    agent* get_agent() const;
     
-    friend class cell; //Yes, bad practice, but they're tied. Don't do this at home kids.
+    friend class cell; 
     
 };
 
