@@ -5,6 +5,7 @@
 
 void ab4_update(agent smith);
 
+//calculates next position for agent based on its current and previous velocities
 void ab4_update(agent smith)
 {
   double vx [HIST_LENGTH];
@@ -39,7 +40,7 @@ void ab4_update(agent smith)
   smith.set_z_coord(new_z);
 }
 
-
+// used for the first 4 iterations when there are not enough data points yet to use ab4
 void euler_update(agent smith)
 {
   double vx [HIST_LENGTH];
