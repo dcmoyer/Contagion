@@ -15,15 +15,6 @@ world::world()
 			}
 		}
 
-//create the agents and add agents to the cells
-	for (int i = 0; i < NUM_OF_AGENTS; i ++)
-		{
-			agents_master[i] = new agent();
-			int x = ((*agents_master[i]).get_x_coord())/CELL_LENGTH;
-			int y = ((*agents_master[i]).get_y_coord())/CELL_LENGTH;
-			cellList[x][y].add_top(cell_node(agents_master[i]));
-		}
-	
 
 //tell the cells who their neighbors are
 	for (int i = 0; i < DOMAIN_DIM_1; i++)
@@ -32,33 +23,33 @@ world::world()
 			{
 				//messy, please help (doug)
 				vector<cell*> v(8);
-				v(0) = &cellList[i-1][j-1];
-				v(1) = &cellList[i][j-1];
-				v(2) = &cellList[i+1][j-1];
+				v[0] = &cellList[i-1][j-1];
+				v[1] = &cellList[i][j-1];
+				v[2] = &cellList[i+1][j-1];
 
-				v(3) = &cellList[i-1][j];
-				v(4) = &cellList[i+1][j];
+				v[3] = &cellList[i-1][j];
+				v[4] = &cellList[i+1][j];
 
-				v(5) = &cellList[i-1][j+1];
-				v(6) = &cellList[i][j+1];
-				v(7) = &cellList[i+1][j+1];
+				v[5] = &cellList[i-1][j+1];
+				v[6] = &cellList[i][j+1];
+				v[7] = &cellList[i+1][j+1];
 
 				if(i == 0)
 				{
-					v(0)=v(3)=v(5)=NULL;
+					v[0]=v[3]=v[5]=NULL;
 				}
 				else if((i+1) == DOMAIN_DIM_1)
 				{
-					v(2)=v(4)=v(7)=NULL;
+					v[2]=v[4]=v[7]=NULL;
 				}
 
 				if(j == 0)
 				{
-					v(0)=v(1)=v(2)=NULL;
+					v[0]=v[1]=v[2]=NULL;
 				}
 				else if((j+1) == DOMAIN_DIM_2)
 				{
-					v(5)=v(6)=v(7)=NULL;
+					v[5]=v[6]=v[7]=NULL;
 				}
 
 				cellList[i][j].set_neighbors(v);
@@ -87,10 +78,42 @@ void refresh()
 
 void print(ostream &strm)
 {
-	for (int i = 0; i < NUM_OF_AGENTS; i ++)
+	for (int i = 0; i < agents_master.size)(); i ++)
 		{
 			strm<< 0 << "," << (*agents_master[i])get_x_coord() 
 				<<"," << (*agents_master[i])get_y_coord() <<"," << (*agents_master[i])get_z_coord() << ",";
 		}
 	strm << endl;
+}
+
+
+
+void add_agent(double x, double y, double z)
+{
+	double v[HIST_LENGTH];
+	agents_master.push_back(new agent(x, y, v, v));
+	int x = ((*agents_master[i]).get_x_coord())/CELL_LENGTH;
+	int y = ((*agents_master[i]).get_y_coord())/CELL_LENGTH;
+	cellList[x][y].add_top(cell_node(agents_master[i]));
+}
+	
+
+
+void populate()
+{
+	for (int i = 0; i < NUM_OF_AGENTS; i ++)
+		{
+			add_agent();
+		}
+}
+
+void populate_rand()
+{
+	for (int i = 0; i < NUM_OF_AGENTS; i ++)
+		{
+			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 );
+			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 );
+			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 );
+			add_agent(x, y, 0);
+		}
 }
