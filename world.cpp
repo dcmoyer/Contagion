@@ -1,6 +1,7 @@
 #include "world.h"
 
 
+
 //default constructor
 world::world()
 {
@@ -64,3 +65,20 @@ world::world()
 		}
 }
 
+//use ab4 to update the positions of all agents
+void refresh()
+{
+		for (int i = 0; i < NUM_OF_AGENTS; i ++)
+		{
+			helper_fcns::ab4_update(agents_master[i]);
+		}
+}
+
+//use euler to update positions when not enough points for ab4
+void refresh()
+{
+		for (int i = 0; i < NUM_OF_AGENTS; i ++)
+		{
+			helper_fcns::euler_update(agents_master[i]);
+		}
+}
