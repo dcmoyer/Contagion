@@ -126,9 +126,9 @@ cell_node::cell_node(){
  
 */
 
-cell_node::cell_node(agent* target){
+cell_node::cell_node(agent &target){
     
-    target_agent = target;
+    *target_agent = &target;
     next = NULL;
     
 }
@@ -155,8 +155,8 @@ cell_node* cell_node::get_next() {
 	return next;
 }
 
-agent* cell_node::get_agent() const{
+agent cell_node::get_agent() const{
     
-    return target_agent;
+    return *target_agent;
     
 }
