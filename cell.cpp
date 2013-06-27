@@ -90,9 +90,8 @@ cell::cell(const cell& rhs) {
         temp = rhs.top;
         
 		while (temp != NULL) {
-			current->set_next(new cell_node(finger->get_agent()));
-			current = current->get_next();
-			finger = finger->get_next();
+            add_top(temp->target_agent);
+            temp = temp->next;
 		}
 	}
 
