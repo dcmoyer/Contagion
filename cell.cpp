@@ -70,6 +70,36 @@ cell::~cell(){
 
 /*
  
+ Copy Constructor: This should not be used. But...just incase.
+ 
+ */
+
+cell::cell(const cell& rhs) {
+    
+    cell_node* temp;
+    
+    while(! isempty()){
+        temp = top->next;
+        delete top;
+        top = temp;
+    }
+    
+	if (rhs.top == NULL) {
+		top = NULL;
+	} else {
+        temp = rhs.top;
+        
+		while (temp != NULL) {
+			current->set_next(new cell_node(finger->get_agent()));
+			current = current->get_next();
+			finger = finger->get_next();
+		}
+	}
+
+}
+
+/*
+ 
 Set neighbors
 
  */
@@ -116,18 +146,19 @@ cell_node* cell::get_top(){
     
     return top;
 
+}
 /*
  
  Destructor
 
- */
+ 
 cell::~cell() {
 	clear();
 }
 
 /*
 Copy constructor
-*/
+
 cell::cell(const cell& rhs) {
 
 	if (rhs.top == NULL) {
@@ -148,7 +179,7 @@ cell::cell(const cell& rhs) {
 
 /*
 Assignment operator
-*/
+
 const cell::cell& operator=(const cell& rhs) {
 	if (this != &rhs) {
 		clear();
@@ -173,7 +204,7 @@ const cell::cell& operator=(const cell& rhs) {
 
 /*
 Add to the beginning of the list	
-*/
+
 void add_top(cell_node new_node) {
 
 	new_node.set_next(top);
@@ -182,7 +213,7 @@ void add_top(cell_node new_node) {
 
 /*
 Remove the first node in the list
-*/
+
 void remove_top() {
 
 	delete *top;
@@ -192,7 +223,7 @@ void remove_top() {
 
 /*
 Get the first node in the list
-*/
+
 cell_node get_top() const {
 
 	return *top;
@@ -245,9 +276,9 @@ cell_node::cell_node(){
  
 */
 
-cell_node::cell_node(agent &target){
+cell_node::cell_node(agent* &target){
     
-    *target_agent = &target;
+    target_agent = target;
     next = NULL;
     
 }

@@ -32,10 +32,10 @@ class cell_node_iterator;
 */
 class cell{
 
-private:
+/*private:
 	cell_node* top;
 	double center_x;
-    double center_y; 
+    double center_y; */
 
 public:
     cell_node* top; 
@@ -45,62 +45,21 @@ public:
     double center_x;
     double center_y; 
     
-	/*
-     
-	Default constructor
-	
-     */
-    cell();
+    cell(); //Default Constructor
+	~cell(); //Destructor
+    cell( std::vector<agent*> &agents); //Fancy Constructor
+    cell(const cell& rhs); //Copy Constructor
     
-	/*
-	Destructor
-	*/
-	~cell();
+    void set_neighbors(std::vector<cell*> &neigh); 
 
-	/*
-     
-	Fancy constructor
-	
-     */
-    cell( std::vector<agent*> &agents);
-    
+	const cell& operator=(const cell& rhs); //Assignment Operator
+
     /*
      
-     Destructor
+     Adds to the top of the list.
      
-     */
-    
-    ~cell();
-    
-    
-	/*
-     
-	Set neighbors
-	
-     */
-    void set_neighbors(std::vector<cell*> &neigh); 
-    
-	Copy constructor
-	*/
-	cell(const cell& rhs);
-
-	/*
-	Assignment operator
-	*/
-	const cell& operator=(const cell& rhs);
-	/*
-     
-	Add to the beginning of the list
-	
      */
 	void add_top(cell_node* new_node);
-
-    /*
-     
-    Add a new node to the beginning of a list;
-     
-     */
-    
     void add_top(agent* target);
     
 	/*
@@ -132,12 +91,6 @@ public:
 
 	cell_node get_top() const;
 
-	/*
-	Check whether the list is empty
-	*/
-	bool is_empty();
-
-    friend class cell_node; 
 };
 
 
@@ -163,7 +116,7 @@ public:
 	/*
 	Fancy constructor
 	*/
-    cell_node(agent &target);
+    cell_node(agent* &target);
 
 	/*
 	Set the next node
