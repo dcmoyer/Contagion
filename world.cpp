@@ -1,7 +1,5 @@
 #include "world.h"
 
-
-
 //default constructor
 world::world()
 {

@@ -19,6 +19,9 @@
 #include <iostream>
 #include <fstream>
 
+void ab4_update(agent smith);
+void euler_update(agent smith);
+
 class world {
 public:
     std::vector<agent*> agents_master;
