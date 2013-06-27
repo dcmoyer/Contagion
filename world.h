@@ -14,19 +14,26 @@
 #include "constants.h"
 #include "agent.h"
 #include "cell.h"
+#include <vector>
+#include "helper_fcns.h"
+#include <iostream>
+#include <fstream>
 
 class world {
 public:
-    vector<agent*> agents_master[NUM_OF_AGENTS];
+    std::vector<agent*> agents_master;
     cell  cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
-    void print();
+
+	world();
+    void print(std::ostream& strm);
 	void add_agent();
 	void add_agent(double x, double y);
-	void add_agent(double x, double y, double z);
+	void add_agent(double x, double y, double z, double (* up)(agent*,agent*));
 	void populate();
 	void populate_rand();
 private:
-    void refresh();
+    void refresh_ab4();
+	void refresh_eul();
 };
 
 
