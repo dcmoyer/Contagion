@@ -21,7 +21,7 @@ world::world()
 		{
 			for(int j = 0; j < DOMAIN_DIM_2); 
 			{
-				//messy, please help (doug)
+				
 				vector<cell*> v(8);
 				v[0] = &cellList[i-1][j-1];
 				v[1] = &cellList[i][j-1];
@@ -57,6 +57,8 @@ world::world()
 		}
 }
 
+
+
 //use ab4 to update the positions of all agents
 void refresh()
 {
@@ -76,7 +78,7 @@ void refresh()
 }
 
 
-void print(ostream &strm)
+void print(ostream& strm)
 {
 	for (int i = 0; i < agents_master.size)(); i ++)
 		{
@@ -86,18 +88,38 @@ void print(ostream &strm)
 	strm << endl;
 }
 
-
-
-void add_agent(double x, double y, double z)
+void add_agent()
 {
 	double v[HIST_LENGTH];
+	for(int i = 0; i < HIST_LENGTH; i++)
+		v[i] = 0;
+	agents_master.push_back(new agent(0, 0, v, v));
+	int x = ((*agents_master[i]).get_x_coord())/CELL_LENGTH;
+	int y = ((*agents_master[i]).get_y_coord())/CELL_LENGTH;
+	cellList[x][y].add_top(cell_node(agents_master[i]));
+}
+
+void add_agent(double x, double y)
+{
+	double v[HIST_LENGTH];
+	for(int i = 0; i < HIST_LENGTH; i++)
+		v[i] = 0;
 	agents_master.push_back(new agent(x, y, v, v));
 	int x = ((*agents_master[i]).get_x_coord())/CELL_LENGTH;
 	int y = ((*agents_master[i]).get_y_coord())/CELL_LENGTH;
 	cellList[x][y].add_top(cell_node(agents_master[i]));
 }
 	
-
+void add_agent(double x, double y, double z)
+{
+	double v[HIST_LENGTH];
+	for(int i = 0; i < HIST_LENGTH; i++)
+		v[i] = 0;
+	agents_master.push_back(new agent(x, y, z, v, v, v, 0, v, 'a',  double (* up)(agent*,agent*) )); //?!?!?!
+	int x = ((*agents_master[i]).get_x_coord())/CELL_LENGTH;
+	int y = ((*agents_master[i]).get_y_coord())/CELL_LENGTH;
+	cellList[x][y].add_top(cell_node(agents_master[i]));
+}
 
 void populate()
 {
@@ -114,6 +136,6 @@ void populate_rand()
 			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 );
 			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 );
 			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 );
-			add_agent(x, y, 0);
+			add_agent(x, y);
 		}
 }

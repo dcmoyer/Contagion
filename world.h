@@ -20,6 +20,8 @@ public:
     vector<agent*> agents_master[NUM_OF_AGENTS];
     cell  cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
     void print();
+	void add_agent();
+	void add_agent(double x, double y);
 	void add_agent(double x, double y, double z);
 	void populate();
 	void populate_rand();
