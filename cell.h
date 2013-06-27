@@ -39,14 +39,11 @@ private:
 
 public:
     cell_node* top; 
-<<<<<<< HEAD
 
     std::vector<cell*> neighbors; 
     
     double center_x;
     double center_y; 
-=======
->>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
     
 	/*
      
@@ -61,7 +58,6 @@ public:
 	~cell();
 
 	/*
-<<<<<<< HEAD
      
 	Fancy constructor
 	
@@ -84,7 +80,6 @@ public:
      */
     void set_neighbors(std::vector<cell*> &neigh); 
     
-=======
 	Copy constructor
 	*/
 	cell(const cell& rhs);
@@ -93,8 +88,6 @@ public:
 	Assignment operator
 	*/
 	const cell& operator=(const cell& rhs);
-
->>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
 	/*
      
 	Add to the beginning of the list
@@ -120,7 +113,6 @@ public:
 	/*
      
 	Get the first node in the list
-<<<<<<< HEAD
 	
      */
 	cell_node* get_top();
@@ -137,8 +129,7 @@ public:
     
     friend class cell_node; //Yes, bad practice, but they're tied. Don't do this at home kids.
     friend class cell_node_iterator;
-=======
-	*/
+
 	cell_node get_top() const;
 
 	/*
@@ -147,7 +138,6 @@ public:
 	bool is_empty();
 
     friend class cell_node; 
->>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
 };
 
 
@@ -195,7 +185,6 @@ public:
 	*/
     agent get_agent() const;
     
-<<<<<<< HEAD
     friend class cell; //Yes, bad practice, but they're tied. Don't do this at home kids.
     friend class cell_node_iterator;
 };
@@ -228,9 +217,7 @@ public:
      
      */
 	void reset_current();
-=======
     friend class cell; 
->>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
     
     agent* get_current();
 };

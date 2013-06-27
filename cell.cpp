@@ -27,7 +27,6 @@ cell::cell(){
 }
 
 /*
-<<<<<<< HEAD
  
  Constructor for cells. Takes two vectors, one of pointers to the cell neighbors,
  and one of pointers to the agents of the cell. This is meant to be used in the
@@ -117,9 +116,11 @@ cell_node* cell::get_top(){
     
     return top;
 
-=======
-Destructor
-*/
+/*
+ 
+ Destructor
+
+ */
 cell::~cell() {
 	clear();
 }
@@ -200,7 +201,6 @@ cell_node get_top() const {
 bool is_empty() {
 
 	return (top == NULL);
->>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
 }
 
 /*
@@ -286,8 +286,7 @@ agent cell_node::get_agent() const{
     return *target_agent;
     
 }
-<<<<<<< HEAD
-
+    
 //**********CELL NODE ITERATOR CLASS***********//
 
 
@@ -322,5 +321,3 @@ agent* cell_node_iterator::get_current(){
     return current->target_agent;
     
 }
-=======
->>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
