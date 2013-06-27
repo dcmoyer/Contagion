@@ -5,10 +5,14 @@
  062413 1457 Created (DM)
  062413 1649 Added constructors, accessors, and mutators for cell_node, and a
     default constructor for cell. (DM)
+<<<<<<< HEAD
  062513 1457 Changed get_top and remove_top return values to node pointers.
  
  THE COPY CONSTRUCTOR, ASSIGNMENT OPERATOR AND DESTRUCTOR ARE MISSING!
  
+=======
+
+>>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
 */
 #ifndef CELL_H
 #define CELL_H
@@ -27,15 +31,22 @@ class cell_node_iterator;
  
 */
 class cell{
-//private:
+
+private:
+	cell_node* top;
+	double center_x;
+    double center_y; 
 
 public:
     cell_node* top; 
+<<<<<<< HEAD
 
     std::vector<cell*> neighbors; 
     
     double center_x;
     double center_y; 
+=======
+>>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
     
 	/*
      
@@ -43,8 +54,14 @@ public:
 	
      */
     cell();
+    
+	/*
+	Destructor
+	*/
+	~cell();
 
 	/*
+<<<<<<< HEAD
      
 	Fancy constructor
 	
@@ -67,6 +84,17 @@ public:
      */
     void set_neighbors(std::vector<cell*> &neigh); 
     
+=======
+	Copy constructor
+	*/
+	cell(const cell& rhs);
+
+	/*
+	Assignment operator
+	*/
+	const cell& operator=(const cell& rhs);
+
+>>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
 	/*
      
 	Add to the beginning of the list
@@ -92,6 +120,7 @@ public:
 	/*
      
 	Get the first node in the list
+<<<<<<< HEAD
 	
      */
 	cell_node* get_top();
@@ -108,6 +137,17 @@ public:
     
     friend class cell_node; //Yes, bad practice, but they're tied. Don't do this at home kids.
     friend class cell_node_iterator;
+=======
+	*/
+	cell_node get_top() const;
+
+	/*
+	Check whether the list is empty
+	*/
+	bool is_empty();
+
+    friend class cell_node; 
+>>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
 };
 
 
@@ -119,10 +159,12 @@ public:
  MUST DELETE AGENT ELSEWHERE!
  */
 class cell_node{
+
 private:
     cell_node* next;
     agent* target_agent;
-    
+
+public:
 	/*
 	Default constructor
 	*/
@@ -131,7 +173,7 @@ private:
 	/*
 	Fancy constructor
 	*/
-    cell_node(agent* target);
+    cell_node(agent &target);
 
 	/*
 	Set the next node
@@ -151,8 +193,9 @@ private:
 	/*
 	Return the agent
 	*/
-    agent* get_agent();
+    agent get_agent() const;
     
+<<<<<<< HEAD
     friend class cell; //Yes, bad practice, but they're tied. Don't do this at home kids.
     friend class cell_node_iterator;
 };
@@ -185,6 +228,9 @@ public:
      
      */
 	void reset_current();
+=======
+    friend class cell; 
+>>>>>>> 8f90395b1ed96062d7bfd11ac3b867035334557d
     
     agent* get_current();
 };
