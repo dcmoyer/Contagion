@@ -52,7 +52,7 @@ public:
     
     void set_neighbors(std::vector<cell*> &neigh); 
 
-	const cell& operator=(const cell& rhs); //Assignment Operator
+    cell& operator=(const cell& rhs); //Assignment Operator
 
     /*
      
@@ -136,7 +136,7 @@ public:
 	/*
 	Return the agent
 	*/
-    agent get_agent() const;
+    agent* get_agent() const;
     
     friend class cell; //Yes, bad practice, but they're tied. Don't do this at home kids.
     friend class cell_node_iterator;

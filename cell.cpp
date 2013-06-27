@@ -60,7 +60,7 @@ cell::~cell(){
     
     cell_node* temp;
     
-    while(! isempty()){
+    while(!isempty()){
         temp = top->next;
         delete top;
         top = temp;
@@ -95,6 +95,40 @@ cell::cell(const cell& rhs) {
 		}
 	}
 
+}
+
+/*
+ 
+ Assignment Operator
+ 
+ */
+
+cell& cell:: operator=(const cell& rhs) {
+    
+    cell_node* temp;
+
+	if (this != &rhs) {
+        
+        while(!isempty()){
+            temp = top->next;
+            delete top;
+            top = temp;
+        }
+        
+		if (rhs.top == NULL) {
+			top == NULL;
+		} else {
+            add_top(rhs.top->target_agent);
+            temp = rhs.top->next;
+            while( temp != NULL ){
+                
+                add_top(temp->target_agent);
+                temp = temp->next;
+                
+            }
+		}
+	}
+	return *this;
 }
 
 /*
@@ -145,35 +179,6 @@ cell_node* cell::get_top(){
     
     return top;
 
-}
-/*
- 
- Destructor
-
- 
-cell::~cell() {
-	clear();
-}
-
-/*
-Copy constructor
-
-cell::cell(const cell& rhs) {
-
-	if (rhs.top == NULL) {
-		top = NULL;
-	} else {
-		top = new cell_node(rhs.top->get_agent());
-
-		cell_node* finger = rhs.top->get_next();
-		cell_node* current = head;
-
-		while (finger != NULL) {
-			current->set_next(new cell_node(finger->get_agent()));
-			current = current->get_next();
-			finger = finger->get_next();
-		}
-	}
 }
 
 /*
@@ -311,9 +316,9 @@ cell_node* cell_node::get_next() {
 	return next;
 }
 
-agent cell_node::get_agent() const{
+agent* cell_node::get_agent() const{
     
-    return *target_agent;
+    return target_agent;
     
 }
     
