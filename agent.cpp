@@ -191,6 +191,30 @@ void agent::set_z_coord(double z){
     
 }
 
+void agent::set_x_veloc(double v_x){
+    
+    x_veloc[0] = v_x;
+    for(int i = 1; i < HIST_LENGTH; i++)
+        x_veloc[i] = 0.0;
+    
+ }
+
+ void agent::set_y_veloc(double v_y){
+    
+    y_veloc[0] = v_y;
+    for(int i = 1; i < HIST_LENGTH; i++)
+        y_veloc[i] = 0.0;
+    
+ }
+
+ void agent::set_z_veloc(double v_z){
+    
+    z_veloc[0] = v_z;
+    for(int i = 1; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0.0;
+    
+ }
+
 void agent::set_x_veloc(double v_x[HIST_LENGTH]){
     
     for(int i = 0; i < HIST_LENGTH; i++)
