@@ -20,7 +20,7 @@
 #include <fstream>
 
 void ab4_update(agent smith);
-void euler_update(agent smith);
+void euler_update(agent &smith);
 
 class world {
 public:
@@ -34,9 +34,10 @@ public:
 	void add_agent(double x, double y, double z, double (* up)(agent*,agent*));
 	void populate();
 	void populate_rand();
-private:
-    void refresh_ab4();
+	void refresh_ab4();
 	void refresh_eul();
+private:
+   
 };
 
 

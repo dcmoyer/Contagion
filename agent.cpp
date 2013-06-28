@@ -346,3 +346,56 @@ double agent::get_forward_q_c(){
     return forward_q_c;
     
 }
+
+
+
+void agent::ab4_update()
+{
+  double vx [HIST_LENGTH];
+  double vy [HIST_LENGTH];
+  double vz [HIST_LENGTH];
+  
+  double* px = get_x_veloc();
+  for (int i = 0; i < HIST_LENGTH; i++)
+  {
+    vx[i] = *(px + i);
+  }
+  
+  double* py = get_y_veloc();
+  for (int i = 0; i < HIST_LENGTH; i++)
+  {
+    vy[i] = *(py + i);
+  }
+  
+  double* pz = get_z_veloc();
+  for (int i = 0; i < HIST_LENGTH; i++)
+  {
+    vz[i] = *(pz + i);
+  }
+  
+  
+  double new_x = get_x_coord() + STEP_SIZE / 24 * (55 * vx[0] - 59 * vx[1] + 37 * vx[2] - 9 * vx[3]);
+  double new_y = get_y_coord() + STEP_SIZE / 24 * (55 * vy[0] - 59 * vy[1] + 37 * vy[2] - 9 * vy[3]);
+  double new_z = get_z_coord() + STEP_SIZE / 24 * (55 * vz[0] - 59 * vz[1] + 37 * vz[2] - 9 * vz[3]);
+  
+  set_x_coord(new_x);
+  set_y_coord(new_y);
+  set_z_coord(new_z);
+}
+
+void agent::euler_update()
+{
+ 
+  
+  double* px = get_x_veloc();
+  double* py = get_y_veloc();
+  double* pz = get_z_veloc();
+  
+  double new_x = get_x_coord() + STEP_SIZE  * (*px);
+  double new_y = get_y_coord() + STEP_SIZE  * (*py);
+  double new_z = get_z_coord() + STEP_SIZE  * (*pz);
+  
+  set_x_coord(new_x);
+  set_y_coord(new_y);
+  set_z_coord(new_z);
+}

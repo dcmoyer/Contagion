@@ -61,7 +61,7 @@ void world::refresh_ab4()
 {
 		for (int i = 0; i < NUM_OF_AGENTS; i ++)
 		{
-			ab4_update(*agents_master[i]);
+			(*agents_master[i]).ab4_update();
 		}
 }
 
@@ -70,7 +70,7 @@ void world::refresh_eul()
 {
 		for (int i = 0; i < NUM_OF_AGENTS; i ++)
 		{
-			euler_update(*agents_master[i]);
+			(*agents_master[i]).euler_update();
 		}
 }
 

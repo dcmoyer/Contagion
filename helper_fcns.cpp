@@ -1,5 +1,5 @@
 #include "helper_fcns.h"
-
+/*
 void ab4_update(agent smith)
 {
   double vx [HIST_LENGTH];
@@ -34,7 +34,7 @@ void ab4_update(agent smith)
   smith.set_z_coord(new_z);
 }
 
-void euler_update(agent smith)
+void euler_update(agent &smith)
 {
  
   
@@ -50,3 +50,5 @@ void euler_update(agent smith)
   smith.set_y_coord(new_y);
   smith.set_z_coord(new_z);
 }
+
+*/

@@ -86,6 +86,8 @@ public:
     double get_forward_v_z();
     double get_forward_q_c();
     
+	void ab4_update();
+	void euler_update();
 };
 
 #endif
