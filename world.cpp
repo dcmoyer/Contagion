@@ -98,6 +98,17 @@ void world::add_agent()
 
 void world::add_agent(double x, double y)
 {
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+
+
+
 	double v[HIST_LENGTH];
 	for(int i = 0; i < HIST_LENGTH; i++)
 		v[i] = 0;
@@ -109,6 +120,19 @@ void world::add_agent(double x, double y)
 	
 void world::add_agent(double x, double y, double z, double (* up)(agent*,agent*))
 {
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+	if(z < 0)
+		z = 0;
+	if(z >= CELL_LENGTH*DOMAIN_DIM_2)
+		z = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+
 	double v[HIST_LENGTH];
 	for(int i = 0; i < HIST_LENGTH; i++)
 		v[i] = 0;
@@ -130,9 +154,9 @@ void world::populate_rand()
 {
 	for (int i = 0; i < NUM_OF_AGENTS; i ++)
 		{
-			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 );
-			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 );
-			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 );
+			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 ) - 1;
+			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 ) - 1;
+			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
 			add_agent(x, y);
 		}
 }
