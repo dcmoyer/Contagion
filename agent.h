@@ -45,13 +45,24 @@ public:
 
     agent();
     agent(int TEST);
+    agent(double x, double y);
+    agent(double x, double y, double z);
     agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH]);
-    agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, double q_c[HIST_LENGTH], char a_type, double (* up)(agent*,agent*) );
-    
+    agent(double x, double y, double z, 
+	  double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH]);
+    agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
+	  double q, char a_type, double (* up)(agent*,agent*) );
+    agent(double x, double y, double z, 
+	  double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], 
+	  double q, char a_type, double (* up)(agent*,agent*) );
+	  
     //Mutator Functions:
     void set_x_coord(double x);
     void set_y_coord(double y);
     void set_z_coord(double z);
+    void set_x_veloc(double v_x);
+    void set_y_veloc(double v_y);
+    void set_z_veloc(double v_z);
     void set_x_veloc(double v_x[HIST_LENGTH]);
     void set_y_veloc(double v_y[HIST_LENGTH]);
     void set_z_veloc(double v_z[HIST_LENGTH]);
