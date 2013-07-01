@@ -5,56 +5,151 @@ world::world()
 {
 //create the cells
 	for (int i = 0; i < DOMAIN_DIM_1; i++)
-		{
-			for(int j = 0; j < DOMAIN_DIM_2; j++) 
-			{
-				cellList[i][j] = cell();
-			}
-		}
+    {
+        for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+            cellList[i][j] = new cell;
+        }
+    }
 
 
 //tell the cells who their neighbors are
 	for (int i = 0; i < DOMAIN_DIM_1; i++)
-		{
-			for(int j = 0; j < DOMAIN_DIM_2; j++) 
-			{
+    {
+        for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
 				
-				std::vector<cell*> v(8);
-				v[0] = &cellList[i-1][j-1];
-				v[1] = &cellList[i][j-1];
-				v[2] = &cellList[i+1][j-1];
+            std::vector<cell*> v(8);
+            v[0] = cellList[i-1][j-1];
+            v[1] = cellList[i][j-1];
+            v[2] = cellList[i+1][j-1];
 
-				v[3] = &cellList[i-1][j];
-				v[4] = &cellList[i+1][j];
+            v[3] = cellList[i-1][j];
+            v[4] = cellList[i+1][j];
 
-				v[5] = &cellList[i-1][j+1];
-				v[6] = &cellList[i][j+1];
-				v[7] = &cellList[i+1][j+1];
+            v[5] = cellList[i-1][j+1];
+            v[6] = cellList[i][j+1];
+            v[7] = cellList[i+1][j+1];
 
-				if(i == 0)
-				{
-					v[0]=v[3]=v[5]=NULL;
-				}
-				else if((i+1) == DOMAIN_DIM_1)
-				{
-					v[2]=v[4]=v[7]=NULL;
-				}
-
-				if(j == 0)
-				{
-					v[0]=v[1]=v[2]=NULL;
-				}
-				else if((j+1) == DOMAIN_DIM_2)
-				{
-					v[5]=v[6]=v[7]=NULL;
-				}
-
-				cellList[i][j].set_neighbors(v);
-			}
-		}
+            if(i == 0)
+            {
+                v[0]=v[3]=v[5]=NULL;
+            }
+            else if((i+1) == DOMAIN_DIM_1)
+            {
+                v[2]=v[4]=v[7]=NULL;
+            }
+            if(j == 0)
+            {
+                v[0]=v[1]=v[2]=NULL;
+            }
+            else if((j+1) == DOMAIN_DIM_2)
+            {
+                v[5]=v[6]=v[7]=NULL;
+            }
+            
+            cellList[i][j].set_neighbors(v);
+        }
+    }
+    
+    
 }
 
 
+/*
+ 
+ Hey everyone, so this function is really confusing. I'm sorry, but I've built it
+ such that we can easily switch to OPEN MP. However, that makes life kinda terrible
+ for reading things. Sorry -DM
+ 
+ */
+void world::update(){
+    
+    origin = cellList[0];
+    end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
+    
+    /*
+     THIS IS WHERE WE'D PUT OPEN MP
+     */
+    //UPDATE RIGHT
+    for(cell* iter = origin; origin < end; iter++)
+    {
+        
+        if(iter.get_neighbor(4) == NULL)
+            continue;
+        
+        cell_node_iterator target = iter.get_iter();
+        cell_node_iterator right = iter.get_neighbor(4) -> get.iter();
+        
+        for(target; target->current != NULL; target.next()){
+            
+            for(right; right->current != NULL; right.next()){
+                
+                target->current->update(target->current, right->current)
+                
+            }
+            
+            right.reset_current();
+            
+        }
+        
+    }
+    
+    //UPDATE UP
+    end = origin + (DOMAIN_DIM_1);
+    for(cell* iter = origin; origin < end; iter++)
+    {
+        
+        for(cell* inner_iter = iter; inner_iter < end; inner_iter += DOMAIN_DIM_1){
+            if(iter.get_neighbor(6) == NULL)
+                continue;
+        
+            cell_node_iterator target = iter.get_iter();
+            cell_node_iterator upwards = iter.get_neighbor(6) -> get.iter();
+            
+            for(target; target->current != NULL; target.next()){
+            
+                for(upwards; upwards->current != NULL; upwards.next()){
+                    
+                    target->current->update(target->current, upwards->current)
+                
+                }
+            
+                upwards.reset_current();
+            
+            }
+        }
+    }
+    
+    //UPDATE DIAG
+    end = origin + (DOMAIN_DIM_1);
+    for(cell* iter = origin; origin < end; iter++)
+    {
+        
+        for(cell* inner_iter = iter; inner_iter < end; inner_iter += DOMAIN_DIM_1){
+            if(iter.get_neighbor(6) == NULL)
+                continue;
+            
+            cell_node_iterator target = iter.get_iter();
+            cell_node_iterator upwards = iter.get_neighbor(6) -> get.iter();
+            
+            for(target; target->current != NULL; target.next()){
+                
+                for(upwards; upwards->current != NULL; upwards.next()){
+                    
+                    target->current->update(target->current, upwards->current)
+                    
+                }
+                
+                upwards.reset_current();
+                
+            }
+        }
+    }
+    
+    
+    
+}
 
 //use ab4 to update the positions of all agents
 void world::refresh_ab4()
@@ -63,6 +158,7 @@ void world::refresh_ab4()
 		{
 			(*agents_master[i]).ab4_update();
 		}
+    
 }
 
 //use euler to update positions when not enough points for ab4
@@ -93,7 +189,7 @@ void world::add_agent()
 	agents_master.push_back(new agent(0, 0, v, v));
 	int x =(int) ((*agents_master.back()).get_x_coord())/CELL_LENGTH;
 	int y = (int) ((*agents_master.back()).get_y_coord())/CELL_LENGTH;
-	cellList[x][y].add_top(new cell_node(agents_master.back()));
+	cellList[x][y]->add_top(new cell_node(agents_master.back()));
 }
 
 void world::add_agent(double x, double y)
@@ -115,7 +211,7 @@ void world::add_agent(double x, double y)
 	agents_master.push_back(new agent(x, y, v, v));
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
-	cellList[i][j].add_top(new cell_node(agents_master.back()));
+	cellList[i][j]->add_top(new cell_node(agents_master.back()));
 }
 	
 void world::add_agent(double x, double y, double z, double (* up)(agent*,agent*))
@@ -139,7 +235,7 @@ void world::add_agent(double x, double y, double z, double (* up)(agent*,agent*)
 	agents_master.push_back(new agent(x, y, z, v, v, v, 0, v, 'a',  up)); //?!?!?!
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
-	cellList[i][j].add_top(new cell_node(agents_master[i]));
+	cellList[i][j]->add_top(new cell_node(agents_master[i]));
 }
 
 void world::populate()

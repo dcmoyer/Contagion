@@ -25,7 +25,7 @@ void euler_update(agent &smith);
 class world {
 public:
     std::vector<agent*> agents_master;
-    cell  cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
+    cell* cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
 
 	world();
     void print(std::ostream& strm);
@@ -34,6 +34,7 @@ public:
 	void add_agent(double x, double y, double z, double (* up)(agent*,agent*));
 	void populate();
 	void populate_rand();
+    void update();
 	void refresh_ab4();
 	void refresh_eul();
 private:
