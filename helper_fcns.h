@@ -4,11 +4,7 @@
 #include "constants.h"
 #include "agent.h"
 
+//basic attraction, repulsion, alignment model
+void swarm1(agent* me, agent* you);
 
-/*
-//calculates next position for agent based on its current and previous velocities
-void ab4_update(agent smith);
-
-// used for the first 4 iterations when there are not enough data points yet to use ab4
-void euler_update(agent &smith);*/
 #endif
