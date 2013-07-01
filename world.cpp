@@ -48,7 +48,7 @@ world::world()
                 v[5]=v[6]=v[7]=NULL;
             }
             
-            cellList[i][j].set_neighbors(v);
+            cellList[i][j]->set_neighbors(v);
         }
     }
     
@@ -65,8 +65,8 @@ world::world()
  */
 void world::update(){
     
-    origin = cellList[0];
-    end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
+    cell* origin = cellList[0];
+    cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     
     /*
      THIS IS WHERE WE'D PUT OPEN MP
@@ -122,16 +122,18 @@ void world::update(){
     }
     
     //UPDATE DIAG
-    end = origin + (DOMAIN_DIM_1);
-    for(cell* iter = origin; origin < end; iter++)
+    //along first dimension
+    for(int off_diag = 0; off_diag < DOMAIN_DIM_1; off_diag++)
     {
-        
-        for(cell* inner_iter = iter; inner_iter < end; inner_iter += DOMAIN_DIM_1){
-            if(iter.get_neighbor(6) == NULL)
+        cell* current = origin + off_diag;
+        int runs = DOMAIN_DIM_1 - off_diag;
+        for(int i = 0; i < runs; i++){
+            current += DOMAIN_DIM_1 + 1;
+            if(iter.get_neighbor(7) == NULL)
                 continue;
             
             cell_node_iterator target = iter.get_iter();
-            cell_node_iterator upwards = iter.get_neighbor(6) -> get.iter();
+            cell_node_iterator upwards = iter.get_neighbor(7) -> get.iter();
             
             for(target; target->current != NULL; target.next()){
                 
@@ -146,6 +148,34 @@ void world::update(){
             }
         }
     }
+    //along second dimension
+    for(int off_diag = 0; off_diag < DOMAIN_DIM_2; off_diag++)
+    {
+        cell* current = origin + (off_diag * DOMAIN_DIM_1);
+        int runs = DOMAIN_DIM_1 - off_diag;
+        for(int i = 0; i < runs; i++){
+            current += DOMAIN_DIM_1 + 1;
+            if(iter.get_neighbor(7) == NULL)
+                continue;
+            
+            cell_node_iterator target = iter.get_iter();
+            cell_node_iterator upwards = iter.get_neighbor(7) -> get.iter();
+            
+            for(target; target->current != NULL; target.next()){
+                
+                for(upwards; upwards->current != NULL; upwards.next()){
+                    
+                    target->current->update(target->current, upwards->current)
+                    
+                }
+                
+                upwards.reset_current();
+                
+            }
+        }
+    }
+    
+    
     
     
     
