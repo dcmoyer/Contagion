@@ -63,9 +63,9 @@ world::world()
  for reading things. Sorry -DM
  
  */
-void world::update(){
+void world::update_forward_velocs(){
     
-    cell* origin = cellList[0];
+    cell* origin = cellList[0][0];
     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     
     /*
@@ -75,17 +75,17 @@ void world::update(){
     for(cell* iter = origin; origin < end; iter++)
     {
         
-        if(iter.get_neighbor(4) == NULL)
+        if(iter->get_neighbor(4) == NULL)
             continue;
         
-        cell_node_iterator target = iter.get_iter();
-        cell_node_iterator right = iter.get_neighbor(4) -> get.iter();
+        cell_node_iterator target = iter->get_iter();
+        cell_node_iterator right = iter->get_neighbor(4) -> get_iter();
         
-        for(target; target->current != NULL; target.next()){
+        for(target; target.current != NULL; target.next()){
             
-            for(right; right->current != NULL; right.next()){
+            for(right; right.current != NULL; right.next()){
                 
-                target->current->update(target->current, right->current)
+                target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
                 
             }
             
@@ -101,17 +101,17 @@ void world::update(){
     {
         
         for(cell* inner_iter = iter; inner_iter < end; inner_iter += DOMAIN_DIM_1){
-            if(iter.get_neighbor(6) == NULL)
+            if(iter->get_neighbor(6) == NULL)
                 continue;
         
-            cell_node_iterator target = iter.get_iter();
-            cell_node_iterator upwards = iter.get_neighbor(6) -> get.iter();
+            cell_node_iterator target = iter->get_iter();
+            cell_node_iterator upwards = iter->get_neighbor(6) -> get_iter();
             
-            for(target; target->current != NULL; target.next()){
+            for(target; target.current != NULL; target.next()){
             
-                for(upwards; upwards->current != NULL; upwards.next()){
+                for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target->current->update(target->current, upwards->current)
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
                 
                 }
             
@@ -128,17 +128,17 @@ void world::update(){
         cell* current = origin + off_diag;
         int runs = DOMAIN_DIM_1 - off_diag;
         for(int i = 0; i < runs; i++){
-            if(current.get_neighbor(7) == NULL)
+            if(current->get_neighbor(7) == NULL)
                 continue;
             
-            cell_node_iterator target = current.get_iter();
-            cell_node_iterator upwards = current.get_neighbor(7) -> get.iter();
+            cell_node_iterator target = current->get_iter();
+            cell_node_iterator upwards = current->get_neighbor(7) -> get_iter();
             
-            for(target; target->current != NULL; target.next()){
+            for(target; target.current != NULL; target.next()){
                 
-                for(upwards; upwards->current != NULL; upwards.next()){
+                for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target->current->update(target->current, upwards->current)
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
                     
                 }
                 
@@ -149,26 +149,26 @@ void world::update(){
     }
     //intermedius along second dimension
     for(int intermedius = 1; intermedius <= DOMAIN_DIM_2 - DOMAIN_DIM_1; intermedius++){
-        cell* current = origin + (off_diag * DOMAIN_DIM_1);
+        cell* current = origin + (intermedius * DOMAIN_DIM_1);
         int runs = DOMAIN_DIM_1;
         for(int i = 0; i < runs; i++){
-            if(current.get_neighbor(7) == NULL)
+            if(current->get_neighbor(7) == NULL)
                 continue;
             
-            cell_node_iterator target = current.get_iter();
-            cell_node_iterator upwards = current.get_neighbor(7) -> get.iter();
+            cell_node_iterator target = current->get_iter();
+            cell_node_iterator upwards = current->get_neighbor(7) -> get_iter();
             
-            for(target; target->current != NULL; target.next()){
+            for(target; target.current != NULL; target.next()){
                 
-                for(upwards; upwards->current != NULL; upwards.next()){
+                for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target->current->update(target->current, upwards->current)
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
                     
                 }
                 
                 upwards.reset_current();
             }
-            current += DOMAIN_DIM_1 + 1
+            current += DOMAIN_DIM_1 + 1;
         }
     }
     //along second dimension
@@ -177,17 +177,17 @@ void world::update(){
         cell* current = origin + (off_diag * DOMAIN_DIM_1);
         int runs = DOMAIN_DIM_2 - off_diag;
         for(int i = 0; i < runs; i++){
-            if(current.get_neighbor(7) == NULL)
+            if(current->get_neighbor(7) == NULL)
                 continue;
             
-            cell_node_iterator target = current.get_iter();
-            cell_node_iterator upwards = current.get_neighbor(7) -> get.iter();
+            cell_node_iterator target = current->get_iter();
+            cell_node_iterator upwards = current->get_neighbor(7) -> get_iter();
             
-            for(target; target->current != NULL; target.next()){
+            for(target; target.current != NULL; target.next()){
                 
-                for(upwards; upwards->current != NULL; upwards.next()){
+                for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target->current->update(target->current, upwards->current)
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
                     
                 }
                 
@@ -203,17 +203,17 @@ void world::update(){
         cell* current = origin + off_diag;
         int runs = off_diag;
         for(int i = 0; i < runs; i++){
-            if(current.get_neighbor(5) == NULL)
+            if(current->get_neighbor(5) == NULL)
                 continue;
             
-            cell_node_iterator target = current.get_iter();
-            cell_node_iterator upwards = current.get_neighbor(5) -> get.iter();
+            cell_node_iterator target = current->get_iter();
+            cell_node_iterator upwards = current->get_neighbor(5) -> get_iter();
             
-            for(target; target->current != NULL; target.next()){
+            for(target; target.current != NULL; target.next()){
                 
-                for(upwards; upwards->current != NULL; upwards.next()){
+                for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target->current->update(target->current, upwards->current)
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
                     
                 }
                 
@@ -225,26 +225,26 @@ void world::update(){
     }
     //intermedius along second dimension
     for(int intermedius = 1; intermedius <= DOMAIN_DIM_2 - DOMAIN_DIM_1; intermedius++){
-        cell* current = end - 1 + (off_diag * DOMAIN_DIM_1);
+        cell* current = end - 1 + (intermedius * DOMAIN_DIM_1);
         int runs = DOMAIN_DIM_1;
         for(int i = 0; i < runs; i++){
-            if(current.get_neighbor(5) == NULL)
+            if(current->get_neighbor(5) == NULL)
                 continue;
             
-            cell_node_iterator target = current.get_iter();
-            cell_node_iterator upwards = current.get_neighbor(5) -> get.iter();
+            cell_node_iterator target = current->get_iter();
+            cell_node_iterator upwards = current->get_neighbor(5) -> get_iter();
             
-            for(target; target->current != NULL; target.next()){
+            for(target; target.current != NULL; target.next()){
                 
-                for(upwards; upwards->current != NULL; upwards.next()){
+                for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target->current->update(target->current, upwards->current)
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
                     
                 }
                 
                 upwards.reset_current();
             }
-            current += DOMAIN_DIM_1 - 1
+            current += DOMAIN_DIM_1 - 1;
         }
     }
     
@@ -253,17 +253,17 @@ void world::update(){
         cell* current = end - 1 + (off_diag * DOMAIN_DIM_1); //Remember the reassignment of end.
         int runs = DOMAIN_DIM_2 - off_diag;
         for(int i = 0; i < runs; i++){
-            if(current.get_neighbor(5) == NULL)
+            if(current->get_neighbor(5) == NULL)
                 continue;
             
-            cell_node_iterator target = current.get_iter();
-            cell_node_iterator upwards = current.get_neighbor(5) -> get.iter();
+            cell_node_iterator target = current->get_iter();
+            cell_node_iterator upwards = current->get_neighbor(5) -> get_iter();
             
-            for(target; target->current != NULL; target.next()){
+            for(target; target.current != NULL; target.next()){
                 
-                for(upwards; upwards->current != NULL; upwards.next()){
+                for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target->current->update(target->current, upwards->current)
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
                     
                 }
                 
@@ -275,19 +275,37 @@ void world::update(){
     }
     
     //DRAG TERM; Also should contain division by Nearest Neighbor Count.
+    origin = cellList[0][0];
+    end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
+    for(cell* iter = origin; iter < end; iter++){
+        cell_node_iterator target = iter->get_iter();
+        for(target; target.current != NULL; target.next()){
+            
+            //target->current->target_agent->drag();
+            
+        }
+    }
+    
+    
+    
+}
+/*
+void world::update_positions(){
     origin = cellList[0];
     end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     for(iter = origin; iter < end; iter++){
         cell_node_iterator target = iter.get_iter();
         for(target; target->current != NULL; target.next()){
             
-            target->current->drag();
+            target->current->ab4_update();
             
+            // change to new cell if appropriate
+            // change "switch flag"
         }
-        
     }
     
-}
+    
+}*/
 
 //use ab4 to update the positions of all agents
 void world::refresh_ab4()

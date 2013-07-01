@@ -24,7 +24,7 @@ void swarm1(agent* me, agent* you)
 	double dy= y2-y1;
 	double dz= z2-z1;
 	double r = sqrt(dx*dx + dy*dy + dz*dz);
-	double sum = abs(dx)+abs(dy)+abs(dz);
+	double sum = std::abs(dx)+std::abs(dy)+std::abs(dz);
 
 	//calculate attraction/repulsion forces
 	double u = -C_A * exp(-r / L_A) + C_R * exp(-r / L_R);

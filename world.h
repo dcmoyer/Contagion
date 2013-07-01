@@ -34,7 +34,7 @@ public:
 	void add_agent(double x, double y, double z, double (* up)(agent*,agent*));
 	void populate();
 	void populate_rand();
-    void update();
+    void update_forward_velocs();
 	void refresh_ab4();
 	void refresh_eul();
 private:
