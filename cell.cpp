@@ -19,7 +19,7 @@
  */
 cell::cell(){
     
-    *top = NULL;
+    top = NULL;
     center_x = 0;
     center_y = 0;
     //neighbors is empty
