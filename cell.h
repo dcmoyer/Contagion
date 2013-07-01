@@ -76,6 +76,10 @@ public:
      */
 	cell_node* get_top();
     
+    cell_node_iterator get_iter();
+    
+    cell* get_neighbor(int index);
+    
     /*
      
      Check if list is empty.
@@ -83,7 +87,7 @@ public:
      */
     
     void move_top(cell* target);
-    
+
     bool isempty();
     
     friend class cell_node; //Yes, bad practice, but they're tied. Don't do this at home kids.

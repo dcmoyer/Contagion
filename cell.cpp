@@ -181,61 +181,19 @@ cell_node* cell::get_top(){
 
 }
 
-/*
-Assignment operator
-
-const cell::cell& operator=(const cell& rhs) {
-	if (this != &rhs) {
-		clear();
-
-		if (rhs.top == NULL) {
-			top == NULL;
-		} else {
-			top = new cell_node(rhs.top->get_agent());
-
-			cell_node* finger = rhs.top->get_next();
-			cell_node* current = head;
-
-			while (finger != NULL) {
-				current->set_next(new cell_node(finger->get_agent()));
-				current = current->get_next();
-				finger = finger->get_next();
-			}
-		}
-	}
-	return *this;
+cell_node_iterator cell::get_iter(){
+    
+    return cell_node_iterator(this);
+    
 }
 
-/*
-Add to the beginning of the list	
-
-void add_top(cell_node new_node) {
-
-	new_node.set_next(top);
-	*top = new_node;
-}
-
-/*
-Remove the first node in the list
-
-void remove_top() {
-
-	delete *top;
-	top = top->get_next();
-}
-
-
-/*
-Get the first node in the list
-
-cell_node get_top() const {
-
-	return *top;
-}
-
-bool is_empty() {
-
-	return (top == NULL);
+cell* cell::get_neighbor(int index){
+    
+    if(index > neighbors.size())
+        return NULL;
+    
+    return neighbors[index];
+    
 }
 
 /*
@@ -356,3 +314,63 @@ agent* cell_node_iterator::get_current(){
     return current->target_agent;
     
 }
+
+
+
+
+/*
+ Assignment operator
+ 
+ const cell::cell& operator=(const cell& rhs) {
+ if (this != &rhs) {
+ clear();
+ 
+ if (rhs.top == NULL) {
+ top == NULL;
+ } else {
+ top = new cell_node(rhs.top->get_agent());
+ 
+ cell_node* finger = rhs.top->get_next();
+ cell_node* current = head;
+ 
+ while (finger != NULL) {
+ current->set_next(new cell_node(finger->get_agent()));
+ current = current->get_next();
+ finger = finger->get_next();
+ }
+ }
+ }
+ return *this;
+ }
+ 
+ /*
+ Add to the beginning of the list	
+ 
+ void add_top(cell_node new_node) {
+ 
+ new_node.set_next(top);
+ *top = new_node;
+ }
+ 
+ /*
+ Remove the first node in the list
+ 
+ void remove_top() {
+ 
+ delete *top;
+ top = top->get_next();
+ }
+ 
+ 
+ /*
+ Get the first node in the list
+ 
+ cell_node get_top() const {
+ 
+ return *top;
+ }
+ 
+ bool is_empty() {
+ 
+ return (top == NULL);
+ }
