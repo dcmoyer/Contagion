@@ -19,4 +19,17 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define STEP_SIZE .1
 #define HIST_LENGTH 1
 
+
+//strengths and lengths of attraction and repulsion
+#define C_A 2
+#define C_R 3
+#define L_A 3
+#define L_R 2
+
+//constants for alignment model
+#define SIGMA 2
+#define GAMMA .45
+#define KAPPA 2
+
+
 #endif
