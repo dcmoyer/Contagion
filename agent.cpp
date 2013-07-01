@@ -13,10 +13,9 @@
 #include <cassert>
 
 /*
- 
  Default Constructor.
- 
- */
+*/
+
 agent::agent(){
     //Assign Coordinates
     x_coord = 0;
@@ -52,10 +51,9 @@ agent::agent(){
 }
 
 /*
- 
  Test Constructor. Unused integer.
- 
  */
+
 agent::agent(int TEST){
     //Assign Coordinates
     x_coord = TEST;
@@ -90,11 +88,83 @@ agent::agent(int TEST){
     
 }   
 
+/* Constructor.  Contains arguments for position */
+
+agent::agent(double x, double y){
+    //Assign Coordinates
+    x_coord = x;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        x_veloc[i] = 0;
+    y_coord = y;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        y_veloc[i] = 0;
+    z_coord = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0;
+    
+    //Assign Contagion
+    q_mag = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        q_change[i] = 0;
+    
+    //Assign Forward Values
+    forward_v_x = 0;
+    forward_v_y = 0;
+    forward_v_z = 0;
+    forward_q_c = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = 0; //NULL 
+    
+}
+
+/* Constructor.  Contains arguments for position */
+
+agent::agent(double x, double y, double z){
+    //Assign Coordinates
+    x_coord = x;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        x_veloc[i] = 0;
+    y_coord = y;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        y_veloc[i] = 0;
+    z_coord = z;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0;
+    
+    //Assign Contagion
+    q_mag = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        q_change[i] = 0;
+    
+    //Assign Forward Values
+    forward_v_x = 0;
+    forward_v_y = 0;
+    forward_v_z = 0;
+    forward_q_c = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = 0; //NULL 
+    
+}
+
+
 /*
- 
 Constructor. Contains arguements for position and velocity. 
- 
- */
+*/
+
 agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH]){
     x_coord = x;
     for(int i = 0; i < HIST_LENGTH; i++)
@@ -129,27 +199,26 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
 }
 
 /*
- 
- Constructor. Contains arguments for position, velocity, and contagion.
- 
- */
-agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, char a_type, double (* up)(agent*,agent*) ){
+Constructor. Contains arguements for position and velocity. 
+*/
 
-    //Assign Coordinates
+agent::agent(double x, double y, double z, 
+	     double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH])
+{
     x_coord = x;
     for(int i = 0; i < HIST_LENGTH; i++)
-        x_veloc[i] = v_x[HIST_LENGTH];
+        x_veloc[i] = v_x[i];
     y_coord = y;
     for(int i = 0; i < HIST_LENGTH; i++)
-        y_veloc[i] = v_y[HIST_LENGTH];
+        y_veloc[i] = v_y[i];
     z_coord = z;
     for(int i = 0; i < HIST_LENGTH; i++)
-        z_veloc[i] = v_z[HIST_LENGTH];
+        z_veloc[i] = v_z[i];
     
     //Assign Contagion
-    q_mag = q;
+    q_mag = 0;
     for(int i = 0; i < HIST_LENGTH; i++)
-        q_change[i] = 0.0;
+        q_change[i] = 0;
     
     //Assign Forward Values
     forward_v_x = 0;
@@ -169,29 +238,104 @@ agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[H
 }
 
 /* 
- 
- Mutator Functions
- 
- */
-void agent::set_x_coord(double x){
-    
+Constructor. Contains arguments for position, velocity, and contagion.
+*/
+
+agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
+	     double q, char a_type, double (* up)(agent*,agent*) ){
+
+    //Assign Coordinates
     x_coord = x;
-    
-}
-
-void agent::set_y_coord(double y){
-    
+    for(int i = 0; i < HIST_LENGTH; i++)
+        x_veloc[i] = v_x[HIST_LENGTH];
     y_coord = y;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        y_veloc[i] = v_y[HIST_LENGTH];
+    z_coord = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0;
+    
+    //Assign Contagion
+    q_mag = q;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        q_change[i] = 0;
+    
+    //Assign Forward Values
+    forward_v_x = 0;
+    forward_v_y = 0;
+    forward_v_z = 0;
+    forward_q_c = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = 0; //NULL
     
 }
 
-void agent::set_z_coord(double z){
-    
-    z_coord = z;
-    
-}
+agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, char a_type, double (* up)(agent*,agent*) ){
 
-void agent::set_x_veloc(double v_x){
+     //Assign Coordinates
+     x_coord = x;
+     for(int i = 0; i < HIST_LENGTH; i++)
+       x_veloc[i] = v_x[HIST_LENGTH];
+     y_coord = y;
+     for(int i = 0; i < HIST_LENGTH; i++)
+         y_veloc[i] = v_y[HIST_LENGTH];
+     z_coord = z;
+     for(int i = 0; i < HIST_LENGTH; i++)
+         z_veloc[i] = v_z[HIST_LENGTH];
+    
+     //Assign Contagion
+     q_mag = q;
+     for(int i = 0; i < HIST_LENGTH; i++)
+         q_change[i] = 0;
+    
+     //Assign Forward Values
+     forward_v_x = 0;
+     forward_v_y = 0;
+     forward_v_z = 0;
+     forward_q_c = 0;
+    
+     //Assign NN
+     NearestNeighbor_count = 0;
+    
+     //Assign Type
+     agent_type = 'd';
+    
+     //Assign Update Rull
+     update = 0; //NULL
+    
+ }
+
+ /* 
+ 
+  Mutator Functions
+ 
+  */
+ void agent::set_x_coord(double x){
+    
+     x_coord = x;
+    
+ }
+
+ void agent::set_y_coord(double y){
+    
+     y_coord = y;
+    
+ }
+
+ void agent::set_z_coord(double z){
+    
+     z_coord = z;
+    
+ }
+
+ void agent::set_x_veloc(double v_x){
     
     x_veloc[0] = v_x;
     for(int i = 1; i < HIST_LENGTH; i++)
@@ -215,8 +359,7 @@ void agent::set_x_veloc(double v_x){
     
  }
 
-void agent::set_x_veloc(double v_x[HIST_LENGTH]){
-    
+ void agent::set_x_veloc(double v_x[HIST_LENGTH]){
     for(int i = 0; i < HIST_LENGTH; i++)
         x_veloc[i] = v_x[i];
 
