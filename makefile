@@ -4,10 +4,10 @@ agent.o : agent.cpp
 	g++ -o agent.o -c agent.cpp
 
 cell.o : cell.cpp agent.o
-	g++ -o cell.o -c cell.cpp agent.o
+	g++ -o cell.o -c cell.cpp
 
 world.o : cell.o agent.o world.cpp helper_fcns.o
-	g++ -o player.o -c world.cpp cell.o agent.o
+	g++ -o player.o -c world.cpp
 
 helper_fcns.o : helper_fcns.cpp
 	g++ -o helper_fcns.o -c helper_fcns.cpp

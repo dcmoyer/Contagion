@@ -374,3 +374,4 @@ agent* cell_node_iterator::get_current(){
  
  return (top == NULL);
  }
+*/

@@ -38,7 +38,7 @@ public:
 	void refresh_ab4();
 	void refresh_eul();
 private:
-   
+    bool turn_counter; //This bool is to be checked against to see if a 
 };
 
 
