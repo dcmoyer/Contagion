@@ -511,7 +511,7 @@ void world::add_agent(double x, double y)
 	double v[HIST_LENGTH];
 	for(int i = 0; i < HIST_LENGTH; i++)
 		v[i] = 0;
-	agents_master.push_back(new agent(x, y, v, v));
+	agents_master.push_back(new agent(x,y,v,v,0, 'a', &swarm_attract ));
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(new cell_node(agents_master.back()));
