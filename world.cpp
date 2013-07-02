@@ -86,7 +86,7 @@ void world::update_forward_velocs(){
             for(right; right.current != NULL; right.next()){
                 
                 target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
-                upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+                right.current->get_agent()->update(right.current->get_agent(), target.current->get_agent());
 
             }
             
@@ -290,7 +290,7 @@ void world::update_forward_velocs(){
         cell_node_iterator target = iter->get_iter();
         for(target; target.current != NULL; target.next()){
             
-            target->current->get_agent()->drag();
+            target.current->get_agent()->drag();
             
         }
     }
@@ -449,7 +449,7 @@ void world::move_to_cell() {
 			while (!current_cell->isempty()) {
 				cell_node* current_node = current_cell->get_top();
 				if (!current_cell->in_the_cell(*(current_node->get_agent()))) {
-					current_node = current_cell->remvoe_top();
+					current_node = current_cell->remove_top();
 					int x = current_node->get_agent()->cell_num_dim1();
 					int y = current_node->get_agent()->cell_num_dim2();
 					cellList[x][y]->add_top(current_node);
