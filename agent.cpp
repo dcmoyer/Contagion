@@ -261,10 +261,10 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     //Assign Coordinates
     x_coord = x;
     for(int i = 0; i < HIST_LENGTH; i++)
-        x_veloc[i] = v_x[HIST_LENGTH];
+        x_veloc[i] = v_x[i];
     y_coord = y;
     for(int i = 0; i < HIST_LENGTH; i++)
-        y_veloc[i] = v_y[HIST_LENGTH];
+        y_veloc[i] = v_y[i];
     z_coord = 0;
     for(int i = 0; i < HIST_LENGTH; i++)
         z_veloc[i] = 0;

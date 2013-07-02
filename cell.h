@@ -127,7 +127,7 @@ public:
 	/*
 	Set the next node
 	*/
-    void set_next(cell_node* &next_node);
+    void set_next(cell_node* next_node);
 
 	/*
 	Set the agent 

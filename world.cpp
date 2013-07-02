@@ -437,6 +437,7 @@ void world::update_forward_velocs(){
 }
 
 void world::update_agent_pos(){
+	/*
     cell* origin = cellList[0][0];
     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     for(cell* iter = origin; iter < end; iter++){
@@ -444,13 +445,22 @@ void world::update_agent_pos(){
         for(target; target.current != NULL; target.next()){
             
             target.current->get_agent()->drag();
-            target.current->get_agent()->ab4_update();
+			target.current->get_agent()->euler_update();
+            //target.current->get_agent()->ab4_update();
             //target.current->get_agent()->
             // change to new cell if appropriate
             // change "switch flag"
         }
-    }
-    
+    }*/
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		for(int j = 0; j < DOMAIN_DIM_2; j++){
+			cell_node_iterator target = cellList[i][j]->get_iter();
+			for(target; target.current != NULL; target.next()){
+				//target.current->get_agent()->drag();
+				target.current->get_agent()->euler_update();
+			}
+		}
+	}
     
 }
 
@@ -479,7 +489,7 @@ void world::print(std::ostream& strm)
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
 			strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
-				<<"," << (*agents_master[i]).get_y_coord() <<"," << (*agents_master[i]).get_z_coord() << "," << (*agents_master[i]).get_q_mag() << ",";
+				<<"," << (*agents_master[i]).get_y_coord() <<"," << *(*agents_master[i]).get_x_veloc() << "," << *(*agents_master[i]).get_y_veloc() << ",";
 		}
 	strm << "\n";
 }
@@ -511,7 +521,7 @@ void world::add_agent(double x, double y)
 	double v[HIST_LENGTH];
 	for(int i = 0; i < HIST_LENGTH; i++)
 		v[i] = 0;
-	agents_master.push_back(new agent(x,y,v,v,0, 'a', &swarm_attract ));
+	agents_master.push_back(new agent(x,y,v,v,0, 'a', go_left_test ));
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(new cell_node(agents_master.back()));

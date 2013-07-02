@@ -23,7 +23,7 @@ width = type;
 for i=1:numel(type)
      if(type(i)==0)
          type(i) = 'o';
-         width(i) = 36;
+         width(i) = 24;
      elseif(type(i)==1)
          type(i) = 'p';
          width(i) = 300;
@@ -45,12 +45,12 @@ for j=1:timesteps
         scatter(x(j,k),y(j,k), width(j,k), [0 0 1], char(type(j,k)),'filled'); 
     end
     hold off;
-    axis([0 100 0 100]);
+    axis([0 120 0 180]);
     grid on;
     F(j)=getframe;
 end
 
-% movie(F);
+movie(F,2,24);
 
 end
 

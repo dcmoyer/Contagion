@@ -1,16 +1,22 @@
 #include "world.h"
+#include <fstream>
 
 int main()
 {
+	std::ofstream str;
+	str.open("data.txt");
 	world w = world();
-	w.populate_rand(4);
-	for(int i = 1; i <= 25; i++)
+	w.populate_rand(75);
+	for(int i = 1; i <=200
+		; i++)
 	{
 		w.update_forward_velocs();
-		w.update_forward_velocs();
-		w.print(std::cout);
+		w.update_agent_pos();
+		w.print(str);
+		//w.print(std::cout);
 	}
-	system("PAUSE");
+	str.close();
+	//system("PAUSE");
 
 
 	return 0;
