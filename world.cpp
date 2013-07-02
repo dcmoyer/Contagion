@@ -72,7 +72,7 @@ void world::update_forward_velocs(){
      THIS IS WHERE WE'D PUT OPEN MP
      */
     //UPDATE RIGHT
-    for(cell* iter = origin; origin < end; iter++)
+    for(cell* iter = origin; iter < end; iter++)
     {
         
         if(iter->get_neighbor(4) == NULL)
@@ -97,7 +97,7 @@ void world::update_forward_velocs(){
     
     //UPDATE UP
     end = origin + (DOMAIN_DIM_1);
-    for(cell* iter = origin; origin < end; iter++)
+    for(cell* iter = origin; iter < end; iter++)
     {
         
         for(cell* inner_iter = iter; inner_iter < end; inner_iter += DOMAIN_DIM_1){
@@ -291,8 +291,8 @@ void world::update_forward_velocs(){
 }
 
 void world::update_agent_pos(){
-    origin = cellList[0];
-    end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
+    cell* origin = cellList[0][0];
+    cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     for(cell* iter = origin; iter < end; iter++){
         cell_node_iterator target = iter->get_iter();
         for(target; target.current != NULL; target.next()){
