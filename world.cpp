@@ -86,7 +86,8 @@ void world::update_forward_velocs(){
             for(right; right.current != NULL; right.next()){
                 
                 target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
-                
+                upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+
             }
             
             right.reset_current();
@@ -112,6 +113,8 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+
                 
                 }
             
@@ -139,6 +142,7 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
                     
                 }
                 
@@ -163,6 +167,7 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
                     
                 }
                 
@@ -188,6 +193,7 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
                     
                 }
                 
@@ -214,6 +220,7 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
                     
                 }
                 
@@ -239,6 +246,7 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
                     
                 }
                 
@@ -264,6 +272,7 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
                     
                 }
                 
@@ -281,7 +290,7 @@ void world::update_forward_velocs(){
         cell_node_iterator target = iter->get_iter();
         for(target; target.current != NULL; target.next()){
             
-            //target->current->target_agent->drag();
+            target->current->get_agent()->drag();
             
         }
     }
