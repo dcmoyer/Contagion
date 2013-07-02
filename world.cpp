@@ -82,6 +82,7 @@ void world::update_forward_velocs(){
      THIS IS WHERE WE'D PUT OPEN MP
      */
     //UPDATE RIGHT
+    /*
     for(cell* iter = origin; iter < end; iter++)
     {
         
@@ -104,9 +105,35 @@ void world::update_forward_velocs(){
             
         }
         
+    }*/
+    
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+        
+            if( cellList[i][j]->get_neighbor(4) == NULL )
+                           continue;
+        
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            cell_node_iterator right = cellList[i][j]->get_neighbor(4) -> get_iter();
+            
+            for(target; target.current != NULL; target.next()){
+                
+                for(right; right.current != NULL; right.next()){
+                    
+                    target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
+                    right.current->get_agent()->update(right.current->get_agent(), target.current->get_agent());
+                    
+                }
+                
+                right.reset_current();
+                
+            }    
+        
+        }
     }
     
     //UPDATE UP
+    /*
     end = origin + (DOMAIN_DIM_1);
     for(cell* iter = origin; iter < end; iter++)
     {
@@ -132,8 +159,35 @@ void world::update_forward_velocs(){
             
             }
         }
+    }*/
+    
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+            
+            if(cellList[i][j]->get_neighbor(6) == NULL)
+                continue;
+            
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            cell_node_iterator upwards = cellList[i][j]->get_neighbor(6) -> get_iter();
+            
+            for(target; target.current != NULL; target.next()){
+                
+                for(upwards; upwards.current != NULL; upwards.next()){
+                    
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+                    
+                    
+                }
+                
+                upwards.reset_current();
+                
+            }
+        }
     }
     
+    
+    /*
     //UPDATE Right DIAG
     //along first dimension
     for(int off_diag = 0; off_diag < DOMAIN_DIM_1; off_diag++)
@@ -212,6 +266,30 @@ void world::update_forward_velocs(){
             current += DOMAIN_DIM_1 + 1;
         }
     }
+     */
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+            
+            if(cellList[i][j]->get_neighbor(7) == NULL)
+                continue;
+            
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            cell_node_iterator upwards = cellList[i][j]->get_neighbor(7) -> get_iter();
+            
+            for(target; target.current != NULL; target.next()){
+                
+                for(upwards; upwards.current != NULL; upwards.next()){
+                    
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+                    
+                }
+                
+                upwards.reset_current();
+            }
+        }
+    }
+    /*
     //UPDATE Left DIAG
     //Along Dim 1
     for(int off_diag = 0; off_diag < DOMAIN_DIM_1; off_diag++)
@@ -292,7 +370,31 @@ void world::update_forward_velocs(){
             current += DOMAIN_DIM_1 - 1;
         }
     }
+     */
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+            
+            if(cellList[i][j]->get_neighbor(5) == NULL)
+                continue;
+            
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            cell_node_iterator upwards = cellList[i][j]->get_neighbor(5) -> get_iter();
+            
+            for(target; target.current != NULL; target.next()){
+                
+                for(upwards; upwards.current != NULL; upwards.next()){
+                    
+                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+                    
+                }
+                
+                upwards.reset_current();
+            }
+        }
+    }
     
+    /*
     //DRAG TERM; Also should contain division by Nearest Neighbor Count.
     origin = cellList[0][0];
     end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
@@ -304,6 +406,7 @@ void world::update_forward_velocs(){
             
         }
     }
+    */
     
     
     
