@@ -432,3 +432,20 @@ void world::populate_rand(int n)
 			add_agent(x, y);
 		}
 }
+
+void world::move_to_cell() {
+	for (int i = 0; i < DOMAIN_DIM_1; i++) {
+		for (int j = 0; j < DOMAIN_DIM_2; i++) {
+			cell* current_cell = cellList[i][j];
+			while (!current_cell->isempty()) {
+				cell_node* current_node = current_cell->get_top();
+				if (!current_cell->in_the_cell(*(current_node->get_agent()))) {
+					current_cell->pop_top();
+					int x = current_node->get_agent()->cell_num_dim1();
+					int y = current_node->get_agent()->cell_num_dim2();
+					cellList[x][y]->add_top(current_node);
+				}	
+			}
+		}
+	}
+}
