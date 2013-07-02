@@ -94,6 +94,8 @@ public:
     friend class cell_node_iterator;
 
 	cell_node get_top() const;
+	
+	bool in_the_cell(agent target) const;
 
 };
 
