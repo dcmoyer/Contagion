@@ -1,5 +1,6 @@
 #include "agent.h"
 #include <iostream>
+#include <cassert>
 
 using std::cout;
 using std::endl;
