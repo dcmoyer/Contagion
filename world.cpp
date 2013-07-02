@@ -559,14 +559,25 @@ void world::move_to_cell() {
 	for (int i = 0; i < DOMAIN_DIM_1; i++) {
 		for (int j = 0; j < DOMAIN_DIM_2; i++) {
 			cell* current_cell = cellList[i][j];
-			while (!current_cell->isempty()) {
-				cell_node* current_node = current_cell->get_top();
-				if (!current_cell->in_the_cell(*(current_node->get_agent()))) {
-					current_node = current_cell->remove_top();
+			cell_node* current_node = current_cell->get_top();
+			cell_node* prev = NULL;
+			while (current_node != NULL) {
+				agent* current_agent = current_node->get_agent();
+				if (!current_cell->in_the_cell(*current_agent)) {
+					if (prev == NULL) {
+						current_node = current_cell->remove_top();
+					} else {
+						prev->set_next(current_node->get_next());
+						current_node->set_next(NULL);
+					}
 					int x = current_node->get_agent()->cell_num_dim1();
 					int y = current_node->get_agent()->cell_num_dim2();
 					cellList[x][y]->add_top(current_node);
-				}	
+					current_node = prev->get_next();
+				} else {
+					prev = current_node;
+					current_node = current_node->get_next();
+				}
 			}
 		}
 	}
