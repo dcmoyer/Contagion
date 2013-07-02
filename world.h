@@ -26,6 +26,8 @@ class world {
 public:
     std::vector<agent*> agents_master;
     cell* cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
+    
+    cell* theLonelyCell;
 
 	world();
     void print(std::ostream& strm);
@@ -34,11 +36,15 @@ public:
 	void add_agent(double x, double y, double z, double (* up)(agent*,agent*));
 	void populate();
 	void populate_rand();
-    void update_forward_velocs();
 	void refresh_ab4();
 	void refresh_eul();
+    
+    void update_forward_velocs();
+    void update_agent_pos();
+    
 private:
-    bool turn_counter; //This bool is to be checked against to see if a 
+    bool world_pos_update_flag; //This bool is to be checked against to see if a agent has been updated or not.
+    
 };
 
 

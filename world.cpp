@@ -289,23 +289,24 @@ void world::update_forward_velocs(){
     
     
 }
-/*
-void world::update_positions(){
+
+void world::update_agent_pos(){
     origin = cellList[0];
     end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
-    for(iter = origin; iter < end; iter++){
-        cell_node_iterator target = iter.get_iter();
-        for(target; target->current != NULL; target.next()){
+    for(cell* iter = origin; iter < end; iter++){
+        cell_node_iterator target = iter->get_iter();
+        for(target; target.current != NULL; target.next()){
             
-            target->current->ab4_update();
-            
+            target.current->get_agent()->drag();
+            target.current->get_agent()->ab4_update();
+            //target.current->get_agent()->
             // change to new cell if appropriate
             // change "switch flag"
         }
     }
     
     
-}*/
+}
 
 //use ab4 to update the positions of all agents
 void world::refresh_ab4()
@@ -332,7 +333,7 @@ void world::print(std::ostream& strm)
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
 			strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
-				<<"," << (*agents_master[i]).get_y_coord() <<"," << (*agents_master[i]).get_z_coord() << ",";
+				<<"," << (*agents_master[i]).get_y_coord() <<"," << (*agents_master[i]).get_z_coord() << "," << (*agents_master[i]).get_q_mag() << ",";
 		}
 	strm << "\n";
 }

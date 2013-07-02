@@ -26,6 +26,8 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define L_A 3
 #define L_R 2
 
+#define DRAG        -1
+
 //constants for alignment model
 #define SIGMA 1
 #define GAMMA .45

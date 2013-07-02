@@ -32,6 +32,8 @@ public:
     double forward_q_c;
     double NearestNeighbor_count;
     
+    bool position_update_flag;
+    
     /*
      agent_type is a character defining which type of agent this is:
         d - default
@@ -40,7 +42,7 @@ public:
     char agent_type;
     
     double (* update)(agent*, agent*);
-
+    
 //public:
 
     agent();
@@ -99,6 +101,7 @@ public:
     
 	void ab4_update();
 	void euler_update();
+    void drag(); //also includes nearest neighbor.
 };
 
 #endif

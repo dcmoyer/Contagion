@@ -48,6 +48,8 @@ agent::agent(){
     //Assign Update Rull
     update = 0; //NULL 
     
+    position_update_flag = 0;
+    
 }
 
 /*
@@ -85,6 +87,8 @@ agent::agent(int TEST){
     
     //Assign Update Rull
     update = 0; //NULL
+    position_update_flag = 0;
+
     
 }   
 
@@ -122,6 +126,9 @@ agent::agent(double x, double y){
     //Assign Update Rull
     update = 0; //NULL 
     
+    position_update_flag = 0;
+
+    
 }
 
 /* Constructor.  Contains arguments for position */
@@ -157,6 +164,8 @@ agent::agent(double x, double y, double z){
     
     //Assign Update Rull
     update = 0; //NULL 
+    position_update_flag = 0;
+
     
 }
 
@@ -196,6 +205,9 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     //Assign Update Rull
     update = 0; //NULL
     
+    position_update_flag = 0;
+
+    
 }
 
 /*
@@ -234,6 +246,8 @@ agent::agent(double x, double y, double z,
     
     //Assign Update Rull
     update = 0; //NULL
+    
+    position_update_flag = 0;
     
 }
 
@@ -275,6 +289,9 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     //Assign Update Rull
     update = 0; //NULL
     
+    position_update_flag = 0;
+
+    
 }
 
 agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, char a_type, double (* up)(agent*,agent*) ){
@@ -310,7 +327,118 @@ agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[H
      //Assign Update Rull
      update = 0; //NULL
     
+    position_update_flag = 0;
+
+    
  }
+
+
+void agent::ab4_update()
+{
+    assert(HIST_LENGTH == 3);
+    
+    x_coord = x_coord +
+                ( (STEP_SIZE * (1.0/24.0)) * 
+                  ((55 * forward_v_x) -
+                   (59 * x_veloc[0]) +
+                   (37 * x_veloc[1]) -
+                   (9  * x_veloc[2])));
+    
+    y_coord = y_coord +
+                ( (STEP_SIZE * (1.0/24.0)) *
+                  ((55 * forward_v_y) -
+                   (59 * y_veloc[0]) +
+                   (37 * y_veloc[1]) -
+                   (9  * y_veloc[2])));
+    
+    //Move history forward.
+    x_veloc[2] = x_veloc[1];
+    y_veloc[2] = y_veloc[1];
+    
+    x_veloc[1] = x_veloc[0];
+    y_veloc[1] = y_veloc[0];
+    
+    x_veloc[0] = forward_v_x;
+    x_veloc[0] = forward_v_y;
+    
+    forward_v_x = 0;
+    forward_v_y = 0;
+    
+    /*
+    double vx [HIST_LENGTH];
+    double vy [HIST_LENGTH];
+    double vz [HIST_LENGTH];
+    
+    double* px = get_x_veloc();
+    for (int i = 0; i < HIST_LENGTH; i++)
+    {
+        vx[i] = *(px + i);
+    }
+    
+    double* py = get_y_veloc();
+    for (int i = 0; i < HIST_LENGTH; i++)
+    {
+        vy[i] = *(py + i);
+    }
+    
+    double* pz = get_z_veloc();
+    for (int i = 0; i < HIST_LENGTH; i++)
+    {
+        vz[i] = *(pz + i);
+    }
+    
+    
+    double new_x = get_x_coord() + STEP_SIZE / 24 * (55 * vx[0] - 59 * vx[1] + 37 * vx[2] - 9 * vx[3]);
+    double new_y = get_y_coord() + STEP_SIZE / 24 * (55 * vy[0] - 59 * vy[1] + 37 * vy[2] - 9 * vy[3]);
+    double new_z = get_z_coord() + STEP_SIZE / 24 * (55 * vz[0] - 59 * vz[1] + 37 * vz[2] - 9 * vz[3]);
+    
+    set_x_coord(new_x);
+    set_y_coord(new_y);
+    set_z_coord(new_z);*/
+}
+
+void agent::euler_update()
+{
+    
+    x_coord = x_coord +
+        (STEP_SIZE * forward_v_x);
+    
+    y_coord = y_coord +
+        (STEP_SIZE * forward_v_y);
+    
+    x_veloc[2] = x_veloc[1];
+    y_veloc[2] = y_veloc[1];
+    
+    x_veloc[1] = x_veloc[0];
+    y_veloc[1] = y_veloc[0];
+    
+    x_veloc[0] = forward_v_x;
+    x_veloc[0] = forward_v_y;
+    
+    forward_v_x = 0;
+    forward_v_y = 0;
+    
+    /*
+    
+    double* px = get_x_veloc();
+    double* py = get_y_veloc();
+    double* pz = get_z_veloc();
+    
+    double new_x = get_x_coord() + STEP_SIZE  * (*px);
+    double new_y = get_y_coord() + STEP_SIZE  * (*py);
+    double new_z = get_z_coord() + STEP_SIZE  * (*pz);
+    
+    set_x_coord(new_x);
+    set_y_coord(new_y);
+    set_z_coord(new_z);
+     */
+}
+
+void agent::drag(){
+    
+    forward_v_x = (forward_v_x / (double) NearestNeighbor_count) + x_veloc[0] - (DRAG * x_veloc[0]);
+    
+}
 
  /* 
  
@@ -514,55 +642,3 @@ double agent::get_forward_q_c(){
     
 }
 
-
-
-void agent::ab4_update()
-{
-  double vx [HIST_LENGTH];
-  double vy [HIST_LENGTH];
-  double vz [HIST_LENGTH];
-  
-  double* px = get_x_veloc();
-  for (int i = 0; i < HIST_LENGTH; i++)
-  {
-    vx[i] = *(px + i);
-  }
-  
-  double* py = get_y_veloc();
-  for (int i = 0; i < HIST_LENGTH; i++)
-  {
-    vy[i] = *(py + i);
-  }
-  
-  double* pz = get_z_veloc();
-  for (int i = 0; i < HIST_LENGTH; i++)
-  {
-    vz[i] = *(pz + i);
-  }
-  
-  
-  double new_x = get_x_coord() + STEP_SIZE / 24 * (55 * vx[0] - 59 * vx[1] + 37 * vx[2] - 9 * vx[3]);
-  double new_y = get_y_coord() + STEP_SIZE / 24 * (55 * vy[0] - 59 * vy[1] + 37 * vy[2] - 9 * vy[3]);
-  double new_z = get_z_coord() + STEP_SIZE / 24 * (55 * vz[0] - 59 * vz[1] + 37 * vz[2] - 9 * vz[3]);
-  
-  set_x_coord(new_x);
-  set_y_coord(new_y);
-  set_z_coord(new_z);
-}
-
-void agent::euler_update()
-{
- 
-  
-  double* px = get_x_veloc();
-  double* py = get_y_veloc();
-  double* pz = get_z_veloc();
-  
-  double new_x = get_x_coord() + STEP_SIZE  * (*px);
-  double new_y = get_y_coord() + STEP_SIZE  * (*py);
-  double new_z = get_z_coord() + STEP_SIZE  * (*pz);
-  
-  set_x_coord(new_x);
-  set_y_coord(new_y);
-  set_z_coord(new_z);
-}
