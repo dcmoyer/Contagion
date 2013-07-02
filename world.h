@@ -33,9 +33,11 @@ public:
     void print(std::ostream& strm);
 	void add_agent();
 	void add_agent(double x, double y);
-	void add_agent(double x, double y, double z, double (* up)(agent*,agent*));
+	void add_agent(double x, double y, double z, void (* up)(agent*,agent*));
 	void populate();
 	void populate_rand();
+	void populate(int n);
+	void populate_rand(int n);
 	void refresh_ab4();
 	void refresh_eul();
     
@@ -43,7 +45,7 @@ public:
     void update_agent_pos();
     
 private:
-    bool world_pos_update_flag; //This bool is to be checked against to see if a agent has been updated or not.
+    bool world_pos_update_flag; //This bool is to be checked against to see if an agent has been updated or not.
     
 };
 

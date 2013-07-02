@@ -371,7 +371,7 @@ void world::add_agent(double x, double y)
 	cellList[i][j]->add_top(new cell_node(agents_master.back()));
 }
 	
-void world::add_agent(double x, double y, double z, double (* up)(agent*,agent*))
+void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))
 {
 	if(x < 0)
 		x = 0;
@@ -406,6 +406,25 @@ void world::populate()
 void world::populate_rand()
 {
 	for (int i = 0; i < NUM_OF_AGENTS; i ++)
+		{
+			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 ) - 1;
+			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 ) - 1;
+			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
+			add_agent(x, y);
+		}
+}
+
+void world::populate(int n)
+{
+	for (int i = 0; i < n; i ++)
+		{
+			add_agent();
+		}
+}
+
+void world::populate_rand(int n)
+{
+	for (int i = 0; i < n; i ++)
 		{
 			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 ) - 1;
 			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 ) - 1;
