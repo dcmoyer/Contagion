@@ -13,7 +13,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 #define NUM_OF_AGENTS   2
 #define DOMAIN_DIM_1    2
-#define DOMAIN_DIM_2    1
+#define DOMAIN_DIM_2    3
 #define DOMAIN_DIM_3    0
 #define CELL_LENGTH   60
 #define STEP_SIZE .1

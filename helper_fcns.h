@@ -6,5 +6,5 @@
 
 //basic attraction, repulsion, alignment model
 void swarm1(agent* me, agent* you);
-
+void swarm_attract(agent* me, agent* you);
 #endif

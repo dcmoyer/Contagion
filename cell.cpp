@@ -261,7 +261,7 @@ cell_node::cell_node(agent* &target){
  
  */
 
-void cell_node::set_next(cell_node* next_node) {
+void cell_node::set_next(cell_node* &next_node) {
 
 	next = next_node;
     

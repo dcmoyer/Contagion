@@ -287,7 +287,7 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     agent_type = 'd';
     
     //Assign Update Rull
-    update = 0; //NULL
+    update = up; //NULL
     
     position_update_flag = 0;
 
