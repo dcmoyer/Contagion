@@ -78,6 +78,30 @@ void world::update_forward_velocs(){
     cell* origin = cellList[0][0];
     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+            
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            cell_node_iterator target2 = cellList[i][j]-> get_iter();
+            
+            for(target; target.current != NULL; target.next()){
+                
+                for(right; right.current != NULL; right.next()){
+                    if(right.current == target.current)
+                        break;
+                    
+                    target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
+                    right.current->get_agent()->update(right.current->get_agent(), target.current->get_agent());
+                    
+                }
+                
+                right.reset_current();
+                
+            }    
+            
+        }
+    }
+    
     /*
      THIS IS WHERE WE'D PUT OPEN MP
      */
