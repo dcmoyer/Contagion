@@ -40,6 +40,7 @@ public:
 	void populate_rand(int n);
 	void refresh_ab4();
 	void refresh_eul();
+	void move_to_cell();
     
     void update_forward_velocs();
     void update_agent_pos();
