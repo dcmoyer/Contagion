@@ -86,16 +86,16 @@ void world::update_forward_velocs(){
             
             for(target; target.current != NULL; target.next()){
                 
-                for(right; right.current != NULL; right.next()){
-                    if(right.current == target.current)
+                for(target2; target2.current != NULL; target2.next()){
+                    if(target2.current == target.current)
                         break;
                     
-                    target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
-                    right.current->get_agent()->update(right.current->get_agent(), target.current->get_agent());
+                    target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
+                    target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
                     
                 }
                 
-                right.reset_current();
+                target2.reset_current();
                 
             }    
             
