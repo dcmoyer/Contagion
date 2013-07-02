@@ -102,6 +102,9 @@ public:
 	void ab4_update();
 	void euler_update();
     void drag(); //also includes nearest neighbor.
+    
+    int cell_num_dim1();
+    int cell_num_dim2();
 };
 
 #endif
