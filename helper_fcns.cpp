@@ -47,3 +47,35 @@ void swarm1(agent* me, agent* you)
 	(*you).set_forward_v_z((*you).get_forward_v_z()+fz);
 
 }
+void swarm_attract(agent* me, agent* you)
+{
+	//get x,y coords
+	double x1 = (*me).get_x_coord();
+	double y1 = (*me).get_y_coord();
+	double x2 = (*you).get_x_coord();
+	double y2 = (*you).get_y_coord();
+	
+	//get component-wise velocity
+	double vx1 = (*me).get_x_veloc_index(0);
+	double vy1 = (*me).get_y_veloc_index(0);
+	double vx2 = (*you).get_x_veloc_index(0);
+	double vy2 = (*you).get_y_veloc_index(0);
+	
+	//calculate distances
+	double dx= x2-x1;
+	double dy= y2-y1;
+	double r = sqrt(dx*dx + dy*dy);
+	double sum = std::abs(dx)+std::abs(dy);
+
+        //calculate attraction force
+	double u = 2*r;
+
+	//update velocities
+	double fx = u*dx/sum;
+	double fy = u*dy/sum;
+	(*me).set_forward_v_x((*me).get_forward_v_x()+fx);
+	(*me).set_forward_v_y((*me).get_forward_v_y()+fy);
+	(*you).set_forward_v_x((*you).get_forward_v_x()+fx);
+	(*you).set_forward_v_y((*you).get_forward_v_y()+fy);
+
+}
