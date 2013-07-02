@@ -41,7 +41,7 @@ public:
      */
     char agent_type;
     
-    double (* update)(agent*, agent*);
+    void (* update)(agent*, agent*);
     
 //public:
 
@@ -53,10 +53,10 @@ public:
     agent(double x, double y, double z, 
 	  double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH]);
     agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
-	  double q, char a_type, double (* up)(agent*,agent*) );
+	  double q, char a_type, void (* up)(agent*,agent*) );
     agent(double x, double y, double z, 
 	  double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], 
-	  double q, char a_type, double (* up)(agent*,agent*) );
+	  double q, char a_type, void (* up)(agent*,agent*) );
 	  
     //Mutator Functions:
     void set_x_coord(double x);

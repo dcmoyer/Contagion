@@ -256,7 +256,7 @@ Constructor. Contains arguments for position, velocity, and contagion.
 */
 
 agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
-	     double q, char a_type, double (* up)(agent*,agent*) ){
+	     double q, char a_type, void (* up)(agent*,agent*) ){
 
     //Assign Coordinates
     x_coord = x;
@@ -294,7 +294,7 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     
 }
 
-agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, char a_type, double (* up)(agent*,agent*) ){
+agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, char a_type, void (* up)(agent*,agent*) ){
 
      //Assign Coordinates
      x_coord = x;
