@@ -440,7 +440,7 @@ void world::move_to_cell() {
 			while (!current_cell->isempty()) {
 				cell_node* current_node = current_cell->get_top();
 				if (!current_cell->in_the_cell(*(current_node->get_agent()))) {
-					current_cell->pop_top();
+					current_node = current_cell->remvoe_top();
 					int x = current_node->get_agent()->cell_num_dim1();
 					int y = current_node->get_agent()->cell_num_dim2();
 					cellList[x][y]->add_top(current_node);
