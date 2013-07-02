@@ -55,6 +55,16 @@ world::world()
     
 }
 
+world::~world(){
+    
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+            delete cellList[i][j];
+        }
+    }
+    
+}
+
 
 /*
  
@@ -102,11 +112,11 @@ void world::update_forward_velocs(){
     {
         
         for(cell* inner_iter = iter; inner_iter < end; inner_iter += DOMAIN_DIM_1){
-            if(iter->get_neighbor(6) == NULL)
+            if(inner_iter->get_neighbor(6) == NULL)
                 continue;
         
-            cell_node_iterator target = iter->get_iter();
-            cell_node_iterator upwards = iter->get_neighbor(6) -> get_iter();
+            cell_node_iterator target = inner_iter->get_iter();
+            cell_node_iterator upwards = inner_iter->get_neighbor(6) -> get_iter();
             
             for(target; target.current != NULL; target.next()){
             
@@ -290,7 +300,7 @@ void world::update_forward_velocs(){
         cell_node_iterator target = iter->get_iter();
         for(target; target.current != NULL; target.next()){
             
-            target.current->get_agent()->drag();
+    //        target.current->get_agent()->drag();
             
         }
     }

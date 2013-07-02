@@ -30,6 +30,8 @@ public:
     cell* theLonelyCell;
 
 	world();
+    ~world();
+    
     void print(std::ostream& strm);
 	void add_agent();
 	void add_agent(double x, double y);
@@ -44,7 +46,6 @@ public:
     
     void update_forward_velocs();
     void update_agent_pos();
-    
 private:
     bool world_pos_update_flag; //This bool is to be checked against to see if an agent has been updated or not.
     
