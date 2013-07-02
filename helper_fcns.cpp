@@ -23,6 +23,9 @@ void swarm1(agent* me, agent* you)
 	double dx= x2-x1;
 	double dy= y2-y1;
 	double dz= z2-z1;
+	double dvx = vx2-vx1;
+	double dvy = vy2-vy1;
+	double dvz = vz2-vz1;
 	double r = sqrt(dx*dx + dy*dy + dz*dz);
 	double sum = std::abs(dx)+std::abs(dy)+std::abs(dz);
 
@@ -33,9 +36,9 @@ void swarm1(agent* me, agent* you)
 	double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
 
 	//update velocities
-	double fx = u*dx/sum + h*dx;
-	double fy = u*dy/sum + h*dy;
-	double fz = u*dz/sum + h*dz;
+	double fx = u*dx/sum + h*dvx;
+	double fy = u*dy/sum + h*dvy;
+	double fz = u*dz/sum + h*dvz;
 	(*me).set_forward_v_x((*me).get_forward_v_x()+fx);
 	(*me).set_forward_v_y((*me).get_forward_v_y()+fy);
 	(*me).set_forward_v_z((*me).get_forward_v_z()+fz);

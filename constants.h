@@ -27,9 +27,9 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define L_R 2
 
 //constants for alignment model
-#define SIGMA 2
+#define SIGMA 1
 #define GAMMA .45
-#define KAPPA 2
+#define KAPPA 1
 
 
 #endif
