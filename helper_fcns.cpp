@@ -1,6 +1,12 @@
 #include "helper_fcns.h"
 #include <cmath>
 
+void go_left_test(agent* me, agent* you){
+
+me->set_forward_v_x( - 1.0 / (double) NUM_OF_AGENTS);
+
+}
+
 void swarm1(agent* me, agent* you)
 {
 	//get x,y,z coords
