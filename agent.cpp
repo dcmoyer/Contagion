@@ -462,7 +462,7 @@ void agent::ab4_update()
     
     //Move history forward.
     
-    for(int i = HIST_LENGTH - 1; i > 0; ++i){
+    for(int i = HIST_LENGTH - 1; i > 0; --i){
         
         x_veloc[i] = x_veloc[i-1];
         x_accel[i] = x_accel[i-1];
