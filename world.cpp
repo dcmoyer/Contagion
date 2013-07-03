@@ -497,6 +497,29 @@ void world::print(std::ostream& strm)
 	strm << "\n";
 }
 
+void world::print_csv(std::ostream& out){
+    // Output format is 
+    // x y v_x v_y type
+    
+    int len = (int) agents_master.size();
+    for(int i = 0; i < (len - 1); ++i){
+        
+        out <<  agents_master[i]->get_x_coord()
+            << "," << agents_master[i]->get_y_coord()
+            << "," << agents_master[i]->get_x_veloc()
+            << "," << agents_master[i]->get_y_veloc()
+            << "," << agents_master[i]->agent_type << ",";
+            
+    }
+    
+    out  << agents_master[len - 1]->get_x_coord()
+    << "," << agents_master[len - 1]->get_y_coord()
+    << "," << agents_master[len - 1]->get_x_veloc()
+    << "," << agents_master[len - 1]->get_y_veloc()
+    << "," << agents_master[len - 1]->agent_type << "\n";
+    
+}
+
 void world::add_agent()
 {
 	double v[HIST_LENGTH];

@@ -33,6 +33,7 @@ public:
     ~world();
     
     void print(std::ostream& strm);
+    void print_csv(std::ostream& out)
 	void add_agent();
 	void add_agent(double x, double y);
 	void add_agent(double x, double y, double z, void (* up)(agent*,agent*));
