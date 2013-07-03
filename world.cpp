@@ -1,4 +1,6 @@
 #include "world.h"
+#include <cstdlib>
+#include <cstddef>
 
 //default constructor
 world::world()
@@ -18,7 +20,7 @@ world::world()
     {
         for(int j = 0; j < DOMAIN_DIM_2; j++) 
         {
-				
+
             std::vector<cell*> v(8);
             v[0] = cellList[i-1][j-1];
             v[1] = cellList[i][j-1];
@@ -520,17 +522,6 @@ void world::print_csv(std::ostream& out){
     
 }
 
-void world::add_agent()
-{
-	double v[HIST_LENGTH];
-	for(int i = 0; i < HIST_LENGTH; i++)
-		v[i] = 0;
-	agents_master.push_back(new agent(0, 0, v, v));
-	int x =(int) ((*agents_master.back()).get_x_coord())/CELL_LENGTH;
-	int y = (int) ((*agents_master.back()).get_y_coord())/CELL_LENGTH;
-	cellList[x][y]->add_top(new cell_node(agents_master.back()));
-}
-
 void world::add_agent(double x, double y)
 {
 	if(x < 0)
@@ -542,18 +533,30 @@ void world::add_agent(double x, double y)
 	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
 		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
 
-
-
-	double v[HIST_LENGTH];
-	for(int i = 0; i < HIST_LENGTH; i++)
-		v[i] = 0;
-	agents_master.push_back(new agent(x,y,v,v,0, 'a', swarm_attract ));
+	agents_master.push_back(new agent(x,y));
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(new cell_node(agents_master.back()));
 }
-	
-void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))
+
+void world::add_agent(double x, double y, void (* up)(agent*,agent*))
+{
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+
+	agents_master.push_back(new agent(x, y, up));
+	int i = (int) (x)/CELL_LENGTH;
+	int j = (int) (y)/CELL_LENGTH;
+	cellList[i][j]->add_top(new cell_node(agents_master.back()));
+}
+
+void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))//?????
 {
 	if(x < 0)
 		x = 0;
@@ -567,22 +570,11 @@ void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))
 		z = 0;
 	if(z >= CELL_LENGTH*DOMAIN_DIM_2)
 		z = CELL_LENGTH*DOMAIN_DIM_2 - 1;
-
-	double v[HIST_LENGTH];
-	for(int i = 0; i < HIST_LENGTH; i++)
-		v[i] = 0;
-	agents_master.push_back(new agent(x, y, z, v, v, v, 0, 'a',  up)); //?!?!?!
+	
+	agents_master.push_back(new agent(x, y, z, up)); //?!?!?!
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(new cell_node(agents_master[i]));
-}
-
-void world::populate()
-{
-	for (int i = 0; i < NUM_OF_AGENTS; i ++)
-		{
-			add_agent();
-		}
 }
 
 void world::populate_rand()
@@ -596,22 +588,22 @@ void world::populate_rand()
 		}
 }
 
-void world::populate(int n)
-{
-	for (int i = 0; i < n; i ++)
-		{
-			add_agent();
-		}
+void world::populate(int n, double** position, void (* up)(agent*,agent*)) {
+	for (int i = 0; i < n; i++) {
+		double x = position[i][1];
+		double y = position[i][2];
+		add_agent(x, y, up);                   
+	}
 }
 
-void world::populate_rand(int n)
+void world::populate_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
 			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 ) - 1;
 			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 ) - 1;
 			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
-			add_agent(x, y);
+			add_agent(x, y, up);
 		}
 }
 
@@ -623,11 +615,9 @@ void world::move_to_cell() {
 			cell_node* prev = NULL;
 			while (current_node != NULL) {
 				agent* current_agent = current_node->get_agent();
-				int x = current_node->get_agent()->cell_num_dim1();
-				int y = current_node->get_agent()->cell_num_dim2();
+				int x = current_agent->cell_num_dim1();
+				int y = current_agent->cell_num_dim2();
 				if ( x != i || y != j) {
-					//current_agent->position_update_flag == world_pos_update_flag) {
-					//current_agent->position_update_flag = !current_agent->position_update_flag;
 					if (prev == NULL) {
 						current_node = current_cell->remove_top();
 					} else {
@@ -652,5 +642,4 @@ void world::move_to_cell() {
 			}
 		}
 	}
-	//world_pos_update_flag = !world_pos_update_flag;
 }
