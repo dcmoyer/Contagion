@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <cstddef>
 
+
+
 //default constructor
 world::world()
 {
@@ -21,7 +23,7 @@ world::world()
         for(int j = 0; j < DOMAIN_DIM_2; j++) 
         {
 
-            std::vector<cell*> v(8);
+            vector<cell*> v(8);
             v[0] = cellList[i-1][j-1];
             v[1] = cellList[i][j-1];
             v[2] = cellList[i+1][j-1];
@@ -588,10 +590,10 @@ void world::populate_rand()
 		}
 }
 
-void world::populate(int n, double** position, void (* up)(agent*,agent*)) {
+void world::populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*)) {
 	for (int i = 0; i < n; i++) {
-		double x = position[i][1];
-		double y = position[i][2];
+	  double x = xpos[i];
+		double y = ypos[i];
 		add_agent(x, y, up);                   
 	}
 }

@@ -22,9 +22,11 @@
 void ab4_update(agent smith);
 void euler_update(agent &smith);
 
+using std::vector;
+
 class world {
 public:
-    std::vector<agent*> agents_master;
+    vector<agent*> agents_master;
     cell* cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
     
     cell* theLonelyIsland; //no agent is an island.
@@ -38,7 +40,7 @@ public:
     void add_agent(double x, double y, void (* up)(agent*,agent*));
     void add_agent(double x, double y, double z, void (* up)(agent*,agent*));
     void populate_rand();
-    void populate(int n, double** position, void (* up)(agent*,agent*));
+    void populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*));
     void populate_rand(int n, void (* up)(agent*,agent*));
     void refresh_ab4();
     void refresh_eul();

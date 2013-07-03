@@ -20,6 +20,8 @@
 #include "agent.h"
 #include <vector>
 
+using std::vector;
+
 //Sign In.
 class cell;
 class cell_node;
@@ -40,17 +42,17 @@ class cell{
 public:
     cell_node* top; 
 
-    std::vector<cell*> neighbors; 
+    vector<cell*> neighbors; 
     
     double center_x;
     double center_y; 
     
     cell(); //Default Constructor
 	~cell(); //Destructor
-    cell( std::vector<agent*> &agents); //Fancy Constructor
+    cell( vector<agent*> &agents); //Fancy Constructor
     cell(const cell& rhs); //Copy Constructor
     
-    void set_neighbors(std::vector<cell*> &neigh); 
+    void set_neighbors(vector<cell*> &neigh); 
 
     cell& operator=(const cell& rhs); //Assignment Operator
 

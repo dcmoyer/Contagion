@@ -33,7 +33,7 @@ cell::cell(){
  instantiation of the world class.
  
  */
-cell::cell(std::vector<agent*> &agents){
+cell::cell(vector<agent*> &agents){
     
     int len = agents.size();
 	center_x = 0;
@@ -136,7 +136,7 @@ cell& cell:: operator=(const cell& rhs) {
 Set neighbors
 
  */
-void cell::set_neighbors(std::vector<cell*> &neigh){
+void cell::set_neighbors(vector<cell*> &neigh){
 
     neighbors = neigh;
 

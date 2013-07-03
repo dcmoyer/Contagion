@@ -33,12 +33,12 @@ int main()
   assert(d.get_q_mag() == 4.0);
 
   agent e = agent();
-  e.set_forward_v_x(1.0);
-  assert(e.get_forward_v_x() == 1.0);
-  e.set_forward_v_y(2.0);
-  assert(e.get_forward_v_y() == 2.0);
-  e.set_forward_v_z(3.0);
-  assert(e.get_forward_v_z() == 3.0);
+  e.set_x_accel(1.0);
+  assert(e.get_x_accel_index(0) == 1.0);
+  e.set_y_accel(2.0);
+  assert(e.get_y_accel_index(0) == 2.0);
+  e.set_z_accel(3.0);
+  assert(e.get_z_accel_index(0) == 3.0);
   cout << "All agent tests passed" << endl;
 
   return 0;
