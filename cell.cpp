@@ -218,9 +218,9 @@ void cell::move_top(cell* target){
     
 }
 
-bool cell::in_the_cell(agent target) const {
-	double x = target.get_x_coord();
-	double y = target.get_y_coord();
+bool cell::in_the_cell(agent* target) const {
+	double x = target->get_x_coord();
+	double y = target->get_y_coord();
 	double min_x = center_x - (CELL_LENGTH/2);
 	double max_x = center_x + (CELL_LENGTH/2);
 	double min_y = center_y - (CELL_LENGTH/2);

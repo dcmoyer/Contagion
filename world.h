@@ -27,7 +27,7 @@ public:
     std::vector<agent*> agents_master;
     cell* cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
     
-    cell* theLonelyCell;
+    cell* theLonelyIsland; //no agent is an island.
 
 	world();
     ~world();

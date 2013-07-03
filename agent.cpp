@@ -436,7 +436,7 @@ void agent::euler_update()
 
 void agent::drag(){
     
-    forward_v_x = (forward_v_x / (double) NearestNeighbor_count) + x_veloc[0] - (DRAG * x_veloc[0]);
+    forward_v_x = /*(forward_v_x / (double) NearestNeighbor_count) +*/ x_veloc[0] - (DRAG * x_veloc[0]);
     
 }
 
@@ -643,20 +643,12 @@ double agent::get_forward_q_c(){
 }
 
 int agent::cell_num_dim1() {
-	int length_dim1 = DOMAIN_DIM_1*CELL_LENGTH;
-	int num_dim1 = x_coord/length_dim1;
-	if (num_dim1 > DOMAIN_DIM_1 - 1) {
-		num_dim1 == DOMAIN_DIM_1 - 1;
-	}
-	return num_dim1;
+	
+	return (int) (x_coord)/CELL_LENGTH;
 }
 
 int agent::cell_num_dim2() {
-	int length_dim2 = DOMAIN_DIM_2*CELL_LENGTH;
-	int num_dim2 = y_coord/length_dim2;
-	if (num_dim2 > DOMAIN_DIM_2 - 1) {
-		num_dim2 == DOMAIN_DIM_2 - 1;
-	}
-	return num_dim2;
+
+	return (int) (y_coord)/CELL_LENGTH;
 }
 

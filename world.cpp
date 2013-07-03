@@ -52,7 +52,8 @@ world::world()
         }
     }
     
-    
+    world_pos_update_flag = 0;
+	theLonelyIsland = new cell;
 }
 
 world::~world(){
@@ -63,6 +64,8 @@ world::~world(){
         }
     }
     
+	delete theLonelyIsland;
+
 }
 
 
@@ -521,7 +524,7 @@ void world::add_agent(double x, double y)
 	double v[HIST_LENGTH];
 	for(int i = 0; i < HIST_LENGTH; i++)
 		v[i] = 0;
-	agents_master.push_back(new agent(x,y,v,v,0, 'a', go_left_test ));
+	agents_master.push_back(new agent(x,y,v,v,0, 'a', swarm_attract ));
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(new cell_node(agents_master.back()));
@@ -591,13 +594,15 @@ void world::populate_rand(int n)
 
 void world::move_to_cell() {
 	for (int i = 0; i < DOMAIN_DIM_1; i++) {
-		for (int j = 0; j < DOMAIN_DIM_2; i++) {
+		for (int j = 0; j < DOMAIN_DIM_2; j++) {
 			cell* current_cell = cellList[i][j];
 			cell_node* current_node = current_cell->get_top();
 			cell_node* prev = NULL;
 			while (current_node != NULL) {
 				agent* current_agent = current_node->get_agent();
-				if (!current_cell->in_the_cell(*current_agent)) {
+				if (/*!current_cell->in_the_cell(current_agent)*/
+					current_agent->position_update_flag == world_pos_update_flag) {
+						current_agent->position_update_flag = !current_agent->position_update_flag;
 					if (prev == NULL) {
 						current_node = current_cell->remove_top();
 					} else {
@@ -606,8 +611,17 @@ void world::move_to_cell() {
 					}
 					int x = current_node->get_agent()->cell_num_dim1();
 					int y = current_node->get_agent()->cell_num_dim2();
-					cellList[x][y]->add_top(current_node);
-					current_node = prev->get_next();
+					if(x < 0 || x >= DOMAIN_DIM_1 || y < 0 || y >= DOMAIN_DIM_2){
+						theLonelyIsland->add_top(current_node);
+					}
+					else{
+						cellList[x][y]->add_top(current_node);
+					}
+					if(prev == NULL){
+						current_node = current_cell->get_top();
+					} else {
+						current_node = prev->get_next();
+					}
 				} else {
 					prev = current_node;
 					current_node = current_node->get_next();
@@ -615,4 +629,5 @@ void world::move_to_cell() {
 			}
 		}
 	}
+	world_pos_update_flag = !world_pos_update_flag;
 }

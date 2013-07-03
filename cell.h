@@ -95,7 +95,7 @@ public:
 
 	cell_node get_top() const;
 	
-	bool in_the_cell(agent target) const;
+	bool in_the_cell(agent* target) const;
 
 };
 
