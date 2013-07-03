@@ -1,4 +1,5 @@
 #include "world.h"
+#include "helper_fcns.h"
 #include <fstream>
 
 int main()
@@ -6,7 +7,7 @@ int main()
 	std::ofstream str;
 	str.open("data.txt");
 	world w = world();
-	w.populate_rand(2500);
+	w.populate_rand(2500, swarm_attract);
 	for(int i = 1; i <=2500
 		; i++)
 	{

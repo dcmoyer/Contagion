@@ -98,6 +98,85 @@ agent::agent(int TEST){
 
 /* Constructor.  Contains arguments for position */
 
+agent::agent(double x, double y, void (* up)(agent*,agent*) ){
+    //Assign Coordinates
+    x_coord = x;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        x_veloc[i] = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        x_accel[i] = 0;
+    
+    y_coord = y;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        y_veloc[i] = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        y_accel[i] = 0;
+    
+    z_coord = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_accel[i] = 0;
+    
+    //Assign Contagion
+    q_mag = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        q_change[i] = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = up; //NULL 
+    
+    position_update_flag = 0;
+
+    
+}
+
+/* Constructor.  Contains arguments for position */
+
+agent::agent(double x, double y, double z, void (* up)(agent*,agent*) ){
+    //Assign Coordinates
+    x_coord = x;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        x_veloc[i] = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        x_accel[i] = 0;
+    
+    y_coord = y;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        y_veloc[i] = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        y_accel[i] = 0;
+    
+    z_coord = z;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_veloc[i] = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        z_accel[i] = 0;
+    
+    //Assign Contagion
+    q_mag = 0;
+    for(int i = 0; i < HIST_LENGTH; i++)
+        q_change[i] = 0;
+    
+    //Assign NN
+    NearestNeighbor_count = 0;
+    
+    //Assign Type
+    agent_type = 'd';
+    
+    //Assign Update Rull
+    update = up; //NULL 
+    position_update_flag = 0;
+
+    
+}
+
 agent::agent(double x, double y){
     //Assign Coordinates
     x_coord = x;
@@ -341,7 +420,7 @@ agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[H
      agent_type = 'd';
     
      //Assign Update Rull
-     update = 0; //NULL
+     update = up; //NULL
     
     position_update_flag = 0;
 

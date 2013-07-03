@@ -48,6 +48,8 @@ public:
     agent(int TEST);
     agent(double x, double y);
     agent(double x, double y, double z);
+    agent(double x, double y, void (* up)(agent*,agent*));
+    agent(double x, double y, double z, void (* up)(agent*,agent*));
     agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH]);
     agent(double x, double y, double z, 
 	  double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH]);
