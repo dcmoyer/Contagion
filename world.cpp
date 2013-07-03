@@ -600,17 +600,17 @@ void world::move_to_cell() {
 			cell_node* prev = NULL;
 			while (current_node != NULL) {
 				agent* current_agent = current_node->get_agent();
-				if (/*!current_cell->in_the_cell(current_agent)*/
-					current_agent->position_update_flag == world_pos_update_flag) {
-						current_agent->position_update_flag = !current_agent->position_update_flag;
+				int x = current_node->get_agent()->cell_num_dim1();
+				int y = current_node->get_agent()->cell_num_dim2();
+				if ( x != i || y != j) {
+					//current_agent->position_update_flag == world_pos_update_flag) {
+					//current_agent->position_update_flag = !current_agent->position_update_flag;
 					if (prev == NULL) {
 						current_node = current_cell->remove_top();
 					} else {
 						prev->set_next(current_node->get_next());
 						current_node->set_next(NULL);
 					}
-					int x = current_node->get_agent()->cell_num_dim1();
-					int y = current_node->get_agent()->cell_num_dim2();
 					if(x < 0 || x >= DOMAIN_DIM_1 || y < 0 || y >= DOMAIN_DIM_2){
 						theLonelyIsland->add_top(current_node);
 					}
@@ -629,5 +629,5 @@ void world::move_to_cell() {
 			}
 		}
 	}
-	world_pos_update_flag = !world_pos_update_flag;
+	//world_pos_update_flag = !world_pos_update_flag;
 }
