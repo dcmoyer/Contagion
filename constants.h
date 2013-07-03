@@ -21,10 +21,12 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 
 //strengths and lengths of attraction and repulsion
-#define C_A 2
-#define C_R 3
-#define L_A 3
-#define L_R 2
+//C_R > C_A
+#define C_A 25
+#define C_R 40
+//L_R < L_A
+#define L_A 100
+#define L_R 15
 
 #define DRAG        -1
 
