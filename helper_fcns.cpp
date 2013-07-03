@@ -36,8 +36,8 @@ void swarm1(agent* me, agent* you)
 	double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
 
 	//update velocities
-	double fx = -u*dx/sum + h*dvx;
-	double fy = -u*dy/sum + h*dvy;
+	double fx = u*dx/sum + h*dvx;
+	double fy = u*dy/sum + h*dvy;
 	//double fz = u*dz/sum + h*dvz;
     
     me->add_to_x_accel(fx);
@@ -92,6 +92,6 @@ void swarm_attract(agent* me, agent* you)
 }
 void go_left_test(agent* me, agent* you){
 
-    me->add_to_x_accel( (- 1.0 + me->get_x_veloc_index(0)) / (double) NUM_OF_AGENTS);
+    me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) NUM_OF_AGENTS);
 
 }

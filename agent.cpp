@@ -490,7 +490,7 @@ void agent::euler_update()
     y_coord = y_coord +
         (STEP_SIZE * forward_v_y);
     
-    for(int i = HIST_LENGTH - 1; i > 0; ++i){
+    for(int i = HIST_LENGTH - 1; i > 0; --i){
         
         x_veloc[i] = x_veloc[i-1];
         x_accel[i] = x_accel[i-1];
@@ -506,11 +506,15 @@ void agent::euler_update()
     
 }
 
+//MUST CALL DRAG AFTER ALL NEIGHBOR INTERACTIONS HAVE BEEN CALCULATED INTO X_ACCEL
 void agent::drag(){
-    if(NearestNeighbor_count != 0){
-        x_accel[0] += (x_accel[0] / (double) NearestNeighbor_count) - (DRAG * x_veloc[0]);
+    double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
+	if(NearestNeighbor_count != 0){
+        x_accel[0] = (ALPHA - BETA * veloc_mag)*x_veloc[0] - (x_accel[0] / (double) NearestNeighbor_count);
+		y_accel[0] = (ALPHA - BETA * veloc_mag)*y_veloc[0] - (y_accel[0] / (double) NearestNeighbor_count);
     }else{
-        x_accel[0] +=  - (DRAG * x_veloc[0]);
+		x_accel[0] = (ALPHA - BETA * veloc_mag)*x_veloc[0];
+		y_accel[0] = (ALPHA - BETA * veloc_mag)*y_veloc[0];
     }
     NearestNeighbor_count = 0;
     

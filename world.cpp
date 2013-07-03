@@ -461,7 +461,7 @@ void world::update_agent_pos(){
 		for(int j = 0; j < DOMAIN_DIM_2; j++){
 			cell_node_iterator target = cellList[i][j]->get_iter();
 			for(target; target.current != NULL; target.next()){
-				//target.current->get_agent()->drag();
+				target.current->get_agent()->drag();
 				target.current->get_agent()->euler_update();
 			}
 		}
