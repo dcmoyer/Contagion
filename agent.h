@@ -19,17 +19,16 @@ class agent{
 public:
     double x_coord;
     double x_veloc[HIST_LENGTH];
+    double x_accel[HIST_LENGTH];
     double y_coord;
     double y_veloc[HIST_LENGTH];
+    double y_accel[HIST_LENGTH];
     double z_coord;
     double z_veloc[HIST_LENGTH];
+    double z_accel[HIST_LENGTH];
     double q_mag;
     double q_change[HIST_LENGTH];
     
-    double forward_v_x;
-    double forward_v_y;
-    double forward_v_z;
-    double forward_q_c;
     double NearestNeighbor_count;
     
     bool position_update_flag;
@@ -65,16 +64,20 @@ public:
     void set_x_veloc(double v_x);
     void set_y_veloc(double v_y);
     void set_z_veloc(double v_z);
+    
+    void set_x_accel(double new_accel);
+    void set_y_accel(double new_accel);
+    void set_z_accel(double new_accel);
+    
+    void add_to_x_accel(double add_to_accel);
+    void add_to_y_accel(double add_to_accel);
+    void add_to_z_accel(double add_to_accel);
+    
     void set_x_veloc(double v_x[HIST_LENGTH]);
     void set_y_veloc(double v_y[HIST_LENGTH]);
     void set_z_veloc(double v_z[HIST_LENGTH]);
     void set_q_mag(double q);
     void set_q_change(double q_c[HIST_LENGTH]);
-    
-    void set_forward_v_x(double for_v_x);
-    void set_forward_v_y(double for_v_y);
-    void set_forward_v_z(double for_v_z);
-    void set_forward_q_c(double for_q_c);
     
     //Accessor Functions:
     double get_x_coord();
@@ -83,21 +86,27 @@ public:
     double* get_x_veloc();//See Note
     double* get_y_veloc();//See Note
     double* get_z_veloc();//See Note
+    
+    double* get_x_accel();//See Note
+    double* get_y_accel();//See Note
+    double* get_z_accel();//See Note
+    
     double get_x_veloc_index(int index);
     double get_y_veloc_index(int index);
     double get_z_veloc_index(int index);
     
+    double get_x_accel_index(int index);
+    double get_y_accel_index(int index);
+    double get_z_accel_index(int index);
+    
     double get_q_mag();
     double* get_q_change();//See Note
     double get_q_change_index(int index);
+    
+    void iterate_NearestNeighbor();
     /*
      NOTE: Because an array cannot be returned, a double pointer is returned instead.
      */
-    
-    double get_forward_v_x();
-    double get_forward_v_y();
-    double get_forward_v_z();
-    double get_forward_q_c();
     
 	void ab4_update();
 	void euler_update();

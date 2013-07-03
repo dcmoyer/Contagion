@@ -17,7 +17,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define DOMAIN_DIM_3    0
 #define CELL_LENGTH   60
 #define STEP_SIZE 0.0001
-#define HIST_LENGTH 3
+#define HIST_LENGTH 4
 
 
 //strengths and lengths of attraction and repulsion
