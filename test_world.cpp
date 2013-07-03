@@ -36,6 +36,9 @@ int main()
   h.populate(10,xpos,ypos,go_left_test);
   assert(h.agents_master[0]->get_x_coord()==0.0);
   assert(h.agents_master[0]->get_y_coord()==0.0);
+  assert(h.agents_master[1]->get_x_coord()==1.0);
+  assert(h.agents_master[1]->get_y_coord()==2.0);
+
   
   
  
