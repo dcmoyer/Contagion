@@ -27,7 +27,7 @@ void swarm1(agent* me, agent* you)
 	double dvy = vy2-vy1;
 	//double dvz = vz2-vz1;
 	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
-	double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
+	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
 
 	//calculate attraction/repulsion forces
 	double u = -C_A * exp(-r / L_A) + C_R * exp(-r / L_R);
@@ -36,8 +36,8 @@ void swarm1(agent* me, agent* you)
 	double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
 
 	//update velocities
-	double fx = u*dx/sum + h*dvx;
-	double fy = u*dy/sum + h*dvy;
+	double fx = u*dx/r + h*dvx;
+	double fy = u*dy/r + h*dvy;
 	//double fz = u*dz/sum + h*dvz;
     
     me->add_to_x_accel(fx);
