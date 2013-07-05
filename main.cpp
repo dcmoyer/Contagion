@@ -9,7 +9,7 @@ int main()
 	std::ofstream str;
 	std::string filepath = "C:\\Users\\dougyd\\Desktop\\data1.txt";
 	time_t t = time(NULL);
-	str.open(filepath.c_str);
+	str.open(filepath.c_str());
 	world w = world();
 	w.populate_rand(75, swarm1);
 	for(int i = 1; i <=50000; i++)
