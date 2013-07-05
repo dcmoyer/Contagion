@@ -102,13 +102,13 @@ agent::agent(double x, double y, void (* up)(agent*,agent*) ){
     //Assign Coordinates
     x_coord = x;
     for(int i = 0; i < HIST_LENGTH; i++)
-        x_veloc[i] = 0;
+        x_veloc[i] = .0010;
     for(int i = 0; i < HIST_LENGTH; i++)
         x_accel[i] = 0;
     
     y_coord = y;
     for(int i = 0; i < HIST_LENGTH; i++)
-        y_veloc[i] = 0;
+        y_veloc[i] = -.0010;
     for(int i = 0; i < HIST_LENGTH; i++)
         y_accel[i] = 0;
     
@@ -513,8 +513,8 @@ void agent::drag(){
         x_accel[0] = (ALPHA - BETA * veloc_mag)*x_veloc[0] - (x_accel[0] / (double) NearestNeighbor_count);
 		y_accel[0] = (ALPHA - BETA * veloc_mag)*y_veloc[0] - (y_accel[0] / (double) NearestNeighbor_count);
     }else{
-		x_accel[0] = (ALPHA - BETA * veloc_mag)*x_veloc[0];
-		y_accel[0] = (ALPHA - BETA * veloc_mag)*y_veloc[0];
+		x_accel[0] += (ALPHA - BETA * veloc_mag)*x_veloc[0];
+		y_accel[0] += (ALPHA - BETA * veloc_mag)*y_veloc[0];
     }
     NearestNeighbor_count = 0;
     
@@ -803,12 +803,18 @@ double agent::get_forward_q_c(){
 }*/
 
 int agent::cell_num_dim1() {
-	
-	return (int) (x_coord)/CELL_LENGTH;
+	if (x_coord < 0) {
+		return -1;
+	} else {
+		return (int) (x_coord)/CELL_LENGTH;
+	}
 }
 
 int agent::cell_num_dim2() {
-
+	if (y_coord < 0) {
+		return -1;
+	}else{
 	return (int) (y_coord)/CELL_LENGTH;
+	}
 }
 
