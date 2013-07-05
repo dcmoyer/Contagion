@@ -606,9 +606,8 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
-			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 ) - 1;
-			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 ) - 1;
-			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
+			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
 			add_agent(x, y, up);
 		}
 }
