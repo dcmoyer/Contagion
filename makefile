@@ -1,4 +1,4 @@
-all :  agent.o cell.o world.o helper_fcns.o main.out
+all : clean agent.o cell.o world.o helper_fcns.o main.out
 test: test_agent test_cell test_world
 
 agent.o : agent.cpp
