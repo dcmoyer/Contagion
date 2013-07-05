@@ -31,7 +31,7 @@ public:
     
     cell* theLonelyIsland; //no agent is an island.
 
-	world();
+    world();
     ~world();
     
     void print(std::ostream& strm);
@@ -48,6 +48,9 @@ public:
     
     void update_forward_velocs();
     void update_agent_pos();
+
+    cell* get_cell(int i, int j);
+    int is_empty(int i, int j);
     
  private:
     bool world_pos_update_flag; 

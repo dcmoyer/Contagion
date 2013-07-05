@@ -28,6 +28,9 @@ test_cell: test_cell.o cell.o
 test_world: test_world.o world.o
 	g++ -o test_world world.o agent.o cell.o helper_fcns.o test_world.o
 
+test_movement: test_movement.o world.o
+	g++ -o test_movement world.o agent.o cell.o helper_fcns.o test_movement.o
+
 .PHONY : clean
 clean :
 	-rm *.o

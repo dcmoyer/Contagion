@@ -8,17 +8,17 @@
 world::world()
 {
 //create the cells
-	for (int i = 0; i < DOMAIN_DIM_1; i++)
+  for (int i = 0; i < DOMAIN_DIM_1; i++)
     {
-        for(int j = 0; j < DOMAIN_DIM_2; j++) 
+      for(int j = 0; j < DOMAIN_DIM_2; j++) 
         {
-            cellList[i][j] = new cell;
+	  cellList[i][j] = new cell;
         }
     }
+  
 
-
-//tell the cells who their neighbors are
-	for (int i = 0; i < DOMAIN_DIM_1; i++)
+  //tell the cells who their neighbors are
+  for (int i = 0; i < DOMAIN_DIM_1; i++)
     {
         for(int j = 0; j < DOMAIN_DIM_2; j++) 
         {
@@ -56,8 +56,8 @@ world::world()
         }
     }
     
-    world_pos_update_flag = 0;
-	theLonelyIsland = new cell;
+  world_pos_update_flag = 0;
+  theLonelyIsland = new cell;
 }
 
 world::~world(){
@@ -86,27 +86,27 @@ void world::update_forward_velocs(){
     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     
     for(int i = 0; i < DOMAIN_DIM_1; i++){
-        for(int j = 0; j < DOMAIN_DIM_2; j++){
+      for(int j = 0; j < DOMAIN_DIM_2; j++){
+	
+	cell_node_iterator target = cellList[i][j]->get_iter();
+	cell_node_iterator target2 = cellList[i][j]-> get_iter();
+        
+	for(target; target.current != NULL; target.next()){
+	  
+	  for(target2; target2.current != NULL; target2.next()){
+	    if(target2.current == target.current)
+	      break;
+	    
+	    target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
+	    target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
             
-            cell_node_iterator target = cellList[i][j]->get_iter();
-            cell_node_iterator target2 = cellList[i][j]-> get_iter();
-            
-            for(target; target.current != NULL; target.next()){
-                
-                for(target2; target2.current != NULL; target2.next()){
-                    if(target2.current == target.current)
-                        break;
-                    
-                    target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
-                    target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
-                    
-                }
-                
-                target2.reset_current();
-                
-            }    
-            
-        }
+	  }
+          
+	  target2.reset_current();
+          
+	}    
+        
+      }
     }
     
     /*
@@ -444,7 +444,7 @@ void world::update_forward_velocs(){
 }
 
 void world::update_agent_pos(){
-	/*
+  /*
     cell* origin = cellList[0][0];
     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     for(cell* iter = origin; iter < end; iter++){
@@ -458,17 +458,18 @@ void world::update_agent_pos(){
             // change to new cell if appropriate
             // change "switch flag"
         }
-    }*/
-	for(int i = 0; i < DOMAIN_DIM_1; i++){
-		for(int j = 0; j < DOMAIN_DIM_2; j++){
-			cell_node_iterator target = cellList[i][j]->get_iter();
-			for(target; target.current != NULL; target.next()){
-				target.current->get_agent()->drag();
-				target.current->get_agent()->euler_update();
-			}
-		}
-	}
-    
+    }
+  */
+  for(int i = 0; i < DOMAIN_DIM_1; i++){
+    for(int j = 0; j < DOMAIN_DIM_2; j++){
+      cell_node_iterator target = cellList[i][j]->get_iter();
+      for(target; target.current != NULL; target.next()){
+	target.current->get_agent()->drag();
+	target.current->get_agent()->euler_update();
+      }
+    }
+  }
+  
 }
 
 //use ab4 to update the positions of all agents
@@ -495,8 +496,11 @@ void world::print(std::ostream& strm)
 {
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
-			strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
-				<<"," << (*agents_master[i]).get_y_coord() <<"," << *(*agents_master[i]).get_x_veloc() << "," << *(*agents_master[i]).get_y_veloc() << ",";
+		  strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
+		      <<"," << (*agents_master[i]).get_y_coord() 
+		      <<"," << *(*agents_master[i]).get_x_veloc() 
+		      << "," << *(*agents_master[i]).get_y_veloc() 
+		      << ",";
 		}
 	strm << "\n";
 }
@@ -644,4 +648,33 @@ void world::move_to_cell() {
 			}
 		}
 	}
+}
+
+/* Functions that are helpful for debugging */
+
+/* Get cell of index i,j */
+
+cell* world::get_cell(int i, int j) {
+  return(cellList[i][j]);
+}
+
+/* Ask whether cell i,j is empty */
+
+
+int world::is_empty(int i, int j) {
+  cell* current_cell = cellList[i][j];
+  //std::cout << current_cell << std::endl;
+  
+  cell_node* current_node = current_cell->get_top();
+  
+  if(current_node == NULL) 
+    {
+      //std::cout << "Current node was empty" << std::endl;
+      return 1;
+    }
+  else 
+    {
+      //std::cout << "Current node not empty" << std::endl;
+      return 0;
+    }
 }

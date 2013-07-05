@@ -24,7 +24,6 @@ int main()
 
   world h =world();
 
-  
   vector<double> xpos(10);
   vector<double> ypos(10);
 
@@ -34,15 +33,12 @@ int main()
   }
   
   h.populate(10,xpos,ypos,go_left_test);
-  assert(h.agents_master[0]->get_x_coord()==0.0);
-  assert(h.agents_master[0]->get_y_coord()==0.0);
-  assert(h.agents_master[1]->get_x_coord()==1.0);
-  assert(h.agents_master[1]->get_y_coord()==2.0);
-
-  
-  
- 
-  
+  for (int i = 0; i < 10; i++) {
+    assert(h.agents_master[i]->get_x_coord()==1.0*i);
+    assert(h.agents_master[i]->get_y_coord()==2.0*i);
+    assert(h.agents_master[i]->cell_num_dim1()==0);
+    assert(h.agents_master[i]->cell_num_dim2()==0);
+  }
 
   cout << "Passed all tests" << endl;
 
