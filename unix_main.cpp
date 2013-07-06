@@ -3,32 +3,30 @@
 #include <fstream>
 #include <ctime>
 #include <string>
+#include <sstream>
 
 int main()
 {
-	std::ofstream str;
-	std::string filepath = "C:\\Users\\dougyd\\Desktop\\data1.txt";
+	std::string filename = "test_data.dat";
 	time_t t = time(NULL);
-	str.open(filepath.c_str());
 	world w = world();
 	w.populate_rand(75, swarm1);
-	for(int i = 1; i <=50000; i++)
+	for(int i = 1; i <=100; i++)
 	{
 		w.update_forward_velocs();
 		w.update_agent_pos();
 		w.move_to_cell();
 		if(i % 100 == 0){
 			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
-			w.print(str);
+            std::stringstream silly;
+            silly << i;
+			w.print_csv(silly.str());
 		}
 		//w.print(str);
 		//w.print(std::cout);
 	}
-	str.close();
-
-	std::cout << "Data printed to " << filepath << "\n";
-	system("PAUSE");
-
-
+    
+	std::cout << "Data printed to " << filename << "\n";    
+    
 	return 0;
 }

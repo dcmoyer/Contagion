@@ -505,26 +505,30 @@ void world::print(std::ostream& strm)
 	strm << "\n";
 }
 
-void world::print_csv(std::ostream& out){
+void world::print_csv(std::string filename){
     // Output format is 
     // x y v_x v_y type
+    
+    std::ofstream out;
+    out.open(filename.c_str());
     
     int len = (int) agents_master.size();
     for(int i = 0; i < (len - 1); ++i){
         
         out <<  agents_master[i]->get_x_coord()
-            << "," << agents_master[i]->get_y_coord()
-            << "," << agents_master[i]->get_x_veloc()
-            << "," << agents_master[i]->get_y_veloc()
-            << "," << agents_master[i]->agent_type << ",";
+            << " " << agents_master[i]->get_y_coord()
+            << " " << agents_master[i]->get_x_veloc_index(0)
+            << " " << agents_master[i]->get_y_veloc_index(0)
+            << " " << agents_master[i]->agent_type << "\n";
             
     }
     
     out  << agents_master[len - 1]->get_x_coord()
-    << "," << agents_master[len - 1]->get_y_coord()
-    << "," << agents_master[len - 1]->get_x_veloc()
-    << "," << agents_master[len - 1]->get_y_veloc()
-    << "," << agents_master[len - 1]->agent_type << "\n";
+    << " " << agents_master[len - 1]->get_y_coord()
+    << " " << agents_master[len - 1]->get_x_veloc_index(0)
+    << " " << agents_master[len - 1]->get_y_veloc_index(0)
+    << " " << agents_master[len - 1]->agent_type << "\n";
+    out.close();
     
 }
 

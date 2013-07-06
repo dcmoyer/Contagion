@@ -19,6 +19,9 @@ helper_fcns.o : helper_fcns.cpp
 main.out : main.cpp cell.o agent.o world.o helper_fcns.o
 	g++ main.cpp helper_fcns.o world.o cell.o agent.o
 
+unix_main.out : unix_main.cpp cell.o agent.o world.o helper_fcns.o
+	g++ unix_main.cpp helper_fcns.o world.o cell.o agent.o
+
 test_agent: test_agent.o agent.o
 	g++ -o test_agent agent.o test_agent.o
 
