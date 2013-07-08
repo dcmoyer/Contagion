@@ -461,14 +461,18 @@ void world::update_agent_pos(){
     }
   */
   for(int i = 0; i < DOMAIN_DIM_1; i++){
-    for(int j = 0; j < DOMAIN_DIM_2; j++){
-      cell_node_iterator target = cellList[i][j]->get_iter();
-      for(target; target.current != NULL; target.next()){
-	target.current->get_agent()->drag();
-	target.current->get_agent()->euler_update();
-      }
-    }
-  }
+	for(int j = 0; j < DOMAIN_DIM_2; j++){
+		cell_node_iterator target = cellList[i][j]->get_iter();
+		for(target; target.current != NULL; target.next()){
+			if (target.current->get_agent()->is_alive()) {
+				target.current->get_agent()->drag();
+				target.current->get_agent()->euler_update();
+			} else {
+				target.current->get_agent()->set_x_coord(-1);
+				}
+			}
+		}
+	}
   
 }
 
@@ -566,6 +570,23 @@ void world::add_agent(double x, double y, void (* up)(agent*,agent*))
 	cellList[i][j]->add_top(new cell_node(agents_master.back()));
 }
 
+void world::add_predator(double x, double y, void (* up)(agent*,agent*))
+{
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+
+	agents_master.push_back(new predator(x, y, up));
+	int i = (int) (x)/CELL_LENGTH;
+	int j = (int) (y)/CELL_LENGTH;
+	cellList[i][j]->add_top(new cell_node(agents_master.back()));
+}
+
 void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))//?????
 {
 	if(x < 0)
@@ -613,6 +634,17 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
 			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
 			add_agent(x, y, up);
+		}
+}
+
+void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
+{
+	for (int i = 0; i < n; i ++)
+		{
+			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 ) - 1;
+			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 ) - 1;
+			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
+			add_predator(x, y, up);
 		}
 }
 
