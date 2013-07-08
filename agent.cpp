@@ -51,7 +51,7 @@ agent::agent(){
     update = 0; //NULL 
     
     position_update_flag = 0;
-    
+    alive = true;
 }
 
 /*
@@ -92,7 +92,7 @@ agent::agent(int TEST){
     //Assign Update Rull
     update = 0; //NULL
     position_update_flag = 0;
-
+    alive = true;
     
 }   
 
@@ -133,7 +133,7 @@ agent::agent(double x, double y, void (* up)(agent*,agent*) ){
     update = up; //NULL 
     
     position_update_flag = 0;
-
+    alive = true;
     
 }
 
@@ -172,6 +172,7 @@ agent::agent(double x, double y, double z, void (* up)(agent*,agent*) ){
     
     //Assign Update Rull
     update = up; //NULL 
+    alive = true;
     position_update_flag = 0;
 
     
@@ -210,6 +211,7 @@ agent::agent(double x, double y){
     
     //Assign Update Rull
     update = 0; //NULL 
+    alive = true;
     
     position_update_flag = 0;
 
@@ -251,6 +253,7 @@ agent::agent(double x, double y, double z){
     
     //Assign Update Rull
     update = 0; //NULL 
+    alive = true;
     position_update_flag = 0;
 
     
@@ -293,6 +296,7 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     
     //Assign Update Rull
     update = 0; //NULL
+    alive = true;
     
     position_update_flag = 0;
 
@@ -337,6 +341,7 @@ agent::agent(double x, double y, double z,
     
     //Assign Update Rull
     update = 0; //NULL
+    alive = true;
     
     position_update_flag = 0;
     
@@ -381,6 +386,7 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     
     //Assign Update Rull
     update = up; //NULL
+    alive = true;
     
     position_update_flag = 0;
 
@@ -421,6 +427,7 @@ agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[H
     
      //Assign Update Rull
      update = up; //NULL
+     alive = true;
     
     position_update_flag = 0;
 
@@ -823,3 +830,17 @@ int agent::cell_num_dim2() {
 	}
 }
 
+char agent::get_type() {
+	
+	return agent_type;
+}
+
+bool agent::is_alive() {
+	
+	return alive;
+}
+
+void agent::kill() {
+	
+	alive = false;
+}
