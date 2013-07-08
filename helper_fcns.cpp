@@ -1,6 +1,116 @@
 #include "helper_fcns.h"
 #include <cmath>
 
+void prey(agent* me, agent* you)
+{
+	
+	//get x,y,z coords
+	double x1 = me->get_x_coord();
+	double y1 = me->get_y_coord();
+	//double z1 = (*me).get_z_coord();
+	double x2 = you->get_x_coord();
+	double y2 = you->get_y_coord();
+	//double z2 = (*you).get_z_coord();
+
+	//get component-wise velocity
+	double vx1 = me->get_x_veloc_index(0);
+	double vy1 = me->get_y_veloc_index(0);
+	//double vz1 = (*me).get_z_veloc_index(0);
+	double vx2 = you->get_x_veloc_index(0);
+	double vy2 = you->get_y_veloc_index(0);
+	//double vz2 = (*you).get_z_veloc_index(0);
+
+	//calculate distances
+	double dx= x2-x1;
+	double dy= y2-y1;
+	//double dz= z2-z1;
+	double dvx = vx2-vx1;
+	double dvy = vy2-vy1;
+	//double dvz = vz2-vz1;
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
+	
+	if (r < 50) {
+		if (you->get_type() == 'd') {
+
+			//calculate attraction/repulsion forces
+			double u = -C_A * exp(-r / L_A) + C_R * exp(-r / L_R);
+
+			//calculate alignment forces
+			double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
+
+			//update velocities
+			double fx = u*dx/r + h*dvx;
+			double fy = u*dy/r + h*dvy;
+			//double fz = u*dz/sum + h*dvz;
+    
+			me->add_to_x_accel(fx);
+			me->add_to_y_accel(fy);
+		}
+	
+		if (you->get_type() == 'p') {
+			if (r < 5) {
+				me->kill();
+			} else {
+				double u = 10 * C_R * exp(-r / L_R);
+				//update velocities
+				double fx = u*dx/r;
+				double fy = u*dy/r;
+				me->add_to_x_accel(fx);
+				me->add_to_y_accel(fy);
+			}
+		}
+		me->iterate_NearestNeighbor();
+	}
+}
+
+void predator(agent* me, agent* you)
+{
+	
+	//get x,y,z coords
+	double x1 = me->get_x_coord();
+	double y1 = me->get_y_coord();
+	//double z1 = (*me).get_z_coord();
+	double x2 = you->get_x_coord();
+	double y2 = you->get_y_coord();
+	//double z2 = (*you).get_z_coord();
+
+	//get component-wise velocity
+	double vx1 = me->get_x_veloc_index(0);
+	double vy1 = me->get_y_veloc_index(0);
+	//double vz1 = (*me).get_z_veloc_index(0);
+	double vx2 = you->get_x_veloc_index(0);
+	double vy2 = you->get_y_veloc_index(0);
+	//double vz2 = (*you).get_z_veloc_index(0);
+
+	//calculate distances
+	double dx= x2-x1;
+	double dy= y2-y1;
+	//double dz= z2-z1;
+	double dvx = vx2-vx1;
+	double dvy = vy2-vy1;
+	//double dvz = vz2-vz1;
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
+	
+	if (r < 100) {
+		if (you->get_type() == 'd') {	
+
+			//calculate attraction/repulsion forces
+			double u = -10* C_A * exp(-r / L_A);
+
+			//update velocities
+			double fx = u*dx/r; 
+			double fy = u*dy/r;
+			//double fz = u*dz/sum + h*dvz;
+    
+			me->add_to_x_accel(fx);
+			me->add_to_y_accel(fy);
+			me->iterate_NearestNeighbor();
+		}
+	}
+}
+
 void swarm1(agent* me, agent* you)
 {
 	//get x,y,z coords
