@@ -30,7 +30,8 @@ public:
     double q_change[HIST_LENGTH];
     
     double NearestNeighbor_count;
-    
+    bool alive;
+
     bool position_update_flag;
     
     /*
@@ -116,6 +117,9 @@ public:
     
     int cell_num_dim1();
     int cell_num_dim2();
+    char get_type();
+    bool is_alive();
+    void kill();
 };
 
 #endif
