@@ -13,6 +13,7 @@
 
 #include "constants.h"
 #include "agent.h"
+#include "predator.h"
 #include "cell.h"
 #include <vector>
 //#include "helper_fcns.h"
@@ -38,10 +39,12 @@ public:
     void print_csv(std::string filename);
     void add_agent(double x, double y);
     void add_agent(double x, double y, void (* up)(agent*,agent*));
+    void add_predator(double x, double y, void (* up)(agent*,agent*));
     void add_agent(double x, double y, double z, void (* up)(agent*,agent*));
     void populate_rand();
     void populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*));
     void populate_rand(int n, void (* up)(agent*,agent*));
+    void populate_predator_rand(int n, void (* up)(agent*,agent*));
     void refresh_ab4();
     void refresh_eul();
     void move_to_cell();
