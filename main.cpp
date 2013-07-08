@@ -11,7 +11,8 @@ int main()
 	time_t t = time(NULL);
 	str.open(filepath.c_str());
 	world w = world();
-	w.populate_rand(75, swarm1);
+	w.populate_rand(75, prey);
+	w.populate_predator_rand(1, predator);
 	for(int i = 1; i <=50000; i++)
 	{
 		w.update_forward_velocs();
