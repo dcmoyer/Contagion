@@ -1,4 +1,4 @@
-function [] = make_movie2d( filepath )
+function [F] = make_movie2d( filepath )
 
 M = csvread(filepath);
 % truncate because matlab adds an extra column of 0s after the last column
@@ -18,12 +18,18 @@ s=size(x);
 timesteps=s(1);
 population=s(2);
 
+
+mx = mean(x');
+my = mean(y');
+
+
+
 width = type;
 % set types
 for i=1:numel(type)
      if(type(i)==0)
          type(i) = 'o';
-         width(i) = 24;
+         width(i) = 22;
      elseif(type(i)==1)
          type(i) = 'p';
          width(i) = 300;
@@ -42,15 +48,17 @@ for j=1:timesteps
     clf;
     hold on;
     for k=1:population
-        scatter(x(j,k),y(j,k), width(j,k), [0 0 1], char(type(j,k)),'filled'); 
+        scatter(x(j,k),y(j,k), width(j,k), [(1-k/51)^2 k/51 1], char(type(j,k)), 'filled'); 
     end
     hold off;
-    axis([0 120 0 180]);
+    axis([mx(j)-10 mx(j)+10 my(j)-10 my(j)+10]);
+%     axis([mx(j)-25 mx(j)+25 my(j)-25 my(j)+25]);
+%     axis([0 500 0 500]);
     grid on;
     F(j)=getframe;
 end
 
-movie(F,2,24);
+% movie(F,10,30);
 
 end
 
