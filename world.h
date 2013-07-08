@@ -50,7 +50,8 @@ public:
     void move_to_cell();
     
     void update_forward_velocs();
-    void update_agent_pos();
+    void update_agent_pos_euler();
+    void update_agent_pos_ab4();
 
     cell* get_cell(int i, int j);
     int is_empty(int i, int j);

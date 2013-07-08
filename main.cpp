@@ -13,12 +13,26 @@ int main()
 	world w = world();
 	w.populate_rand(75, prey);
 	w.populate_predator_rand(1, predator);
-	for(int i = 1; i <=50000; i++)
+    
+    int jump_val = 4;
+    int print_val = 100;
+    for(int i = 1; i <= jump_val; i++){
+        w.update_forward_velocs();
+		w.update_agent_pos_euler();
+		w.move_to_cell();
+		if(i % print_val == 0){
+			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
+			w.print(str);
+		}
+		//w.print(str);
+		//w.print(std::cout);
+    }
+	for(int i = jump_val + 1; i <=50000; i++)
 	{
 		w.update_forward_velocs();
-		w.update_agent_pos();
+		w.update_agent_pos_ab4();
 		w.move_to_cell();
-		if(i % 100 == 0){
+		if(i % print_val == 0){
 			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
 			w.print(str);
 		}

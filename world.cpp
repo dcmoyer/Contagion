@@ -443,7 +443,7 @@ void world::update_forward_velocs(){
     
 }
 
-void world::update_agent_pos(){
+void world::update_agent_pos_ab4(){
   /*
     cell* origin = cellList[0][0];
     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
@@ -466,7 +466,7 @@ void world::update_agent_pos(){
 		for(target; target.current != NULL; target.next()){
 			if (target.current->get_agent()->is_alive()) {
 				target.current->get_agent()->drag();
-				target.current->get_agent()->euler_update();
+				target.current->get_agent()->ab4_update();
 			} else {
 				target.current->get_agent()->set_x_coord(-1);
 				}
@@ -474,6 +474,39 @@ void world::update_agent_pos(){
 		}
 	}
   
+}
+
+void world::update_agent_pos_euler(){
+    /*
+     cell* origin = cellList[0][0];
+     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
+     for(cell* iter = origin; iter < end; iter++){
+     cell_node_iterator target = iter->get_iter();
+     for(target; target.current != NULL; target.next()){
+     
+     target.current->get_agent()->drag();
+     target.current->get_agent()->euler_update();
+     //target.current->get_agent()->ab4_update();
+     //target.current->get_agent()->
+     // change to new cell if appropriate
+     // change "switch flag"
+     }
+     }
+     */
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            for(target; target.current != NULL; target.next()){
+                if (target.current->get_agent()->is_alive()) {
+                    target.current->get_agent()->drag();
+                    target.current->get_agent()->ab4_update();
+                } else {
+                    target.current->get_agent()->set_x_coord(-1);
+				}
+			}
+		}
+	}
+    
 }
 
 //use ab4 to update the positions of all agents
