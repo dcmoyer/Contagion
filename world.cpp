@@ -39,7 +39,7 @@ world::world()
             {
                 v[0]=v[3]=v[5]=NULL;
             }
-            else if((i+1) == DOMAIN_DIM_1)
+             if((i+1) == DOMAIN_DIM_1)
             {
                 v[2]=v[4]=v[7]=NULL;
             }
@@ -47,7 +47,7 @@ world::world()
             {
                 v[0]=v[1]=v[2]=NULL;
             }
-            else if((j+1) == DOMAIN_DIM_2)
+             if((j+1) == DOMAIN_DIM_2)
             {
                 v[5]=v[6]=v[7]=NULL;
             }
@@ -71,6 +71,7 @@ world::~world(){
 	delete theLonelyIsland;
 
 }
+
 
 
 /*
@@ -499,7 +500,7 @@ void world::update_agent_pos_euler(){
             for(target; target.current != NULL; target.next()){
                 if (target.current->get_agent()->is_alive()) {
                     target.current->get_agent()->drag();
-                    target.current->get_agent()->ab4_update();
+                    target.current->get_agent()->euler_update();
                 } else {
                     target.current->get_agent()->set_x_coord(-1);
 				}

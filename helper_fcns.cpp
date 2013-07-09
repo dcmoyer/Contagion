@@ -140,14 +140,15 @@ void swarm1(agent* me, agent* you)
 	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
 
 	//calculate attraction/repulsion forces
-	double u = -C_A * exp(-r / L_A) + C_R * exp(-r / L_R);
+	//double u = -C_A * exp(-r / L_A) + C_R * exp(-r / L_R);
+	double ugrad = C_A/L_A * exp(-r / L_A) - C_R/L_R * exp(-r / L_R);
 
 	//calculate alignment forces
 	double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
 
 	//update velocities
-	double fx = u*dx/r - h*dvx;
-	double fy = u*dy/r - h*dvy;
+	double fx = -ugrad*dx/r;// - h*dvx;
+	double fy = -ugrad*dy/r;// - h*dvy;
 	//double fx = -h*dvx;
 	//double fy = -h*dvy;
 	//double fz = u*dz/sum + h*dvz;

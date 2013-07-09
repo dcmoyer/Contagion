@@ -12,21 +12,21 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define CONSTANTS_H
 
 #define NUM_OF_AGENTS   2
-#define DOMAIN_DIM_1    2
-#define DOMAIN_DIM_2    2
+#define DOMAIN_DIM_1    1
+#define DOMAIN_DIM_2    1
 #define DOMAIN_DIM_3    0
-#define CELL_LENGTH   60
-#define STEP_SIZE 0.001
+#define CELL_LENGTH   100
+#define STEP_SIZE 0.01
 #define HIST_LENGTH 4
 
 
 //strengths and lengths of attraction and repulsion
 //C_R > C_A
-#define C_A 20
-#define C_R 50
+#define C_A 20.0
+#define C_R 50.0
 //L_R < L_A
-#define L_A 100
-#define L_R 20
+#define L_A 100.0
+#define L_R 2.0
 
 //self-propulsion and friction
 #define ALPHA .07
