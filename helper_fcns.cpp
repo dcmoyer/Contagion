@@ -208,3 +208,11 @@ void go_left_test(agent* me, agent* you){
     me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) NUM_OF_AGENTS);
 
 }
+
+void predator_2012(agent* me, agent* you){
+    
+    
+    
+    
+    
+}
