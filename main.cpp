@@ -6,17 +6,22 @@
 
 int main()
 {
+	//Set file path for output
 	std::ofstream str;
-	std::string filepath = "C:\\Users\\dougyd\\Desktop\\data1.txt";
-	time_t t = time(NULL);
+	std::string filepath = "C:\\Users\\dougyd\\Desktop\\test.txt";
 	str.open(filepath.c_str());
+	
+	time_t t = time(NULL);
+
+	//initialize world
 	world w = world();
-	w.populate_rand(75, prey);
-	w.populate_predator_rand(1, predator);
-    
+	w.populate_rand(50, swarm1);
     int jump_val = 4;
     int print_val = 100;
-    for(int i = 1; i <= jump_val; i++){
+
+	//solve initial data with euler's method
+    for(int i = 1; i <= jump_val; i++)
+	{
         w.update_forward_velocs();
 		w.update_agent_pos_euler();
 		w.move_to_cell();
@@ -27,6 +32,8 @@ int main()
 		//w.print(str);
 		//w.print(std::cout);
     }
+
+	//solve using AB4
 	for(int i = jump_val + 1; i <=50000; i++)
 	{
 		w.update_forward_velocs();
@@ -39,11 +46,10 @@ int main()
 		//w.print(str);
 		//w.print(std::cout);
 	}
-	str.close();
 
+
+	str.close();
 	std::cout << "Data printed to " << filepath << "\n";
 	system("PAUSE");
-
-
 	return 0;
 }

@@ -82,10 +82,13 @@ world::~world(){
  
  */
 void world::update_forward_velocs(){
+	//Iterates through all cells and does pairwise comparisons
     
     cell* origin = cellList[0][0];
     cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     
+
+	//Same-cell comparison
     for(int i = 0; i < DOMAIN_DIM_1; i++){
       for(int j = 0; j < DOMAIN_DIM_2; j++){
 	
@@ -100,7 +103,7 @@ void world::update_forward_velocs(){
 	    
 	    target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
 	    target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
-            
+        //Do comparisons each way, since update rules might be different
 	  }
           
 	  target2.reset_current();
@@ -139,6 +142,9 @@ void world::update_forward_velocs(){
         
     }*/
     
+
+	
+	//Compare to cell to the right
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
         
@@ -193,6 +199,7 @@ void world::update_forward_velocs(){
         }
     }*/
     
+	//Compare to cell below
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -299,6 +306,9 @@ void world::update_forward_velocs(){
         }
     }
      */
+
+
+	//Compare to cell to the bottomn right
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -403,6 +413,9 @@ void world::update_forward_velocs(){
         }
     }
      */
+
+
+	//Compare to cell to the bottom left
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -466,6 +479,7 @@ void world::update_agent_pos_ab4(){
 		cell_node_iterator target = cellList[i][j]->get_iter();
 		for(target; target.current != NULL; target.next()){
 			if (target.current->get_agent()->is_alive()) {
+				target.current->get_agent()->normalize_accel();
 				target.current->get_agent()->drag();
 				target.current->get_agent()->ab4_update();
 			} else {
@@ -499,7 +513,8 @@ void world::update_agent_pos_euler(){
             cell_node_iterator target = cellList[i][j]->get_iter();
             for(target; target.current != NULL; target.next()){
                 if (target.current->get_agent()->is_alive()) {
-                    target.current->get_agent()->drag();
+                    target.current->get_agent()->normalize_accel();
+					target.current->get_agent()->drag();
                     target.current->get_agent()->euler_update();
                 } else {
                     target.current->get_agent()->set_x_coord(-1);
@@ -700,6 +715,7 @@ void world::move_to_cell() {
 						current_node->set_next(NULL);
 					}
 					if(x < 0 || x >= DOMAIN_DIM_1 || y < 0 || y >= DOMAIN_DIM_2){
+						current_agent->kill();
 						theLonelyIsland->add_top(current_node);
 					}
 					else{

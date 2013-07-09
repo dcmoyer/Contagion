@@ -514,21 +514,24 @@ void agent::euler_update()
 }
 
 //MUST CALL DRAG AFTER ALL NEIGHBOR INTERACTIONS HAVE BEEN CALCULATED INTO X_ACCEL
-void agent::drag(){
+void agent::drag()
+{
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-    if(NearestNeighbor_count != 0)
-      {
-        x_accel[0] = (ALPHA - BETA * veloc_mag)*x_veloc[0] - (x_accel[0] / (double) NearestNeighbor_count);
-	y_accel[0] = (ALPHA - BETA * veloc_mag)*y_veloc[0] - (y_accel[0] / (double) NearestNeighbor_count);
-    }
-    else
-      {
 	x_accel[0] += (ALPHA - BETA * veloc_mag)*x_veloc[0];
 	y_accel[0] += (ALPHA - BETA * veloc_mag)*y_veloc[0];
-      }
     NearestNeighbor_count = 0;
-    
 }
+
+
+void agent::normalize_accel()
+{
+	if(NearestNeighbor_count != 0)
+      {
+        x_accel[0] =  (x_accel[0] / (double) NearestNeighbor_count);
+		y_accel[0] =  (y_accel[0] / (double) NearestNeighbor_count);
+    }
+}
+
 
 /* 
    
