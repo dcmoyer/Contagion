@@ -31,7 +31,6 @@ public:
     
     double NearestNeighbor_count;
     bool alive;
-
     bool position_update_flag;
     
     /*
@@ -113,8 +112,8 @@ public:
     
 	void ab4_update();
 	void euler_update();
-    void normalize_accel();
-	void drag(); 
+    virtual void normalize_accel();
+	virtual void drag(); 
 
     
     int cell_num_dim1();

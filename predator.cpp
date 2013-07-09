@@ -38,3 +38,18 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
     running_r = 1000000;
 	    
 }
+
+void predator::drag(){
+    
+    
+    double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
+    x_accel[0] += (ALPHA - BETA * veloc_mag)*x_veloc[0];
+    y_accel[0] += (ALPHA - BETA * veloc_mag)*y_veloc[0];
+    running_r = 1000000;
+    
+    
+}
+
+double predator::get_running_r(){
+    return running_r;
+}

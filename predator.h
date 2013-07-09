@@ -6,9 +6,13 @@
 
 class predator : public agent {
 private:
-    double running_r;
-    
+        
 public:
-  predator(double x, double y, void (* up)(agent*,agent*));
+    predator(double x, double y, void (* up)(agent*,agent*));
+    virtual void drag();
+    
+    double get_running_r();
+    double running_r;
+
 };
 #endif 

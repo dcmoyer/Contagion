@@ -37,5 +37,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define GAMMA .45
 #define KAPPA 0
 
+//2012 Predator Speed
+#define PRED_2012_SP .1
 
 #endif
