@@ -259,7 +259,7 @@ void go_left_test(agent* me, agent* you){
 
 void predator_2012( agent* me_fake, agent* you){
     
-    predator* me = (predator) me_fake;
+    predator* me = (predator*) me_fake;
     //get x,y,z coords
 	double x1 = me->get_x_coord();
 	double y1 = me->get_y_coord();
