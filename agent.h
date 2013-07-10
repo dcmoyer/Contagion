@@ -80,6 +80,7 @@ public:
     void set_z_veloc(double v_z[HIST_LENGTH]);
     void set_q_mag(double q);
     void set_q_change(double q_c[HIST_LENGTH]);
+    void set_q_change_0(double q_c);
     
     //Accessor Functions:
     double get_x_coord();
