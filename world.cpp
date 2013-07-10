@@ -564,23 +564,35 @@ void world::print_csv(std::string filename){
     
     std::ofstream out;
     out.open(filename.c_str());
-    
+    double color = 0;
     int len = (int) agents_master.size();
     for(int i = 0; i < (len - 1); ++i){
+        
+        if(agents_master[i]->agent_type == 'd'){
+            color = 0;
+        }else{
+            color = 1;
+        }
         
         out <<  agents_master[i]->get_x_coord()
             << " " << agents_master[i]->get_y_coord()
             << " " << agents_master[i]->get_x_veloc_index(0)
             << " " << agents_master[i]->get_y_veloc_index(0)
-            << " " << agents_master[i]->agent_type << "\n";
+            << " " << color << "\n";
             
+    }
+    
+    if(agents_master[len - 1]->agent_type == 'd'){
+        color = 0;
+    }else{
+        color = 1;
     }
     
     out  << agents_master[len - 1]->get_x_coord()
     << " " << agents_master[len - 1]->get_y_coord()
     << " " << agents_master[len - 1]->get_x_veloc_index(0)
     << " " << agents_master[len - 1]->get_y_veloc_index(0)
-    << " " << agents_master[len - 1]->agent_type << "\n";
+    << " " << color << "\n";
     out.close();
     
 }

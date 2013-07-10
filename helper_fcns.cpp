@@ -258,7 +258,7 @@ void prey_2012_nofear(agent* me, agent* you){
 			if (r < 5) {
 				me->kill();
 			} else {
-				double u = C_R * exp(-r / L_R);
+				double u = -20 * exp(-r / 10);
 				//update velocities
 				double fx = u*dx/r;
 				double fy = u*dy/r;
