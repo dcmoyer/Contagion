@@ -549,11 +549,19 @@ void world::print(std::ostream& strm)
 {
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
-		  strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
-		      <<"," << (*agents_master[i]).get_y_coord() 
-		      <<"," << *(*agents_master[i]).get_x_veloc() 
-		      << "," << *(*agents_master[i]).get_y_veloc() 
-		      << ",";
+			if ((*agents_master[i]).get_type() == 'd') {
+				strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
+				<<"," << (*agents_master[i]).get_y_coord() 
+				<<"," << *(*agents_master[i]).get_x_veloc() 
+				<< "," << *(*agents_master[i]).get_y_veloc() 
+				<< ",";
+			} else if ((*agents_master[i]).get_type() == 'p') {
+				strm<< 1 << "," << (*agents_master[i]).get_x_coord() 
+				<<"," << (*agents_master[i]).get_y_coord() 
+				<<"," << *(*agents_master[i]).get_x_veloc() 
+				<< "," << *(*agents_master[i]).get_y_veloc() 
+			<< ",";
+			}
 		}
 	strm << "\n";
 }

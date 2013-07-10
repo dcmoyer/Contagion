@@ -9,6 +9,7 @@
  */
 
 #include "cell.h"
+#include <cstdlib>
 
 //**********CELL CLASS***********//
 
