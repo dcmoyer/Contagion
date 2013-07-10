@@ -437,7 +437,7 @@ agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[H
 
 void agent::ab4_update()
 {
-    assert(HIST_LENGTH >= 3);
+    assert(HIST_LENGTH >= 4);
     
     double forward_v_x = x_veloc[0] +
                 ( (STEP_SIZE * (1.0/24.0)) * 
@@ -466,6 +466,13 @@ void agent::ab4_update()
                    (59 * y_veloc[0]) +
                    (37 * y_veloc[1]) -
                    (9  * y_veloc[2])));
+
+	q_mag = q_mag +
+                ( (STEP_SIZE * (1.0/24.0)) *
+                  ((55 * q_change[0]) -
+                   (59 * q_change[1]) +
+                   (37 * q_change[2]) -
+                   (9  * q_change[3])));
     
     //Move history forward.
     
@@ -475,13 +482,17 @@ void agent::ab4_update()
         x_accel[i] = x_accel[i-1];
         y_veloc[i] = y_veloc[i-1];
         y_accel[i] = y_accel[i-1];
-        
+		
+        q_change[i] = q_change[i-1];
+
     }
     
     x_veloc[0] = forward_v_x;
     y_veloc[0] = forward_v_y;
     x_accel[0] = 0;
     y_accel[0] = 0;
+
+	q_change[0] = 0;
     
 }
 
@@ -496,7 +507,9 @@ void agent::euler_update()
     
     y_coord = y_coord +
         (STEP_SIZE * forward_v_y);
-    
+
+    q_mag = (q_mag + (STEP_SIZE * q_change[0]));
+
     for(int i = HIST_LENGTH - 1; i > 0; --i){
         
         x_veloc[i] = x_veloc[i-1];
@@ -504,6 +517,8 @@ void agent::euler_update()
         y_veloc[i] = y_veloc[i-1];
         y_accel[i] = y_accel[i-1];
         
+		q_change[i] = q_change[i-1];
+
     }
     
     x_veloc[0] = forward_v_x;
@@ -511,6 +526,11 @@ void agent::euler_update()
     x_accel[0] = 0;
     y_accel[0] = 0;
     
+	q_change[0] = 0;
+
+	//update emotion by 1st order euler
+
+	
 }
 
 //MUST CALL DRAG AFTER ALL NEIGHBOR INTERACTIONS HAVE BEEN CALCULATED INTO X_ACCEL
@@ -529,6 +549,7 @@ void agent::normalize_accel()
       {
         x_accel[0] =  (x_accel[0] / (double) NearestNeighbor_count);
 		y_accel[0] =  (y_accel[0] / (double) NearestNeighbor_count);
+		q_change[0] = (q_change[0] / (double) NearestNeighbor_count);
     }
 }
 
@@ -646,6 +667,13 @@ void agent::set_q_change(double q_c[HIST_LENGTH]){
     
     for(int i = 0; i < HIST_LENGTH; i++)
         q_change[i] = q_c[i];
+    
+}
+
+void agent::set_q_change_0(double q_c){
+    
+   
+        q_change[0] = q_c;
     
 }
 
@@ -777,6 +805,12 @@ double agent::get_z_accel_index(int index){
     assert(index < HIST_LENGTH && index > -1);
     return z_accel[index];
     
+}
+
+double agent::get_q_change_index(int index)
+{
+	assert(index < HIST_LENGTH && index > -1);
+    return q_change[index];
 }
 
 double agent::get_q_mag(){
