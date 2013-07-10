@@ -37,6 +37,9 @@ test_world: test_world.o world.o predator.o
 test_movement: test_movement.o world.o
 	g++ -o test_movement world.o agent.o cell.o helper_fcns.o test_movement.o predator.o
 
+timing: timing.o world.o
+	g++ -O3 -o timing world.o agent.o cell.o helper_fcns.o timing.o predator.o
+
 .PHONY : clean
 clean :
 	-rm *.o
