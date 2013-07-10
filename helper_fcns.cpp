@@ -117,8 +117,8 @@ void swarm1(agent* me, agent* you)
 	double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
 
 	//update velocities
-	double fx = ugrad*dx/r;// - h*dvx;
-	double fy = ugrad*dy/r;// - h*dvy;
+	double fx = ugrad*dx/r+ h*dvx;
+	double fy = ugrad*dy/r+ h*dvy;
 	//double fx = -h*dvx;
 	//double fy = -h*dvy;
 	//double fz = u*dz/sum + h*dvz;
