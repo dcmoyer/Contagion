@@ -29,7 +29,7 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    //Assign NN
 	    NearestNeighbor_count = 0;
 	    
-	    agent_type = 'p';
+	    agent_type = '1';
 	    
 	    update = up; //NULL 
 	    
@@ -43,8 +43,8 @@ void predator::drag(){
     
     
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-    x_accel[0] += (ALPHA - BETA * veloc_mag)*x_veloc[0];
-    y_accel[0] += (ALPHA - BETA * veloc_mag)*y_veloc[0];
+    x_accel[0] += (ALPHA*1.5 - BETA * veloc_mag)*x_veloc[0];
+    y_accel[0] += (ALPHA*1.5 - BETA * veloc_mag)*y_veloc[0];
     running_r = 1000000;
     
     

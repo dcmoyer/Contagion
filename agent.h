@@ -14,6 +14,7 @@ This is the agent class for the Contagion Project, UCLA REU 2013.
 
 #include "constants.h"
 
+
 class agent{
 //private: //THIS IS BAD PRACTICE. WILL CHANGE LATER? Sorry, don't do at home. (DM)
 public:
@@ -31,12 +32,13 @@ public:
     
     double NearestNeighbor_count;
     bool alive;
+
     bool position_update_flag;
     
     /*
      agent_type is a character defining which type of agent this is:
-        d - default
-     
+        0 - default
+		1- predator
      */
     char agent_type;
     
@@ -80,7 +82,7 @@ public:
     void set_z_veloc(double v_z[HIST_LENGTH]);
     void set_q_mag(double q);
     void set_q_change(double q_c[HIST_LENGTH]);
-    void set_q_change_0(double q_c);
+	void set_q_change_0(double q_c);
     
     //Accessor Functions:
     double get_x_coord();

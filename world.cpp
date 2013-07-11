@@ -323,7 +323,7 @@ void world::update_forward_velocs(){
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
-                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+                   upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
                     
                 }
                 
@@ -549,19 +549,11 @@ void world::print(std::ostream& strm)
 {
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
-			if ((*agents_master[i]).get_type() == 'd') {
-				strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
-				<<"," << (*agents_master[i]).get_y_coord() 
-				<<"," << *(*agents_master[i]).get_x_veloc() 
-				<< "," << *(*agents_master[i]).get_y_veloc() 
-				<< ",";
-			} else if ((*agents_master[i]).get_type() == 'p') {
-				strm<< 1 << "," << (*agents_master[i]).get_x_coord() 
-				<<"," << (*agents_master[i]).get_y_coord() 
-				<<"," << *(*agents_master[i]).get_x_veloc() 
-				<< "," << *(*agents_master[i]).get_y_veloc() 
-			<< ",";
-			}
+		  strm<< 0 << "," << (*agents_master[i]).get_x_coord() 
+		      <<"," << (*agents_master[i]).get_y_coord() 
+		      <<"," << agents_master[i]->agent_type 
+		      << "," << (*agents_master[i]).get_q_mag() 
+		      << ",";
 		}
 	strm << "\n";
 }
@@ -572,35 +564,23 @@ void world::print_csv(std::string filename){
     
     std::ofstream out;
     out.open(filename.c_str());
-    double color = 0;
+    
     int len = (int) agents_master.size();
     for(int i = 0; i < (len - 1); ++i){
-        
-        if(agents_master[i]->agent_type == 'd'){
-            color = 0;
-        }else{
-            color = 1;
-        }
         
         out <<  agents_master[i]->get_x_coord()
             << " " << agents_master[i]->get_y_coord()
             << " " << agents_master[i]->get_x_veloc_index(0)
             << " " << agents_master[i]->get_y_veloc_index(0)
-            << " " << color << "\n";
+            << " " << agents_master[i]->agent_type << "\n";
             
-    }
-    
-    if(agents_master[len - 1]->agent_type == 'd'){
-        color = 0;
-    }else{
-        color = 1;
     }
     
     out  << agents_master[len - 1]->get_x_coord()
     << " " << agents_master[len - 1]->get_y_coord()
     << " " << agents_master[len - 1]->get_x_veloc_index(0)
     << " " << agents_master[len - 1]->get_y_veloc_index(0)
-    << " " << color << "\n";
+    << " " << agents_master[len - 1]->agent_type << "\n";
     out.close();
     
 }
@@ -700,8 +680,11 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
-			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
-			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			double x = CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1 - 2*CELL_LENGTH);
+			double y = CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2 - 2*CELL_LENGTH);
+			
+			/*double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);*/
 			add_agent(x, y, up);
 		}
 }

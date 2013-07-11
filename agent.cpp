@@ -45,7 +45,7 @@ agent::agent(){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = '0';
     
     //Assign Update Rull
     update = 0; //NULL 
@@ -127,7 +127,7 @@ agent::agent(double x, double y, void (* up)(agent*,agent*) ){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = '0';
     
     //Assign Update Rull
     update = up; //NULL 
@@ -537,10 +537,12 @@ void agent::euler_update()
 void agent::drag()
 {
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-	x_accel[0] += (ALPHA - BETA * veloc_mag)*x_veloc[0];
-	y_accel[0] += (ALPHA - BETA * veloc_mag)*y_veloc[0];
+	double A = ALPHA*(1+3*q_mag);
+	x_accel[0] += (A - BETA * veloc_mag)*x_veloc[0];
+	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0];
+	q_change[0] += -q_mag/100;
     NearestNeighbor_count = 0;
-}
+} 
 
 
 void agent::normalize_accel()
