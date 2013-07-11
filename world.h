@@ -57,8 +57,6 @@ public:
     int is_empty(int i, int j);
     
  private:
-    bool world_pos_update_flag; 
-    //This bool is to be checked against to see if an agent has been updated or not.
     
 };
 

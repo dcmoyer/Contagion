@@ -55,9 +55,7 @@ world::world()
             cellList[i][j]->set_neighbors(v);
         }
     }
-    
-  world_pos_update_flag = 0;
-  theLonelyIsland = new cell;
+	theLonelyIsland = new cell;
 }
 
 world::~world(){
@@ -636,7 +634,7 @@ void world::add_predator(double x, double y, void (* up)(agent*,agent*))
 	cellList[i][j]->add_top(new cell_node(agents_master.back()));
 }
 
-void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))//?????
+void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))
 {
 	if(x < 0)
 		x = 0;
@@ -743,7 +741,7 @@ void world::move_to_cell() {
 /* Get cell of index i,j */
 
 cell* world::get_cell(int i, int j) {
-  return(cellList[i][j]);
+	return(cellList[i][j]);
 }
 
 /* Ask whether cell i,j is empty */

@@ -1,9 +1,10 @@
 #include "helper_fcns.h"
-#include <cmath>
 
 void prey(agent* me, agent* you)
 {
-	
+	if(you->get_type() == 2){
+		return;
+	}
 	//get x,y,z coords
 	double x1 = me->get_x_coord();
 	double y1 = me->get_y_coord();
@@ -35,7 +36,9 @@ void prey(agent* me, agent* you)
 
 void predator_model(agent* me, agent* you)
 {
-	
+	if(you->get_type() == 2){
+		return;
+	}
 	//get x,y,z coords
 	double x1 = me->get_x_coord();
 	double y1 = me->get_y_coord();
@@ -82,6 +85,9 @@ void predator_model(agent* me, agent* you)
 
 void swarm1(agent* me, agent* you)
 {
+	if(you->get_type() == 2){
+		return;
+	}
 	//get x,y,z coords
 	double x1 = me->get_x_coord();
 	double y1 = me->get_y_coord();
@@ -141,6 +147,10 @@ void swarm1(agent* me, agent* you)
 
 void swarm1_fear(agent* me, agent* you)
 {
+	if(you->get_type() == 2){
+		return;
+	}
+	
 	//get x,y,z coords
 	double x1 = me->get_x_coord();
 	double y1 = me->get_y_coord();
@@ -214,6 +224,9 @@ void swarm1_fear(agent* me, agent* you)
 
 void swarm_attract(agent* me, agent* you)
 {
+	if(you->get_type() == 2){
+		return;
+	}
 	//get x,y coords
 	double x1 = (*me).get_x_coord();
 	double y1 = (*me).get_y_coord();
@@ -252,13 +265,18 @@ void swarm_attract(agent* me, agent* you)
 
 
 void go_left_test(agent* me, agent* you){
-
+	if(you->get_type() == 2){
+		return;
+	}
+	
     me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) NUM_OF_AGENTS);
 
 }
 
 void predator_2012( agent* me_fake, agent* you){
-    
+	if(you->get_type() == 2){
+		return;
+	}
     predator* me = (predator*) me_fake;
     //get x,y,z coords
 	double x1 = me->get_x_coord();
@@ -285,7 +303,10 @@ void predator_2012( agent* me_fake, agent* you){
 }
 
 void prey_2012_nofear(agent* me, agent* you){
-    
+	if(you->get_type() == 2){
+		return;
+	}
+	
 	//get x,y,z coords
 	double x1 = me->get_x_coord();
 	double y1 = me->get_y_coord();
@@ -317,7 +338,7 @@ void prey_2012_nofear(agent* me, agent* you){
 
     me->iterate_NearestNeighbor();
     if (r < CELL_LENGTH) {
-		if (you->get_type() == 'd') {
+		if (you->get_type() == 0) {
             
             double ugrad = C_A/L_A * exp(-r / L_A) - C_R/L_R * exp(-r / L_R);
             
@@ -333,7 +354,7 @@ void prey_2012_nofear(agent* me, agent* you){
             
 		}
         
-		if (you->get_type() == 'p') {
+		if (you->get_type() == 1) {
 			if (r < 5) {
 				me->kill();
 			} else {
@@ -352,6 +373,11 @@ void prey_2012_nofear(agent* me, agent* you){
 
 void prey_2012_fear(agent* me, agent* you){
     
+	//wall check
+	if(you->get_type() == 2){
+		return;
+	}
+	
 	//get x,y,z coords
 	double x1 = me->get_x_coord();
 	double y1 = me->get_y_coord();
@@ -383,7 +409,7 @@ void prey_2012_fear(agent* me, agent* you){
 
 	
 
-		if (you->get_type() == '0') {
+		if (you->get_type() == 0) {
             
 
 			//get fear
@@ -409,7 +435,7 @@ void prey_2012_fear(agent* me, agent* you){
             
 		}
         
-		if (you->get_type() == '1') {
+		if (you->get_type() == 1) {
 			if (r < 5) {
 				me->kill();
 			} else {
@@ -435,4 +461,30 @@ void prey_2012_fear(agent* me, agent* you){
 		me->iterate_NearestNeighbor();
 	}
     
+}
+
+void wall_interaction(agent* me_fake, agent* you){
+	//This is the wall function.
+	
+	wall* me = (wall* ) me_fake;
+	double r_x = you->x_coord - me->x_coord;
+	double r_y = you->y_coord - me->y_coord;
+	r = sqrt(pow(r_x,2) + pow(r_y,2))
+	
+	double n_dot_r = r_x * (me->normal_x) + r_y * (me->normal_y);
+	double p_n_x = n_dot_r * (me->normal_x);
+	double p_n_y = n_dot_r * (me->normal_y);
+	if( sqrt(pow((r_x - p_n_x),2) + pow((r_y - p_n_y),2)) < (me->length) ){
+		
+		double u = (double) WALL_PWR / pow(r,5)
+		
+		double fx = u * r_x / r;
+		double fy = u * r_y / r;
+		
+		you->add_to_x_accel(fx);
+		you->add_to_y_accel(fy);
+		
+	}
+	
+	
 }

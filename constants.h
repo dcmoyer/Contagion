@@ -15,7 +15,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define DOMAIN_DIM_1    4
 #define DOMAIN_DIM_2    4
 #define DOMAIN_DIM_3    0
-#define CELL_LENGTH   100
+#define CELL_LENGTH   75
 #define STEP_SIZE 0.01
 #define HIST_LENGTH 4
 
@@ -41,5 +41,8 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define PRED_2012_SP .1
 //Probability of kill
 #define PRECISION .5
+
+//Wall Power
+#define WALL_PWR 50
 
 #endif

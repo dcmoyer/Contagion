@@ -45,12 +45,11 @@ agent::agent(){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = '0';
+    agent_type = 0;
     
     //Assign Update Rull
     update = 0; //NULL 
     
-    position_update_flag = 0;
     alive = true;
 }
 
@@ -87,11 +86,10 @@ agent::agent(int TEST){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = 0;
     
     //Assign Update Rull
     update = 0; //NULL
-    position_update_flag = 0;
     alive = true;
     
 }   
@@ -127,12 +125,11 @@ agent::agent(double x, double y, void (* up)(agent*,agent*) ){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = '0';
+    agent_type = 0;
     
     //Assign Update Rull
     update = up; //NULL 
     
-    position_update_flag = 0;
     alive = true;
     
 }
@@ -168,13 +165,11 @@ agent::agent(double x, double y, double z, void (* up)(agent*,agent*) ){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = 0;
     
     //Assign Update Rull
     update = up; //NULL 
     alive = true;
-    position_update_flag = 0;
-
     
 }
 
@@ -207,13 +202,12 @@ agent::agent(double x, double y){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = 0;
     
     //Assign Update Rull
     update = 0; //NULL 
     alive = true;
     
-    position_update_flag = 0;
 
     
 }
@@ -249,12 +243,11 @@ agent::agent(double x, double y, double z){
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = 0;
     
     //Assign Update Rull
     update = 0; //NULL 
     alive = true;
-    position_update_flag = 0;
 
     
 }
@@ -292,14 +285,11 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = 0;
     
     //Assign Update Rull
     update = 0; //NULL
     alive = true;
-    
-    position_update_flag = 0;
-
     
 }
 
@@ -337,13 +327,11 @@ agent::agent(double x, double y, double z,
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = 0;
     
     //Assign Update Rull
     update = 0; //NULL
     alive = true;
-    
-    position_update_flag = 0;
     
 }
 
@@ -352,7 +340,7 @@ Constructor. Contains arguments for position, velocity, and contagion.
 */
 
 agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
-	     double q, char a_type, void (* up)(agent*,agent*) ){
+	     double q, int a_type, void (* up)(agent*,agent*) ){
 
     //Assign Coordinates
     x_coord = x;
@@ -382,18 +370,15 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     NearestNeighbor_count = 0;
     
     //Assign Type
-    agent_type = 'd';
+    agent_type = a_type;
     
     //Assign Update Rull
     update = up; //NULL
     alive = true;
     
-    position_update_flag = 0;
-
-    
 }
 
-agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, char a_type, void (* up)(agent*,agent*) ){
+agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], double q, int a_type, void (* up)(agent*,agent*) ){
 
      //Assign Coordinates
      x_coord = x;
@@ -423,14 +408,11 @@ agent::agent(double x, double y, double z, double v_x[HIST_LENGTH], double v_y[H
      NearestNeighbor_count = 0;
     
      //Assign Type
-     agent_type = 'd';
+     agent_type = a_type;
     
      //Assign Update Rull
      update = up; //NULL
      alive = true;
-    
-    position_update_flag = 0;
-
     
  }
 
@@ -869,7 +851,7 @@ int agent::cell_num_dim2() {
 	}
 }
 
-char agent::get_type() {
+int agent::get_type() {
 	
 	return agent_type;
 }

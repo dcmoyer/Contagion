@@ -7,13 +7,16 @@ agent.o : agent.cpp
 predator.o : predator.cpp agent.o
 	g++ -o predator.o -c predator.cpp
 
+wall.o : wall.cpp agent.o
+	g++ -o wall.o -c wall.cpp
+
 cell.o : cell.cpp
 	g++ -o cell.o -c cell.cpp
 
 world.o : world.cpp predator.o
 	g++ -o world.o -c world.cpp
 
-helper_fcns.o : helper_fcns.cpp
+helper_fcns.o : helper_fcns.cpp predator.o wall.o
 	g++ -o helper_fcns.o -c helper_fcns.cpp
 
 #Trading_Thangs.BETA : Main_Interface.cpp cargo.2.o ship.o battle.o player.o mapgraph.o world.o

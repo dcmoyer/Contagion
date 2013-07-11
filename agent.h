@@ -32,15 +32,13 @@ public:
     
     double NearestNeighbor_count;
     bool alive;
-
-    bool position_update_flag;
     
     /*
      agent_type is a character defining which type of agent this is:
         0 - default
 		1- predator
      */
-    char agent_type;
+    int agent_type;
     
     void (* update)(agent*, agent*);
     
@@ -56,10 +54,10 @@ public:
     agent(double x, double y, double z, 
 	  double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH]);
     agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
-	  double q, char a_type, void (* up)(agent*,agent*) );
+	  double q, int a_type, void (* up)(agent*,agent*) );
     agent(double x, double y, double z, 
 	  double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], double v_z[HIST_LENGTH], 
-	  double q, char a_type, void (* up)(agent*,agent*) );
+	  double q, int a_type, void (* up)(agent*,agent*) );
 	  
     //Mutator Functions:
     void set_x_coord(double x);
@@ -121,7 +119,7 @@ public:
     
     int cell_num_dim1();
     int cell_num_dim2();
-    char get_type();
+    int get_type();
     bool is_alive();
     void kill();
 };

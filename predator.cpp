@@ -29,9 +29,9 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    //Assign NN
 	    NearestNeighbor_count = 0;
 	    
-	    agent_type = '1';
+	    agent_type = 1;
 	    
-	    update = up; //NULL 
+	    update = up;
 	    
 	    alive = true;
 

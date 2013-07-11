@@ -10,8 +10,8 @@ int main()
 	//std::string filename = "test_data.dat";
 	time_t t = time(NULL);
 	world w = world();
-	w.populate_rand(45, prey_2012_nofear);
-    w.populate_predator_rand(1, predator_2012);
+	w.populate_rand(45, swarm1);
+    //w.populate_predator_rand(1, predator_2012);
     
     
     
@@ -31,7 +31,7 @@ int main()
 		//w.print(str);
 		//w.print(std::cout);
 	}
-    for(int i = jump_val + 1; i <= 100000; i++)
+    for(int i = jump_val + 1; i <= 105000; i++)
 	{
 		w.update_forward_velocs();
 		w.update_agent_pos_ab4();
