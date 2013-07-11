@@ -39,5 +39,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 //2012 Predator Speed
 #define PRED_2012_SP .1
+//Probability of kill
+#define PRECISION .5
 
 #endif
