@@ -66,7 +66,7 @@ void predator_model(agent* me, agent* you)
 	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
 	
 	if (r < 100) {
-		if (you->get_type() == 'd') {	
+		if (you->get_type() == 0) {	
 
 			//calculate attraction/repulsion forces
 			double u = -10* C_A * exp(-r / L_A);
@@ -293,11 +293,11 @@ void predator_2012( agent* me_fake, agent* you){
     double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
     
     if(r < me->running_r){
-        
-        me->running_r = r;
-        me->set_x_accel( PRED_2012_SP * dx/std::abs(dx));
-        me->set_y_accel( PRED_2012_SP * dy/std::abs(dy));
-        
+        if (you->get_type() == 0) {	
+        	me->running_r = r;
+        	me->set_x_accel( PRED_2012_SP * dx/std::abs(dx));
+        	me->set_y_accel( PRED_2012_SP * dy/std::abs(dy));
+		}
     }
     
 }
