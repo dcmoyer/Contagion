@@ -880,6 +880,8 @@ bool agent::is_alive() {
 }
 
 void agent::kill() {
-	
-	alive = false;
+	double p = (double)rand()/(double)RAND_MAX;
+	if (p < PRECISION) {
+		alive = false;
+	}
 }
