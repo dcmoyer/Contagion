@@ -51,6 +51,7 @@ agent::agent(){
     update = 0; //NULL 
     
     alive = true;
+	heading = 0;
 }
 
 /*
@@ -434,7 +435,30 @@ void agent::ab4_update()
                   (59 * y_accel[1]) +
                   (37 * y_accel[2]) -
                   (9  * y_accel[3])));
-    
+
+    if(abs(forward_v_x) > abs(forward_v_y))
+	{
+		if(forward_v_x > 0)
+		{
+			heading = 2;
+		}
+		else
+		{
+			heading = 4;
+		}
+	}
+	else
+	{
+		if(forward_v_y > 0)
+		{
+			heading = 1;
+		}
+		else
+		{
+			heading = 3;
+		}
+	}
+
     x_coord = x_coord +
                 ( (STEP_SIZE * (1.0/24.0)) * 
                   ((55 * forward_v_x) -
@@ -484,6 +508,29 @@ void agent::euler_update()
     
     double forward_v_y = y_veloc[0] + (STEP_SIZE * y_accel[0]);
     
+	if(abs(forward_v_x) > abs(forward_v_y))
+	{
+		if(forward_v_x > 0)
+		{
+			heading = 2;
+		}
+		else
+		{
+			heading = 4;
+		}
+	}
+	else
+	{
+		if(forward_v_y > 0)
+		{
+			heading = 1;
+		}
+		else
+		{
+			heading = 3;
+		}
+	}
+
     x_coord = x_coord +
         (STEP_SIZE * forward_v_x);
     
