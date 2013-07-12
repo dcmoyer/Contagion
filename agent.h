@@ -32,6 +32,8 @@ public:
     
     double NearestNeighbor_count;
     bool alive;
+	int heading;
+    bool position_update_flag;
     
     /*
      agent_type is a character defining which type of agent this is:

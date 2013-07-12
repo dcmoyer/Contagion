@@ -556,31 +556,28 @@ void world::print(std::ostream& strm)
 	strm << "\n";
 }
 
-void world::print_csv(std::string filename){
-    // Output format is 
-    // x y v_x v_y type
-    
-    std::ofstream out;
-    out.open(filename.c_str());
-    
-    int len = (int) agents_master.size();
-    for(int i = 0; i < (len - 1); ++i){
-        
-        out <<  agents_master[i]->get_x_coord()
-            << " " << agents_master[i]->get_y_coord()
-            << " " << agents_master[i]->get_x_veloc_index(0)
-            << " " << agents_master[i]->get_y_veloc_index(0)
-            << " " << agents_master[i]->agent_type << "\n";
-            
-    }
-    
-    out  << agents_master[len - 1]->get_x_coord()
-    << " " << agents_master[len - 1]->get_y_coord()
-    << " " << agents_master[len - 1]->get_x_veloc_index(0)
-    << " " << agents_master[len - 1]->get_y_veloc_index(0)
-    << " " << agents_master[len - 1]->agent_type << "\n";
-    out.close();
-    
+void world::print(std::ostream& strm)
+{
+	for (size_t  i = 0; i < agents_master.size(); i++)
+		{
+			if(agents_master[i]->alive)
+			{
+			strm<< agents_master[i]->heading << "," << (*agents_master[i]).get_x_coord() 
+		      <<"," << (*agents_master[i]).get_y_coord() 
+		      <<"," << agents_master[i]->agent_type 
+		      << "," << (*agents_master[i]).get_q_mag() 
+		      << ",";
+			}
+			else
+			{
+				strm << 0 << "," << -100
+		      <<"," << -100
+		      <<"," << 0
+		      << "," << 0
+		      << ",";
+			}
+		}
+	strm << "\n";
 }
 
 void world::add_agent(double x, double y)
@@ -678,8 +675,8 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
-			double x = CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1 - 2*CELL_LENGTH);
-			double y = CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2 - 2*CELL_LENGTH);
+			double x = 2*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1 - 4*CELL_LENGTH);
+			double y = 2*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2 - 4*CELL_LENGTH);
 			
 			/*double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
 			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);*/
@@ -691,8 +688,16 @@ void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
-			double x = rand() % (CELL_LENGTH*DOMAIN_DIM_1 ) - 1;
-			double y = rand() % (CELL_LENGTH*DOMAIN_DIM_2 ) - 1;
+			double x = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
+			double y = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
+			if(x > 2*CELL_LENGTH)
+			{
+				x += (DOMAIN_DIM_1-4)*CELL_LENGTH;
+			}
+			if(y > 2*CELL_LENGTH)
+			{
+				y += (DOMAIN_DIM_2-4)*CELL_LENGTH;
+			}
 			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
 			add_predator(x, y, up);
 		}

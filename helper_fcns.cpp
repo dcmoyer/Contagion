@@ -202,9 +202,19 @@ void swarm1_fear(agent* me, agent* you)
     me->add_to_x_accel(fx);
     me->add_to_y_accel(fy);
 
-	//update fear
-	double fq = me->get_q_change_index(0) + h*dq;
-	me->set_q_change_0(fq);
+//update fear
+	double fq;
+			
+			if (dq > 0)
+			{
+				 fq = me->get_q_change_index(0) + 6*h*dq;
+				me->set_q_change_0(fq);
+			}
+			else
+			{
+				 fq = me->get_q_change_index(0) + 3*h*dq;
+				me->set_q_change_0(fq);
+			}
 
 
 
@@ -430,8 +440,19 @@ void prey_2012_fear(agent* me, agent* you){
             me->add_to_y_accel(fy);
 
 
-			double fq = me->get_q_change_index(0) + 3*h*dq;
-			me->set_q_change_0(fq);
+			double fq;
+			
+			if (dq > 0)
+			{
+				 fq = me->get_q_change_index(0) + 6*h*dq;
+				me->set_q_change_0(fq);
+			}
+			else
+			{
+				 fq = me->get_q_change_index(0) + 3*h*dq;
+				me->set_q_change_0(fq);
+			}
+
             
 		}
         

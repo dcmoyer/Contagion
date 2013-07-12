@@ -35,6 +35,8 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    
 	    alive = true;
 
+		heading = 0;
+
     running_r = 1000000;
 	    
 }
