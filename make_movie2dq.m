@@ -1,7 +1,9 @@
 function [F] = make_movie2dq( filepath )
 
-cellx = 7;
-celly = 7;
+
+
+cellx = 8;
+celly = cellx;
 length = 75;
 
 M = csvread(filepath);
@@ -9,6 +11,7 @@ M = csvread(filepath);
 M = M(1:end, 1:end-1);
 
 % extract coordinates and particle types
+head = M(:,1:5:end);
 type=M(:,4:5:end);
 x=M(:,2:5:end);
 y=M(:,3:5:end);
@@ -29,8 +32,25 @@ for i=1:numel(type)
          type(i) = 'o';
          width(i) = 24;
      elseif(type(i)==1)
-         type(i) = 'v';
          width(i) = 100;
+         
+         switch head(i)
+          case {1}
+            type(i) = '^';
+          case {2}
+            type(i) = '>';
+          case {3}
+            type(i) = 'v';
+          case {4}
+            type(i) = '<';
+          
+             otherwise
+            type(i) = 'v';
+          
+        end
+         
+         
+         
      else
          type(i)  = 's';
          width(i) = 36;
@@ -46,14 +66,19 @@ for j=1:timesteps
     clf;
     hold on;
     for k=1:population
-        scatter(x(j,k),y(j,k), width(j,k), [q(j,k) pred(j,k) (1-q(j,k))*(1-pred(j,k))], char(type(j,k)),'filled'); 
+        scatter(x(j,k),y(j,k), width(j,k), [q(j,k) pred(j,k) (1-q(j,k))*(1-pred(j,k))], char(type(j,k)),'filled');
+        
     end
     hold off;
 % 	axis([mx(j)-10 mx(j)+10 my(j)-10 my(j)+10]);
 % 	axis([mx(j)-40 mx(j)+40 my(j)-40 my(j)+40]);
 %     axis([0 500 0 500]);
+axis equal;
     axis([0 cellx*length 0 celly*length]);
+    
     grid on;
+    set(gcf, 'Position', get(0, 'Screensize'));
+%     axis equal;
     F(j)=getframe;
 end
 
