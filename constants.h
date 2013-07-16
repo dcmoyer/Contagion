@@ -12,11 +12,11 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define CONSTANTS_H
 
 #define NUM_OF_AGENTS   2
-#define DOMAIN_DIM_1    4
-#define DOMAIN_DIM_2    4
+#define DOMAIN_DIM_1    3
+#define DOMAIN_DIM_2    3
 #define DOMAIN_DIM_3    0
 #define CELL_LENGTH   75
-#define STEP_SIZE 0.01
+#define STEP_SIZE 0.001
 #define HIST_LENGTH 4
 
 

@@ -14,7 +14,9 @@
 #include "constants.h"
 #include "agent.h"
 #include "predator.h"
+#include "wall.h"
 #include "cell.h"
+#include "helper_fcns.h"
 #include <vector>
 //#include "helper_fcns.h"
 #include <iostream>
@@ -41,6 +43,8 @@ public:
     void add_agent(double x, double y, void (* up)(agent*,agent*));
     void add_predator(double x, double y, void (* up)(agent*,agent*));
     void add_agent(double x, double y, double z, void (* up)(agent*,agent*));
+	void add_wall(double c_x, double c_y, double n_x, double n_y, double len, void (* up)(agent*,agent*));
+	void add_boundary(void (* up)(agent*,agent*));
     void populate_rand();
     void populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*));
     void populate_rand(int n, void (* up)(agent*,agent*));

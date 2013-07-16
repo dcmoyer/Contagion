@@ -652,6 +652,53 @@ void world::add_agent(double x, double y, double z, void (* up)(agent*,agent*))
 	cellList[i][j]->add_top(new cell_node(agents_master[i]));
 }
 
+void world::add_wall(double c_x, double c_y, double n_x, double n_y, double len, void (* up)(agent*,agent*)){
+	
+	if(c_x < 0)
+		c_x = 0;
+	if(c_x > CELL_LENGTH*DOMAIN_DIM_1)
+		c_x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(c_y < 0)
+		c_y = 0;
+	if(c_y > CELL_LENGTH*DOMAIN_DIM_2)
+		c_y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+	
+	agents_master.push_back((agent*) new wall(c_x, c_y, n_x, n_y, len, up));
+	int i = (int) (c_x)/CELL_LENGTH;
+	int j = (int) (c_y)/CELL_LENGTH;
+	
+	if( i == DOMAIN_DIM_1){
+		i--;
+	}
+	if( j == DOMAIN_DIM_2){
+		j--;
+	}
+	cellList[i][j]->add_top(new cell_node(agents_master.back()));
+}
+
+void world::add_boundary(void (* up)(agent*,agent*)){
+	
+	//Bottom
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		add_wall(i*CELL_LENGTH + (double)CELL_LENGTH/2.0, 0, 0, 1, (double)(CELL_LENGTH/2), up);
+	}
+	//Top
+	double top = DOMAIN_DIM_2 * CELL_LENGTH;
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		add_wall(i*CELL_LENGTH + (double)CELL_LENGTH/2.0, top, 0, -1, (double)(CELL_LENGTH/2), up);
+	}
+	//Left Side
+	for(int i = 0; i < DOMAIN_DIM_2; i++){
+		add_wall(0, i*CELL_LENGTH + (double)CELL_LENGTH/2.0, 1, 0, (double)(CELL_LENGTH/2), up);
+	}
+	//Right Side
+	double right = DOMAIN_DIM_1 * CELL_LENGTH;
+	for(int i = 0; i < DOMAIN_DIM_2; i++){
+		add_wall(right, i*CELL_LENGTH + (double)CELL_LENGTH/2.0, -1, 0, (double)(CELL_LENGTH/2), up);
+	}
+	
+}
+
 void world::populate_rand()
 {
 	for (int i = 0; i < NUM_OF_AGENTS; i ++)
@@ -713,7 +760,7 @@ void world::move_to_cell() {
 				agent* current_agent = current_node->get_agent();
 				int x = current_agent->cell_num_dim1();
 				int y = current_agent->cell_num_dim2();
-				if ( x != i || y != j) {
+				if ( (current_agent->get_type() != 2) && (x != i || y != j) ) {
 					if (prev == NULL) {
 						current_node = current_cell->remove_top();
 					} else {

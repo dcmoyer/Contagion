@@ -10,10 +10,13 @@ int main()
 	//std::string filename = "test_data.dat";
 	time_t t = time(NULL);
 	world w = world();
-	w.populate_rand(45, swarm1);
+	//w.add_boundary(velocity_wall_interaction);
+	w.add_boundary(wall_interaction);
+	w.populate_rand(1000, prey_2012_fear);
     //w.populate_predator_rand(1, predator_2012);
-    
-    
+    //w.add_wall(100.0001, 100, 1, 0, 1000, wall_interaction);
+    w.add_wall(100, 100, -1, 0, 1000, wall_interaction);
+   
     
     int jump_val = 4;
     int print_val = 200;
@@ -31,7 +34,7 @@ int main()
 		//w.print(str);
 		//w.print(std::cout);
 	}
-    for(int i = jump_val + 1; i <= 105000; i++)
+    for(int i = jump_val + 1; i <= 200000; i++)
 	{
 		w.update_forward_velocs();
 		w.update_agent_pos_ab4();

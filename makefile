@@ -13,7 +13,7 @@ wall.o : wall.cpp agent.o
 cell.o : cell.cpp
 	g++ -o cell.o -c cell.cpp
 
-world.o : world.cpp predator.o
+world.o : world.cpp predator.o helper_fcns.o
 	g++ -o world.o -c world.cpp
 
 helper_fcns.o : helper_fcns.cpp predator.o wall.o
@@ -26,7 +26,7 @@ main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o
 	g++ main.cpp helper_fcns.o world.o cell.o agent.o predator.o
 
 unix_main : unix_main.cpp cell.o agent.o world.o helper_fcns.o predator.o
-	g++ -o unix_main -O3 unix_main.cpp helper_fcns.o world.o cell.o agent.o predator.o
+	g++ -o unix_main -O3 unix_main.cpp helper_fcns.o world.o cell.o agent.o predator.o wall.o
 
 test_agent: test_agent.o agent.o
 	g++ -o test_agent agent.o test_agent.o

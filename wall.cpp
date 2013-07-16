@@ -4,7 +4,12 @@ wall::wall(double center_x, double center_y, double n_x, double n_y, double len,
 
 	x_coord = center_x;
 	y_coord = center_y;
-
+	
+	double n_mag = sqrt(pow(n_x,2) + pow(n_y,2));
+	
+	n_x = n_x / n_mag;
+	n_y = n_y / n_mag;
+	
 	normal_x = n_x;
 	normal_y = n_y;
 	length = len;

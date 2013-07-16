@@ -47,6 +47,7 @@ public:
 //public:
 
     agent();
+	virtual ~agent(){;}
     agent(int TEST);
     agent(double x, double y);
     agent(double x, double y, double z);
@@ -62,7 +63,7 @@ public:
 	  double q, int a_type, void (* up)(agent*,agent*) );
 	  
     //Mutator Functions:
-    void set_x_coord(double x);
+	void set_x_coord(double x);
     void set_y_coord(double y);
     void set_z_coord(double z);
     void set_x_veloc(double v_x);

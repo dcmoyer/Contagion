@@ -3,17 +3,20 @@
 
 #include "constants.h"
 #include "agent.h"
+#include <cmath>
 
 class wall : public agent {
 	//private:
         
 public:
+	
     wall(double center_x, double center_y, double n_x, double n_y, double len,  void (* up)(agent*,agent*));
-    virtual void drag();
+    virtual ~wall(){;}
+	virtual void drag();
 	
 	double normal_x;
 	double normal_y;
-	double length;
+	double length; //The Length of a wall is not guarenteed effective past the length of a cell =( 
 	
 };
 #endif 

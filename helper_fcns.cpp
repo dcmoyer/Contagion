@@ -279,7 +279,7 @@ void go_left_test(agent* me, agent* you){
 		return;
 	}
 	
-    me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) NUM_OF_AGENTS);
+    me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) 100000);
 
 }
 
@@ -454,10 +454,8 @@ void prey_2012_fear(agent* me, agent* you){
 			}
 
             
-		}
-        
-		if (you->get_type() == 1) {
-			if (r < 5) {
+		} else if (you->get_type() == 1) {
+			if (r < 1) {
 				me->kill();
 			} else {
 				double u = - 2/30 *C_R/L_R * exp(-r / (30 * L_R));  
@@ -486,26 +484,63 @@ void prey_2012_fear(agent* me, agent* you){
 
 void wall_interaction(agent* me_fake, agent* you){
 	//This is the wall function.
+	if(you->get_type() == 2){
+		return;
+	}
 	
 	wall* me = (wall* ) me_fake;
 	double r_x = you->x_coord - me->x_coord;
 	double r_y = you->y_coord - me->y_coord;
-	r = sqrt(pow(r_x,2) + pow(r_y,2))
+	double r = sqrt(pow(r_x,2) + pow(r_y,2));
 	
 	double n_dot_r = r_x * (me->normal_x) + r_y * (me->normal_y);
 	double p_n_x = n_dot_r * (me->normal_x);
 	double p_n_y = n_dot_r * (me->normal_y);
 	if( sqrt(pow((r_x - p_n_x),2) + pow((r_y - p_n_y),2)) < (me->length) ){
 		
-		double u = (double) WALL_PWR / pow(r,5)
+		double u = (double) WALL_PWR / pow(n_dot_r,6);
 		
-		double fx = u * r_x / r;
-		double fy = u * r_y / r;
+		double fx = copysign(1, n_dot_r) * u * me->normal_x;
+		double fy = copysign(1, n_dot_r) * u * me->normal_y;
 		
 		you->add_to_x_accel(fx);
 		you->add_to_y_accel(fy);
 		
 	}
+}
+
+void velocity_wall_interaction(agent* me_fake, agent* you){
 	
+	if(you->get_type() == 2){
+		return;
+	}
+	
+	wall* me = (wall* ) me_fake;
+	
+	double r_x = you->x_coord - me->x_coord;
+	double r_y = you->y_coord - me->y_coord;
+	double r = sqrt(pow(r_x,2) + pow(r_y,2));
+	
+	double n_dot_r = r_x * (me->normal_x) + r_y * (me->normal_y);
+	
+	double v_x = you->get_x_veloc_index(0);
+	double v_y = you->get_y_veloc_index(0);
+	double n_dot_v = v_x * (me->normal_x) + v_y * (me->normal_y);
+	
+	/*arccos(n_dot_v/sqrt(v_x*v_x + v_y*v_y)) is the angle between the velocity
+	vector and the normal vector to the wall
+	*/
+	double projected_impact = (std::tan(std::acos(n_dot_v/sqrt(v_x*v_x + v_y*v_y))) * n_dot_r );
+	if( n_dot_v < 0  && ( projected_impact < (me->length)/2.0 )){
+		
+		double u = (1 - projected_impact/((me->length)/2.0)) * (double) WALL_PWR / pow(n_dot_r,6);
+		
+		double fx = copysign(1, n_dot_r) * u * me->normal_x;
+		double fy = copysign(1, n_dot_r) * u * me->normal_y;
+		
+		you->add_to_x_accel(fx);
+		you->add_to_y_accel(fy);
+		
+	}
 	
 }
