@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "agent.h"
 #include "predator.h"
+#include "finch.h"
 #include "wall.h"
 #include <cmath>
 
@@ -19,5 +20,6 @@ void predator_2012( agent* me, agent* you);
 void prey_2012_nofear(agent* me, agent* you);
 void prey_2012_fear(agent* me, agent* you);
 void wall_interaction(agent* me_fake, agent* you);
+void finch1(agent* me_cast, agent* you);
 void velocity_wall_interaction(agent* me_fake, agent* you);
 #endif
