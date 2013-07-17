@@ -1,7 +1,7 @@
 #include "world.h"
 #include <cstdlib>
 #include <cstddef>
-
+#include <iostream>
 
 
 //default constructor
@@ -82,35 +82,35 @@ world::~world(){
 void world::update_forward_velocs(){
 	//Iterates through all cells and does pairwise comparisons
     
-    cell* origin = cellList[0][0];
-    cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
+    //cell* origin = cellList[0][0];
+    //cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
     
 
 	//Same-cell comparison
-    for(int i = 0; i < DOMAIN_DIM_1; i++){
-      for(int j = 0; j < DOMAIN_DIM_2; j++){
-	
-	cell_node_iterator target = cellList[i][j]->get_iter();
-	cell_node_iterator target2 = cellList[i][j]-> get_iter();
-        
-	for(target; target.current != NULL; target.next()){
-	  
-	  for(target2; target2.current != NULL; target2.next()){
-	    if(target2.current == target.current)
-	      break;
-	    
-	    target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
-	    target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
-        //Do comparisons each way, since update rules might be different
-	  }
-          
-	  target2.reset_current();
-          
-	}    
+    /*for(int i = 0; i < DOMAIN_DIM_1; i++){
+      for(int j = 0; j < DOMAIN_DIM_2; j++){ 
         
       }
-    }
+    }*/
     
+	cell* end = cellList[DOMAIN_DIM_1 - 1][DOMAIN_DIM_2-1];
+	#pragma omp parallel for
+	for(cell* iter = cellList[0][0]; iter <= end; iter++){
+		cell_node_iterator target = iter->get_iter();
+		cell_node_iterator target2 = iter->get_iter();
+		
+		for(target; target.current != NULL; target.next()){
+			for(target2; target2.current != NULL; target2.next()){
+			if(target2.current == target.current)
+				break;
+			target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
+			target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
+			//Do comparisons each way, since update rules might be different
+			} 
+		target2.reset_current();
+		}
+	}
+	
     /*
      THIS IS WHERE WE'D PUT OPEN MP
      */
@@ -139,10 +139,9 @@ void world::update_forward_velocs(){
         }
         
     }*/
-    
-
 	
 	//Compare to cell to the right
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
         
@@ -198,6 +197,7 @@ void world::update_forward_velocs(){
     }*/
     
 	//Compare to cell below
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -307,6 +307,7 @@ void world::update_forward_velocs(){
 
 
 	//Compare to cell to the bottomn right
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -414,6 +415,7 @@ void world::update_forward_velocs(){
 
 
 	//Compare to cell to the bottom left
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -543,7 +545,7 @@ void world::refresh_eul()
 }
 
 
-void world::print(std::ostream& strm)
+/*void world::print(std::ostream& strm)
 {
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
@@ -554,7 +556,7 @@ void world::print(std::ostream& strm)
 		      << ",";
 		}
 	strm << "\n";
-}
+}*/
 
 void world::print(std::ostream& strm)
 {
@@ -578,6 +580,30 @@ void world::print(std::ostream& strm)
 			}
 		}
 	strm << "\n";
+}
+
+void world::print_csv(std::string filename){
+	// Output format is 
+	// x y v_x v_y type
+	std::ofstream out;
+	out.open(filename.c_str());
+	
+	int len = (int) agents_master.size();
+	for(int i = 0; i < (len - 1); ++i){ 
+		out <<  agents_master[i]->get_x_coord()
+		<< " " << agents_master[i]->get_y_coord()
+		<< " " << agents_master[i]->get_x_veloc_index(0)
+		<< " " << agents_master[i]->get_y_veloc_index(0)
+		<< " " << agents_master[i]->agent_type << "\n";
+		
+	}
+	
+	out  << agents_master[len - 1]->get_x_coord()
+	<< " " << agents_master[len - 1]->get_y_coord()
+	<< " " << agents_master[len - 1]->get_x_veloc_index(0)
+	<< " " << agents_master[len - 1]->get_y_veloc_index(0)
+	<< " " << agents_master[len - 1]->agent_type << "\n";
+	out.close();
 }
 
 void world::add_agent(double x, double y)
