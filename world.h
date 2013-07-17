@@ -16,6 +16,7 @@
 #include "predator.h"
 //#include "finch.h"
 #include "cell.h"
+#include "wall.h"
 #include <vector>
 //#include "helper_fcns.h"
 #include <iostream>
@@ -39,6 +40,8 @@ public:
     
     void add_agent(double x, double y, void (* up)(agent*,agent*));
     void add_predator(double x, double y, void (* up)(agent*,agent*));
+	void add_wall(double c_x, double c_y, double n_x, double n_y, double len, void (* up)(agent*,agent*));
+	void add_boundary(void (* up)(agent*,agent*));	
 //	void add_finch_rand(double x, double y, void (* up)(agent*,agent*));
 
 	void populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*));
@@ -46,6 +49,9 @@ public:
     void populate_predator_rand(int n, void (* up)(agent*,agent*));
 //	void populate_finches_rand(int n, void (* up)(agent*,agent*));
 
+
+	
+	
 	void run(std::ostream& strm, int print_every, int iterations);
 
     cell* get_cell(int i, int j);
