@@ -3,52 +3,31 @@
 #include <fstream>
 #include <ctime>
 #include <string>
+#include <iostream>
+
 
 int main()
 {
 	//Set file path for output
-	std::ofstream str;
-	std::string filepath = "C:\\Users\\dougyd\\Desktop\\test.txt";
-	str.open(filepath.c_str());
+	std::ofstream strm;
+	std::string filepath = "C:\\Users\\dougyd\\Desktop\\simple.txt";
+	std::cout << "Data printed to " << filepath;
+	strm.open(filepath.c_str());
 	
+	//setup
 	time_t t = time(NULL);
-
+	srand (t);
+	
 	//initialize world
 	world w = world();
-	w.populate_rand(50, swarm1);
-    int jump_val = 4;
-    int print_val = 100;
+	w.populate_rand(5, swarm1);
+	//w.populate_finches_rand(45, finch1);
+	//w.populate_predator_rand(1, predator_2012);
 
-	//solve initial data with euler's method
-    for(int i = 1; i <= jump_val; i++)
-	{
-        w.update_forward_velocs();
-		w.update_agent_pos_euler();
-		w.move_to_cell();
-		if(i % print_val == 0){
-			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
-			w.print(str);
-		}
-		//w.print(str);
-		//w.print(std::cout);
-    }
+	w.run(strm, 100, 1000);
 
-	//solve using AB4
-	for(int i = jump_val + 1; i <=50000; i++)
-	{
-		w.update_forward_velocs();
-		w.update_agent_pos_ab4();
-		w.move_to_cell();
-		if(i % print_val == 0){
-			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
-			w.print(str);
-		}
-		//w.print(str);
-		//w.print(std::cout);
-	}
-
-
-	str.close();
+	//cleanup
+	strm.close();
 	std::cout << "Data printed to " << filepath << "\n";
 	system("PAUSE");
 	return 0;

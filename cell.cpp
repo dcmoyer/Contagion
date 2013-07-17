@@ -1,80 +1,18 @@
-/*
- 
- This is the cell class for the Contagion Project, UCLA REU 2013.
- 
- 062413 1503 Created (DM)
- 062413 1649 Added constructors, accessors, and mutators for cell_node, and a
-    default constructor for cell. (DM)
 
- */
 
 #include "cell.h"
-#include <cstdlib>
 
-//**********CELL CLASS***********//
 
-/*
- 
- Default constructor for cell.
- 
- */
-cell::cell(){
-    
-    top = NULL;
-    center_x = 0;
-    center_y = 0;
-    //neighbors is empty
-    
+//*******************************************CELL*******************************************//
+
+//Default constructor for cell.
+cell::cell()
+{
+	top = NULL;  
+	//neighbors is empty
 }
 
-/*
- 
- Constructor for cells. Takes two vectors, one of pointers to the cell neighbors,
- and one of pointers to the agents of the cell. This is meant to be used in the
- instantiation of the world class.
- 
- */
-cell::cell(vector<agent*> &agents){
-    
-    int len = agents.size();
-	center_x = 0;
-	center_y = 0;
-    top = 0; //NULL
-    
-    if(len == 0)
-        return;
-        
-    //BUG
-	for (int i = 1; i < len; i++) {
-		add_top(agents[i]);
-	}
-    
-}
-
-/*
- 
- Destructor
- 
- */
-
-cell::~cell(){
-    
-    cell_node* temp;
-    
-    while(!isempty()){
-        temp = top->next;
-        delete top;
-        top = temp;
-    }
-    
-}
-
-/*
- 
- Copy Constructor: This should not be used. But...just incase.
- 
- */
-
+//Copy Constructor
 cell::cell(const cell& rhs) {
     
     cell_node* temp;
@@ -98,12 +36,20 @@ cell::cell(const cell& rhs) {
 
 }
 
-/*
- 
- Assignment Operator
- 
- */
+//Destructor
+cell::~cell(){
+    
+    cell_node* temp;
+    
+    while(!isempty()){
+        temp = top->next;
+        delete top;
+        top = temp;
+    }
+    
+}
 
+//Assignment Operator
 cell& cell:: operator=(const cell& rhs) {
     
     cell_node* temp;
@@ -132,20 +78,13 @@ cell& cell:: operator=(const cell& rhs) {
 	return *this;
 }
 
-/*
- 
-Set neighbors
-
- */
+//Set neighbors
 void cell::set_neighbors(vector<cell*> &neigh){
 
     neighbors = neigh;
 
 }
 
-/*
-Add to the beginning of the list
-*/
 void cell::add_top(cell_node* new_node) {
 
     new_node->next = top;
@@ -162,20 +101,12 @@ void cell::add_top(agent* new_node) {
     
 }
 
-/*
-Remove the first node in the list
-*/
 cell_node* cell::remove_top() {
-
     cell_node* out = top;
     top = top->next;
     return out;
-
 }
 
-/*
-Get the first node in the list
-*/
 cell_node* cell::get_top(){
     
     return top;
@@ -197,12 +128,6 @@ cell* cell::get_neighbor(int index){
     
 }
 
-/*
- 
- Checks if empty.
- 
- */
-
 bool cell::isempty(){
     
     return top == 0;
@@ -219,23 +144,11 @@ void cell::move_top(cell* target){
     
 }
 
-bool cell::in_the_cell(agent* target) const {
-	double x = target->get_x_coord();
-	double y = target->get_y_coord();
-	double min_x = center_x - (CELL_LENGTH/2);
-	double max_x = center_x + (CELL_LENGTH/2);
-	double min_y = center_y - (CELL_LENGTH/2);
-	double max_y = center_y + (CELL_LENGTH/2);	
-	return (min_x < x && x < max_x && min_y < y && y< max_y);
-}
 
-//**********CELL NODE CLASS***********//
 
-/*
+//*****************************************CELL NODE CLASS******************************//
 
- Default constructor for the cell_nodes. 
- 
- */
+
 cell_node::cell_node(){
     
     next = NULL;
@@ -243,11 +156,6 @@ cell_node::cell_node(){
     
 }
 
-/*
- 
- Constructor for the cell_nodes. Meant to be used only with Cell class.
- 
-*/
 
 cell_node::cell_node(agent* &target){
     
@@ -256,11 +164,8 @@ cell_node::cell_node(agent* &target){
     
 }
 
-/*
- 
- Mutator Functions.
- 
- */
+
+//Mutator Functions.
 
 void cell_node::set_next(cell_node* next_node) {
 
@@ -274,13 +179,10 @@ void cell_node::set_agent(agent* &target){
     
 }
 
-/*
- 
- Accessor Functions.
- 
- */
 
-cell_node* cell_node::get_next() {
+//Accessor Functions.
+
+cell_node* cell_node::get_next() const {
 
 	return next;
 }
@@ -291,7 +193,7 @@ agent* cell_node::get_agent() const{
     
 }
     
-//**********CELL NODE ITERATOR CLASS***********//
+//***************************************CELL NODE ITERATOR CLASS********************//
 
 
 cell_node_iterator::cell_node_iterator(){
@@ -325,64 +227,3 @@ agent* cell_node_iterator::get_current(){
     return current->target_agent;
     
 }
-
-
-
-
-/*
- Assignment operator
- 
- const cell::cell& operator=(const cell& rhs) {
- if (this != &rhs) {
- clear();
- 
- if (rhs.top == NULL) {
- top == NULL;
- } else {
- top = new cell_node(rhs.top->get_agent());
- 
- cell_node* finger = rhs.top->get_next();
- cell_node* current = head;
- 
- while (finger != NULL) {
- current->set_next(new cell_node(finger->get_agent()));
- current = current->get_next();
- finger = finger->get_next();
- }
- }
- }
- return *this;
- }
- 
- /*
- Add to the beginning of the list	
- 
- void add_top(cell_node new_node) {
- 
- new_node.set_next(top);
- *top = new_node;
- }
- 
- /*
- Remove the first node in the list
- 
- void remove_top() {
- 
- delete *top;
- top = top->get_next();
- }
- 
- 
- /*
- Get the first node in the list
- 
- cell_node get_top() const {
- 
- return *top;
- }
- 
- bool is_empty() {
- 
- return (top == NULL);
- }
-*/

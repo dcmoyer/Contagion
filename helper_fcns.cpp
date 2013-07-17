@@ -207,13 +207,13 @@ void swarm1_fear(agent* me, agent* you)
 			
 			if (dq > 0)
 			{
-				 fq = me->get_q_change_index(0) + 6*h*dq;
-				me->set_q_change_0(fq);
+				 fq = 6*h*dq;
+				me->add_to_q_change(fq);
 			}
 			else
 			{
-				 fq = me->get_q_change_index(0) + 3*h*dq;
-				me->set_q_change_0(fq);
+				 fq = 3*h*dq;
+				me->add_to_q_change(fq);
 			}
 
 
@@ -279,7 +279,7 @@ void go_left_test(agent* me, agent* you){
 		return;
 	}
 	
-    me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) 100000);
+    me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) NUM_OF_AGENTS);
 
 }
 
@@ -444,18 +444,20 @@ void prey_2012_fear(agent* me, agent* you){
 			
 			if (dq > 0)
 			{
-				 fq = me->get_q_change_index(0) + 6*h*dq;
-				me->set_q_change_0(fq);
+				 fq =6*h*dq;
+				me->add_to_q_change(fq);
 			}
 			else
 			{
-				 fq = me->get_q_change_index(0) + 3*h*dq;
-				me->set_q_change_0(fq);
+				 fq = 3*h*dq;
+				me->add_to_q_change(fq);
 			}
 
             
-		} else if (you->get_type() == 1) {
-			if (r < 1) {
+		}
+        
+		if (you->get_type() == 1) {
+			if (r < 5) {
 				me->kill();
 			} else {
 				double u = - 2/30 *C_R/L_R * exp(-r / (30 * L_R));  
@@ -472,8 +474,8 @@ void prey_2012_fear(agent* me, agent* you){
 				double dq = q2-q1;
 				
 				double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
-				double fq = me->get_q_change_index(0) + 40*h*dq;
-				me->set_q_change_0(fq);
+				double fq =40*h*dq;
+				me->add_to_q_change(fq);
 			}
 		}
 
@@ -482,65 +484,132 @@ void prey_2012_fear(agent* me, agent* you){
     
 }
 
-void wall_interaction(agent* me_fake, agent* you){
+/*void wall_interaction(agent* me_fake, agent* you){
 	//This is the wall function.
-	if(you->get_type() == 2){
-		return;
-	}
 	
 	wall* me = (wall* ) me_fake;
 	double r_x = you->x_coord - me->x_coord;
 	double r_y = you->y_coord - me->y_coord;
-	double r = sqrt(pow(r_x,2) + pow(r_y,2));
+	r = sqrt(pow(r_x,2) + pow(r_y,2))
 	
 	double n_dot_r = r_x * (me->normal_x) + r_y * (me->normal_y);
 	double p_n_x = n_dot_r * (me->normal_x);
 	double p_n_y = n_dot_r * (me->normal_y);
 	if( sqrt(pow((r_x - p_n_x),2) + pow((r_y - p_n_y),2)) < (me->length) ){
 		
-		double u = (double) WALL_PWR / pow(n_dot_r,6);
+		double u = (double) WALL_PWR / pow(r,5)
 		
-		double fx = copysign(1, n_dot_r) * u * me->normal_x;
-		double fy = copysign(1, n_dot_r) * u * me->normal_y;
+		double fx = u * r_x / r;
+		double fy = u * r_y / r;
 		
 		you->add_to_x_accel(fx);
 		you->add_to_y_accel(fy);
 		
 	}
-}
+	
+	
+}*/
 
-void velocity_wall_interaction(agent* me_fake, agent* you){
-	
-	if(you->get_type() == 2){
-		return;
-	}
-	
-	wall* me = (wall* ) me_fake;
-	
-	double r_x = you->x_coord - me->x_coord;
-	double r_y = you->y_coord - me->y_coord;
-	double r = sqrt(pow(r_x,2) + pow(r_y,2));
-	
-	double n_dot_r = r_x * (me->normal_x) + r_y * (me->normal_y);
-	
-	double v_x = you->get_x_veloc_index(0);
-	double v_y = you->get_y_veloc_index(0);
-	double n_dot_v = v_x * (me->normal_x) + v_y * (me->normal_y);
-	
-	/*arccos(n_dot_v/sqrt(v_x*v_x + v_y*v_y)) is the angle between the velocity
-	vector and the normal vector to the wall
-	*/
-	double projected_impact = (std::tan(std::acos(n_dot_v/sqrt(v_x*v_x + v_y*v_y))) * n_dot_r );
-	if( n_dot_v < 0  && ( projected_impact < (me->length)/2.0 )){
-		
-		double u = (1 - projected_impact/((me->length)/2.0)) * (double) WALL_PWR / pow(n_dot_r,6);
-		
-		double fx = copysign(1, n_dot_r) * u * me->normal_x;
-		double fy = copysign(1, n_dot_r) * u * me->normal_y;
-		
-		you->add_to_x_accel(fx);
-		you->add_to_y_accel(fy);
-		
-	}
-	
-}
+//void finch1(finch* me_cast, agent* you)
+//{
+//	    finch* me = (finch*) me_cast;
+//    
+//	/*
+//	//wall check
+//	if(you->get_type() == 2){
+//		return;
+//	}
+//	*/
+//
+//	//get x,y,z coords
+//	double x1 = me->x_coord;
+//	double y1 = me->get_y_coord();
+//	double x2 = you->get_x_coord();
+//	double y2 = you->get_y_coord();
+//	
+//    //calculate distances
+//	double dx= x2-x1;
+//	double dy= y2-y1;
+//	double r = sqrt(dx*dx + dy*dy);
+//
+//    
+//    if (r < CELL_LENGTH) 
+//	{
+//		if (you->get_type() == 0) \
+//		{
+//            //get component-wise velocity
+//			double vx1 = me->get_x_veloc_index(0);
+//			double vy1 = me->get_y_veloc_index(0);
+//			double vx2 = you->get_x_veloc_index(0);
+//			double vy2 = you->get_y_veloc_index(0);
+//			double dvx = vx2-vx1;
+//			double dvy = vy2-vy1;
+//
+//			//get fear
+//			double q1 = me->get_q_mag();
+//			double q2 = you->get_q_mag();
+//			double dq = q2-q1;
+//
+//			//calculate attraction-repulsion
+//            double ugrad = exp(-r ) - c1 * exp(-r / l1);
+//            
+//            //calculate alignment forces
+//            double h = me->v_align_mag / pow((1 + r*r), me->gamma);
+//            
+//            //update velocities
+//            double fx = ugrad*dx/r - h*dvx;
+//            double fy = ugrad*dy/r - h*dvy;	//double fx = -h*dvx;
+//            
+//            me->add_to_x_accel_prey(fx);
+//            me->add_to_y_accel_prey(fy);
+//
+//
+//			double fq;
+//			
+//			if (dq > 0)
+//			{
+//				 fq = 6*h*dq;
+//				me->add_to_q_change(fq);
+//			}
+//			else
+//			{
+//				 fq =3*h*dq;
+//				me->add_to_q_change(fq);
+//			}
+//
+//
+//			me->iterate_NearestNeighbor();
+//            
+//		}
+//        
+//		if (you->get_type() == 1) 
+//		{
+//			if (r < 5) {
+//				me->kill();
+//			} else {
+//				double u = -C_R/L_R * exp(-r / (L_R));  
+//				//update velocities
+//				double fx = me->pred_repel*u*dx/r;
+//				double fy = me->pred_repel*u*dy/r;
+//				me->add_to_x_accel_pred(fx);
+//				me->add_to_y_accel_pred(fy);
+//
+//
+//				//get fear
+//				double q1 = me->get_q_mag();
+//				double q2 = 1;
+//				double dq = q2-q1;
+//				
+//				double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
+//				double fq =  40*h*dq;
+//				me->add_to_q_change(fq);
+//			}
+//
+//			me->iterate_NearestPred();
+//		}
+//
+//		
+//	}
+//    
+//}
+
