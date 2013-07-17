@@ -65,6 +65,11 @@ world::~world()
     }
     
 	delete theLonelyIsland;
+	
+	int len = agents_master.size();
+	for(int i = 0; i < len ; i++){
+		delete agents_master[i];
+	}
 }
 
 //add agent at position with given model
@@ -86,40 +91,39 @@ void world::add_agent(double x, double y, void (* up)(agent*,agent*))
 }
 
 //add predator at position with given model
-//void world::add_predator(double x, double y, void (* up)(agent*,agent*))
-//{
-//	if(x < 0)
-//		x = 0;
-//	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
-//		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
-//	if(y < 0)
-//		y = 0;
-//	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
-//		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
-//
-//	agents_master.push_back(new predator(x, y, up));
-//	int i = (int) (x)/CELL_LENGTH;
-//	int j = (int) (y)/CELL_LENGTH;
-//	cellList[i][j]->add_top(agents_master.back());
-//}
-
+void world::add_predator(double x, double y, void (* up)(agent*,agent*))
+{
+	
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+	agents_master.push_back(new predator(x, y, up));
+	int i = (int) (x)/CELL_LENGTH;
+	int j = (int) (y)/CELL_LENGTH;
+	cellList[i][j]->add_top(agents_master.back());
+}
+/*
 //add finch at position with given model
-//void world::add_finch_rand(double x, double y, void (* up)(agent*,agent*))
-//{
-//	if(x < 0)
-//		x = 0;
-//	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
-//		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
-//	if(y < 0)
-//		y = 0;
-//	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
-//		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
-//
-//	agents_master.push_back(new finch(x, y, up));
-//	int i = (int) (x)/CELL_LENGTH;
-//	int j = (int) (y)/CELL_LENGTH;
-//	cellList[i][j]->add_top(agents_master.back());
-//}
+void world::add_finch_rand(double x, double y, void (* up)(agent*,agent*))
+{
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+	agents_master.push_back(new finch(x, y, up));
+	int i = (int) (x)/CELL_LENGTH;
+	int j = (int) (y)/CELL_LENGTH;
+	cellList[i][j]->add_top(agents_master.back());
+}*/
 
 //populate with agents at given positions
 void world::populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*)) {

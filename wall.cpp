@@ -24,10 +24,6 @@ wall::wall(double center_x, double center_y, double n_x, double n_y, double len,
         y_veloc[i] = 0;
     for(int i = 0; i < HIST_LENGTH; i++)
         y_accel[i] = 0;
-    for(int i = 0; i < HIST_LENGTH; i++)
-        z_veloc[i] = 0;
-    for(int i = 0; i < HIST_LENGTH; i++)
-        z_accel[i] = 0;
 	
     q_mag = 0;
     for(int i = 0; i < HIST_LENGTH; i++)

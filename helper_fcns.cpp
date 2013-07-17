@@ -494,14 +494,14 @@ void wall_interaction(agent* me_fake, agent* you){
 	wall* me = (wall* ) me_fake;
 	double r_x = you->x_coord - me->x_coord;
 	double r_y = you->y_coord - me->y_coord;
-	double r = sqrt(pow(r_x,2) + pow(r_y,2))
+	double r = sqrt(pow(r_x,2) + pow(r_y,2));
 	
 	double n_dot_r = r_x * (me->normal_x) + r_y * (me->normal_y);
 	double p_n_x = n_dot_r * (me->normal_x);
 	double p_n_y = n_dot_r * (me->normal_y);
 	if( sqrt(pow((r_x - p_n_x),2) + pow((r_y - p_n_y),2)) < (me->length) ){
 		
-		double u = (double) WALL_PWR / pow(n_dot_r,6)
+		double u = (double) WALL_PWR / pow(n_dot_r,6);
 		
 		double fx = copysign(1, n_dot_r) * u * r_x / r;
 		double fy = copysign(1, n_dot_r) * u * r_y / r;

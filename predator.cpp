@@ -15,12 +15,6 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    for(int i = 0; i < HIST_LENGTH; i++)
 	        y_accel[i] = 0;
 	    
-	    z_coord = 0;
-	    for(int i = 0; i < HIST_LENGTH; i++)
-	        z_veloc[i] = 0;
-	    for(int i = 0; i < HIST_LENGTH; i++)
-	        z_accel[i] = 0;
-	    
 	    //Assign Contagion
 	    q_mag = 0;
 	    for(int i = 0; i < HIST_LENGTH; i++)
@@ -34,9 +28,7 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    update = up;
 	    
 	    alive = true;
-
-		heading = 0;
-
+		
     running_r = 1000000;
 	    
 }
