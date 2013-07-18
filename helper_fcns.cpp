@@ -544,106 +544,107 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 		you->add_to_y_accel(fy);
 	}
 }
-//void finch1(finch* me_cast, agent* you)
-//{
-//	    finch* me = (finch*) me_cast;
-//    
-//	/*
-//	//wall check
-//	if(you->get_type() == 2){
-//		return;
-//	}
-//	*/
-//
-//	//get x,y,z coords
-//	double x1 = me->x_coord;
-//	double y1 = me->get_y_coord();
-//	double x2 = you->get_x_coord();
-//	double y2 = you->get_y_coord();
-//	
-//    //calculate distances
-//	double dx= x2-x1;
-//	double dy= y2-y1;
-//	double r = sqrt(dx*dx + dy*dy);
-//
-//    
-//    if (r < CELL_LENGTH) 
-//	{
-//		if (you->get_type() == 0) \
-//		{
-//            //get component-wise velocity
-//			double vx1 = me->get_x_veloc_index(0);
-//			double vy1 = me->get_y_veloc_index(0);
-//			double vx2 = you->get_x_veloc_index(0);
-//			double vy2 = you->get_y_veloc_index(0);
-//			double dvx = vx2-vx1;
-//			double dvy = vy2-vy1;
-//
-//			//get fear
-//			double q1 = me->get_q_mag();
-//			double q2 = you->get_q_mag();
-//			double dq = q2-q1;
-//
-//			//calculate attraction-repulsion
-//            double ugrad = exp(-r ) - c1 * exp(-r / l1);
-//            
-//            //calculate alignment forces
-//            double h = me->v_align_mag / pow((1 + r*r), me->gamma);
-//            
-//            //update velocities
-//            double fx = ugrad*dx/r - h*dvx;
-//            double fy = ugrad*dy/r - h*dvy;	//double fx = -h*dvx;
-//            
-//            me->add_to_x_accel_prey(fx);
-//            me->add_to_y_accel_prey(fy);
-//
-//
-//			double fq;
-//			
-//			if (dq > 0)
-//			{
-//				 fq = 6*h*dq;
-//				me->add_to_q_change(fq);
-//			}
-//			else
-//			{
-//				 fq =3*h*dq;
-//				me->add_to_q_change(fq);
-//			}
-//
-//
-//			me->iterate_NearestNeighbor();
-//            
-//		}
-//        
-//		if (you->get_type() == 1) 
-//		{
-//			if (r < 5) {
-//				me->kill();
-//			} else {
-//				double u = -C_R/L_R * exp(-r / (L_R));  
-//				//update velocities
-//				double fx = me->pred_repel*u*dx/r;
-//				double fy = me->pred_repel*u*dy/r;
-//				me->add_to_x_accel_pred(fx);
-//				me->add_to_y_accel_pred(fy);
-//
-//
-//				//get fear
-//				double q1 = me->get_q_mag();
-//				double q2 = 1;
-//				double dq = q2-q1;
-//				
-//				double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
-//				double fq =  40*h*dq;
-//				me->add_to_q_change(fq);
-//			}
-//
-//			me->iterate_NearestPred();
-//		}
-//
-//		
-//	}
-//    
-//}
+
+void finch1(agent* me_cast, agent* you)
+{
+	    finch* me = (finch*) me_cast;
+    
+	/*
+	//wall check
+	if(you->get_type() == 2){
+		return;
+	}
+	*/
+
+	//get x,y,z coords
+	double x1 = me->x_coord;
+	double y1 = me->get_y_coord();
+	double x2 = you->get_x_coord();
+	double y2 = you->get_y_coord();
+	
+    //calculate distances
+	double dx= x2-x1;
+	double dy= y2-y1;
+	double r = sqrt(dx*dx + dy*dy);
+
+    
+    if (r < CELL_LENGTH) 
+	{
+		if (you->get_type() == 0) \
+		{
+            //get component-wise velocity
+			double vx1 = me->get_x_veloc_index(0);
+			double vy1 = me->get_y_veloc_index(0);
+			double vx2 = you->get_x_veloc_index(0);
+			double vy2 = you->get_y_veloc_index(0);
+			double dvx = vx2-vx1;
+			double dvy = vy2-vy1;
+
+			//get fear
+			double q1 = me->get_q_mag();
+			double q2 = you->get_q_mag();
+			double dq = q2-q1;
+
+			//calculate attraction-repulsion
+            double ugrad = exp(-r ) - c1 * exp(-r / l1);
+            
+            //calculate alignment forces
+            double h = me->v_align_mag / pow((1 + r*r), me->gamma);
+            
+            //update velocities
+            double fx = ugrad*dx/r - h*dvx;
+            double fy = ugrad*dy/r - h*dvy;	//double fx = -h*dvx;
+            
+            me->add_to_x_accel_prey(fx);
+            me->add_to_y_accel_prey(fy);
+
+
+			double fq;
+			
+			if (dq > 0)
+			{
+				 fq = 6*h*dq;
+				me->add_to_q_change(fq);
+			}
+			else
+			{
+				 fq =3*h*dq;
+				me->add_to_q_change(fq);
+			}
+
+
+			me->iterate_NearestNeighbor();
+            
+		}
+        
+		if (you->get_type() == 1) 
+		{
+			if (r < 5) {
+				me->kill();
+			} else {
+				double u = -C_R/L_R * exp(-r / (L_R));  
+				//update velocities
+				double fx = me->pred_repel*u*dx/r;
+				double fy = me->pred_repel*u*dy/r;
+				me->add_to_x_accel_pred(fx);
+				me->add_to_y_accel_pred(fy);
+
+
+				//get fear
+				double q1 = me->get_q_mag();
+				double q2 = 1;
+				double dq = q2-q1;
+				
+				double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
+				double fq =  40*h*dq;
+				me->add_to_q_change(fq);
+			}
+
+			me->iterate_NearestPred();
+		}
+
+		
+	}
+    
+}
 

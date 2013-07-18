@@ -107,7 +107,7 @@ void world::add_predator(double x, double y, void (* up)(agent*,agent*))
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(agents_master.back());
 }
-/*
+
 //add finch at position with given model
 void world::add_finch_rand(double x, double y, void (* up)(agent*,agent*))
 {
@@ -123,7 +123,7 @@ void world::add_finch_rand(double x, double y, void (* up)(agent*,agent*))
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(agents_master.back());
-}*/
+}
 
 void world::add_wall(double c_x, double c_y, double n_x, double n_y, double len, void (* up)(agent*,agent*)){
   
@@ -199,29 +199,29 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 }
 
 //randomly populate world with n predators using given model
-//void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
-//{
-//	for (int i = 0; i < n; i ++)
-//		{
-//			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
-//			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
-//			/*
-//			double x = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
-//			double y = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
-//			if(x > 2*CELL_LENGTH)
-//			{
-//				x += (DOMAIN_DIM_1-4)*CELL_LENGTH;
-//			}
-//			if(y > 2*CELL_LENGTH)
-//			{
-//				y += (DOMAIN_DIM_2-4)*CELL_LENGTH;
-//			}*/
-//			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
-//			add_predator(x, y, up);
-//		}
-//}
+void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
+{
+	for (int i = 0; i < n; i ++)
+		{
+			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			/*
+			double x = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
+			double y = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
+			if(x > 2*CELL_LENGTH)
+			{
+				x += (DOMAIN_DIM_1-4)*CELL_LENGTH;
+			}
+			if(y > 2*CELL_LENGTH)
+			{
+				y += (DOMAIN_DIM_2-4)*CELL_LENGTH;
+			}*/
+			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
+			add_predator(x, y, up);
+		}
+}
 
-/*
+
 void world::populate_finches_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
@@ -232,9 +232,6 @@ void world::populate_finches_rand(int n, void (* up)(agent*,agent*))
 			add_finch_rand(x, y, up);
 		}
 }
-*/
-
-//output positions for plotting
 
 
 void world::run(std::ostream& strm, int print_every, int iterations)
