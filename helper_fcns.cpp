@@ -503,8 +503,8 @@ void wall_interaction(agent* me_fake, agent* you){
 		
 		double u = (double) WALL_PWR / pow(n_dot_r,6);
 		
-		double fx = copysign(1, n_dot_r) * u * r_x / r;
-		double fy = copysign(1, n_dot_r) * u * r_y / r;
+		double fx = n_dot_r / abs(n_dot_r) * u * r_x / r;
+		double fy = n_dot_r / abs(n_dot_r) * u * r_y / r;
 		
 		you->add_to_x_accel(fx);
 		you->add_to_y_accel(fy);

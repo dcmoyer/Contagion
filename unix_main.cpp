@@ -12,7 +12,7 @@ int main()
 	world w = world();
 	//w.add_boundary(velocity_wall_interaction);
 	//w.add_boundary(wall_interaction);
-	w.populate_rand(1000, prey_2012_fear);
+	w.populate_rand(100, prey_2012_fear);
     //w.populate_predator_rand(1, predator_2012);
     //w.add_wall(100.0001, 100, 1, 0, 1000, wall_interaction);
     //w.add_wall(100, 100, -1, 0, 1000, wall_interaction);
