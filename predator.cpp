@@ -1,5 +1,4 @@
 #include "predator.h"
-#include <cstdlib>
 
 predator::predator(double x, double y, void (* up)(agent*,agent*)) {
   //Assign Coordinates
@@ -15,6 +14,7 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    for(int i = 0; i < HIST_LENGTH; i++)
 	        y_accel[i] = 0;
 	    
+	
 	    //Assign Contagion
 	    q_mag = 0;
 	    for(int i = 0; i < HIST_LENGTH; i++)
@@ -28,7 +28,9 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    update = up;
 	    
 	    alive = true;
-	
+
+		
+
     running_r = 1000000;
 	    
 }
@@ -37,8 +39,8 @@ void predator::drag(){
     
     
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-    x_accel[0] += (ALPHA*1.5 - BETA * veloc_mag)*x_veloc[0];
-    y_accel[0] += (ALPHA*1.5 - BETA * veloc_mag)*y_veloc[0];
+    x_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*x_veloc[0];
+    y_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*y_veloc[0];
     running_r = 1000000;
     
     

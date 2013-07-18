@@ -93,6 +93,7 @@ void world::add_agent(double x, double y, void (* up)(agent*,agent*))
 //add predator at position with given model
 void world::add_predator(double x, double y, void (* up)(agent*,agent*))
 {
+	
 	if(x < 0)
 		x = 0;
 	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
@@ -119,6 +120,22 @@ void world::add_finch_rand(double x, double y, void (* up)(agent*,agent*))
 	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
 		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
 	agents_master.push_back(new finch(x, y, up));
+	int i = (int) (x)/CELL_LENGTH;
+	int j = (int) (y)/CELL_LENGTH;
+	cellList[i][j]->add_top(agents_master.back());
+}
+
+void world::add_finch(double x, double y, void (* up)(agent*,agent*), unsigned char params[7])
+{
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+	agents_master.push_back(new finch(x, y, up, params));
 	int i = (int) (x)/CELL_LENGTH;
 	int j = (int) (y)/CELL_LENGTH;
 	cellList[i][j]->add_top(agents_master.back());
@@ -185,14 +202,32 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
-			/*Use this to restrict to the middle
-			double x = 2*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1 - 4*CELL_LENGTH);
-			double y = 2*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2 - 4*CELL_LENGTH);*/
-			
+			double x, y;
+			/*Use this to restrict to the middle*/
+			if(DOMAIN_DIM_1 % 2 == 0)
+			{
+				int padx = DOMAIN_DIM_1 / 2 - 1;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int padx = DOMAIN_DIM_1 / 2;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
+			if(DOMAIN_DIM_2 % 2 == 0)
+			{
+				int pady = DOMAIN_DIM_2 / 2 - 1;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int pady = DOMAIN_DIM_2 / 2;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
 
 
-			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
-			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			//double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			//double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
 			add_agent(x, y, up);
 		}
 }
@@ -200,21 +235,127 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 //randomly populate world with n predators using given model
 void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
 {
-	for (int i = 0; i < n; i++){
-		double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
-		double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
-		add_predator(x, y, up);
-	}
+	for (int i = 0; i < n; i ++)
+		{
+			//double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			//double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			
+			double x, y;
+			/*Use this to restrict to the middle*/
+			if(DOMAIN_DIM_1 % 2 == 0)
+			{
+				int padx = std::max(DOMAIN_DIM_1 / 2 - 2,0);
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+				if( rand() % 2)
+					if(DOMAIN_DIM_1 > 2 )
+						x += 3*CELL_LENGTH;
+					else
+						x += CELL_LENGTH;
+			}
+			else 
+			{
+				int padx = std::max(DOMAIN_DIM_1 / 2 -1,0);
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+				if(DOMAIN_DIM_1 >= 3 && rand() % 2)
+					x += 2*CELL_LENGTH;
+			}
+			if(DOMAIN_DIM_2 % 2 == 0)
+			{
+				int pady = std::max(DOMAIN_DIM_2 / 2 - 2,0);
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+				if(rand() % 2)
+					if(DOMAIN_DIM_2 > 2 )
+						y += 3*CELL_LENGTH;
+					else
+						y += CELL_LENGTH;
+			}
+			else 
+			{
+				int pady = std::max(DOMAIN_DIM_2 / 2 -1,0);
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+				if(DOMAIN_DIM_2 >= 3 && rand() % 2)
+					y += 2*CELL_LENGTH;
+			}
+			add_predator(x, y, up);
+		}
 }
+
 
 void world::populate_finches_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
-			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
-			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			
+			double x, y;
+			/*Use this to restrict to the middle*/
+			if(DOMAIN_DIM_1 % 2 == 0)
+			{
+				int padx = DOMAIN_DIM_1 / 2 - 1;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int padx = DOMAIN_DIM_1 / 2;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
+			if(DOMAIN_DIM_2 % 2 == 0)
+			{
+				int pady = DOMAIN_DIM_2 / 2 - 1;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int pady = DOMAIN_DIM_2 / 2;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
+			
+			//double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			//double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
 			
 			add_finch_rand(x, y, up);
+		}
+}
+
+void world::populate_finches_std(int n, void (* up)(agent*,agent*))
+{
+	for (int i = 0; i < n; i ++)
+		{
+			double x, y;
+			/*Use this to restrict to the middle*/
+			if(DOMAIN_DIM_1 % 2 == 0)
+			{
+				int padx = DOMAIN_DIM_1 / 2 - 1;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int padx = DOMAIN_DIM_1 / 2;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
+			if(DOMAIN_DIM_2 % 2 == 0)
+			{
+				int pady = DOMAIN_DIM_2 / 2 - 1;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int pady = DOMAIN_DIM_2 / 2;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
+			
+			//double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			//double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			
+			unsigned char params[7];
+			params[0] = .45 * 255;
+			params[1] = .5 * 255;
+			params[2] = .01 * 255;
+			params[3] = .6 * 255;
+			params[4] = .6 * 255;
+			params[5] = .5 * 255;
+			params[6] = .5 * 255;
+
+			add_finch(x, y, up, params);
 		}
 }
 
