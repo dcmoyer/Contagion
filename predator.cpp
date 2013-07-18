@@ -28,7 +28,7 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    update = up;
 	    
 	    alive = true;
-		
+	
     running_r = 1000000;
 	    
 }

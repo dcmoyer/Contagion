@@ -1,6 +1,7 @@
 
 
 #include "cell.h"
+#include <iostream>
 
 
 //*******************************************CELL*******************************************//
@@ -105,6 +106,21 @@ cell_node* cell::remove_top() {
     cell_node* out = top;
     top = top->next;
     return out;
+}
+
+void cell::extract_node_and_add(cell_node* target, cell* new_home){
+	if(target == NULL){
+		return;
+	}
+	cell_node* temp = top;
+	while(temp != NULL){
+		if(temp->next == target){
+			temp->next = temp->next->next;
+			break;
+		}
+		temp = temp->next;
+	}
+	new_home->add_top(target);
 }
 
 cell_node* cell::get_top(){

@@ -36,6 +36,7 @@ public:
     cell* get_neighbor(int index);
     
     void move_top(cell* target);
+	void extract_node_and_add(cell_node* target, cell* new_home);
 
     bool isempty();
     

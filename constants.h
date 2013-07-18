@@ -50,6 +50,6 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define PRECISION .5
 
 //Wall Power
-#define WALL_PWR 50
+#define WALL_PWR 500
 
 #endif

@@ -257,6 +257,25 @@ void agent::kill() {
 		alive = false;
 	}
 }
+/*
+void agent::move_inside(int proj_x, int proj_y){
+	if(!alive){
+		return;
+	}
+	double EPSILON = 0.0001;
+	if(proj_x < 0){
+		set_x_coord(EPSILON);
+	} else if(proj_x > DOMAIN_DIM_1){
+		set_x_coord((DOMAIN_DIM_1*CELL_LENGTH) - EPSILON );
+	}
+	if(proj_y < 0){
+		set_y_coord(EPSILON);
+	} else if(proj_y > DOMAIN_DIM_2){
+		set_y_coord((DOMAIN_DIM_2*CELL_LENGTH) - EPSILON );
+	}
+	
+	
+}*/
 
 void agent::iterate_NearestNeighbor(){
     
