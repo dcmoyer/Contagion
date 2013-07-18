@@ -200,6 +200,7 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 //randomly populate world with n predators using given model
 void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
 {
+<<<<<<< HEAD
 	for (int i = 0; i < n; i++){
 		double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
 		double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
@@ -207,6 +208,29 @@ void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
 	}
 }
 
+=======
+	for (int i = 0; i < n; i ++)
+		{
+			double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			/*
+			double x = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
+			double y = CELL_LENGTH + (double)rand() / RAND_MAX * (2*CELL_LENGTH);
+			if(x > 2*CELL_LENGTH)
+			{
+				x += (DOMAIN_DIM_1-4)*CELL_LENGTH;
+			}
+			if(y > 2*CELL_LENGTH)
+			{
+				y += (DOMAIN_DIM_2-4)*CELL_LENGTH;
+			}*/
+			//double z = rand() % (CELL_LENGTH*DOMAIN_DIM_3 ) - 1;
+			add_predator(x, y, up);
+		}
+}
+
+
+>>>>>>> cc3bff8460ffaf70ed492b15f8a58e97a786ff95
 void world::populate_finches_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
