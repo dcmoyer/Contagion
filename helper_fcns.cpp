@@ -305,8 +305,8 @@ void predator_2012( agent* me_fake, agent* you){
     if(r < me->running_r){
         if (you->get_type() == 0) {	
         	me->running_r = r;
-        	me->set_x_accel( PRED_2012_SP * dx/std::abs(dx));
-        	me->set_y_accel( PRED_2012_SP * dy/std::abs(dy));
+        	me->set_x_accel( PRED_2012_ACCEL * dx/r);
+        	me->set_y_accel( PRED_2012_ACCEL * dy/r);
 		}
     }
     
@@ -456,14 +456,14 @@ void prey_2012_fear(agent* me, agent* you){
             
 		}
         
-		if (you->get_type() == 1) {
+		else if (you->get_type() == 1) {
 			if (r < 5) {
 				me->kill();
 			} else {
 				double u = - 2/30 *C_R/L_R * exp(-r / (30 * L_R));  
 				//update velocities
-				double fx = 100*u*dx/r;
-				double fy = 120*u*dy/r;
+				double fx = 10000*u*dx/r;
+				double fy = 12000*u*dy/r;
 				me->add_to_x_accel(fx);
 				me->add_to_y_accel(fy);
 
@@ -503,8 +503,8 @@ void wall_interaction(agent* me_fake, agent* you){
 		
 		double u = (double) WALL_PWR / pow(n_dot_r,6);
 		
-		double fx = copysign(1, n_dot_r) * u * (me->normal_x);
-		double fy = copysign(1, n_dot_r) * u * (me->normal_y);
+		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
+		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
 		
 		you->add_to_x_accel(fx);
 		you->add_to_y_accel(fy);
@@ -537,8 +537,8 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 		 
 		double u = (1 - projected_impact/((me->length)/2.0)) * (double) WALL_PWR / pow(n_dot_r,6);
 		
-		double fx = copysign(1, n_dot_r) * u * me->normal_x;
-		double fy = copysign(1, n_dot_r) * u * me->normal_y;
+		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
+		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
 		
 		you->add_to_x_accel(fx);
 		you->add_to_y_accel(fy);
@@ -547,20 +547,20 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 
 void finch1(agent* me_cast, agent* you)
 {
-	    finch* me = (finch*) me_cast;
+	finch* me = (finch*) me_cast;
     
-	/*
+	
 	//wall check
 	if(you->get_type() == 2){
 		return;
 	}
-	*/
+	
 
 	//get x,y,z coords
 	double x1 = me->x_coord;
-	double y1 = me->get_y_coord();
-	double x2 = you->get_x_coord();
-	double y2 = you->get_y_coord();
+	double y1 = me->y_coord;
+	double x2 = you->x_coord;
+	double y2 = you->y_coord;
 	
     //calculate distances
 	double dx= x2-x1;
@@ -570,7 +570,7 @@ void finch1(agent* me_cast, agent* you)
     
     if (r < CELL_LENGTH) 
 	{
-		if (you->get_type() == 0) \
+		if (you->agent_type == 0) 
 		{
             //get component-wise velocity
 			double vx1 = me->get_x_veloc_index(0);
@@ -581,19 +581,19 @@ void finch1(agent* me_cast, agent* you)
 			double dvy = vy2-vy1;
 
 			//get fear
-			double q1 = me->get_q_mag();
-			double q2 = you->get_q_mag();
+			double q1 = me->q_mag;
+			double q2 = you->q_mag;
 			double dq = q2-q1;
 
 			//calculate attraction-repulsion
-            double ugrad = exp(-r ) - c1 * exp(-r / l1);
+            double ugrad = me->attr_align_ratio * 2 * (exp(-r ) - c1 * exp(-r / l1));
             
             //calculate alignment forces
-            double h = me->v_align_mag / pow((1 + r*r), me->gamma);
+            double h = 1 / pow((1 + r*r), me->gamma);
             
             //update velocities
-            double fx = ugrad*dx/r - h*dvx;
-            double fy = ugrad*dy/r - h*dvy;	//double fx = -h*dvx;
+            double fx = ugrad*dx/r - 2*(1 - me->attr_align_ratio)*h*dvx;
+            double fy = ugrad*dy/r - 2*(1 - me->attr_align_ratio)*h*dvy;	
             
             me->add_to_x_accel_prey(fx);
             me->add_to_y_accel_prey(fy);
@@ -603,12 +603,12 @@ void finch1(agent* me_cast, agent* you)
 			
 			if (dq > 0)
 			{
-				 fq = 6*h*dq;
+				fq = 10*me->empathy*h*dq;
 				me->add_to_q_change(fq);
 			}
 			else
 			{
-				 fq =3*h*dq;
+				fq = 10 * (1-me->empathy)*h*dq;
 				me->add_to_q_change(fq);
 			}
 
@@ -624,8 +624,8 @@ void finch1(agent* me_cast, agent* you)
 			} else {
 				double u = -C_R/L_R * exp(-r / (L_R));  
 				//update velocities
-				double fx = me->pred_repel*u*dx/r;
-				double fy = me->pred_repel*u*dy/r;
+				double fx = u*dx/r;
+				double fy = u*dy/r;
 				me->add_to_x_accel_pred(fx);
 				me->add_to_y_accel_pred(fy);
 
@@ -635,8 +635,8 @@ void finch1(agent* me_cast, agent* you)
 				double q2 = 1;
 				double dq = q2-q1;
 				
-				double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
-				double fq =  40*h*dq;
+				double h = 10 / pow((SIGMA*SIGMA + r*r), me->gamma);
+				double fq =  h*dq;
 				me->add_to_q_change(fq);
 			}
 
