@@ -112,9 +112,17 @@ void cell::extract_node_and_add(cell_node* target, cell* new_home){
 	if(target == NULL){
 		return;
 	}
+	if(target == top){
+		top = target->next;
+		new_home->add_top(target);
+		return;
+	}
+
 	cell_node* temp = top;
 	while(temp != NULL){
+		
 		if(temp->next == target){
+		
 			temp->next = temp->next->next;
 			break;
 		}
