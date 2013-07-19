@@ -20,7 +20,7 @@ cell.o : cell.cpp
 world.o : world.cpp predator.o helper_fcns.o
 	g++ -o world.o -c world.cpp
 
-helper_fcns.o : helper_fcns.cpp predator.o wall.o
+helper_fcns.o : helper_fcns.cpp predator.o wall.o finch.o
 	g++ -o helper_fcns.o -c helper_fcns.cpp
 
 #Trading_Thangs.BETA : Main_Interface.cpp cargo.2.o ship.o battle.o player.o mapgraph.o world.o
@@ -30,7 +30,7 @@ main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o
 	g++ main.cpp helper_fcns.o world.o cell.o agent.o predator.o
 
 unix_main : unix_main.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o
-	g++ -o unix_main -O3 unix_main.cpp helper_fcns.o world.o cell.o agent.o predator.o wall.o
+	g++ -o unix_main -O3 unix_main.cpp helper_fcns.o world.o cell.o agent.o predator.o wall.o finch.o
 
 test_agent: test_agent.o agent.o
 	g++ -o test_agent agent.o test_agent.o
