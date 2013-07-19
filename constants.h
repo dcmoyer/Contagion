@@ -45,7 +45,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define KAPPA 0.5
 
 //2012 Predator Speed
-#define PRED_2012_ACCEL .1
+#define PRED_2012_SP .1
 //Probability of kill
 #define PRECISION .5
 
