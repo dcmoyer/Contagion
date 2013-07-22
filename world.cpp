@@ -700,3 +700,83 @@ void world::print_csv(std::string filename){
     out.close();
 
 }
+
+void world::repopulate(void (* up)(agent*,agent*)) {
+	// Delete old cells
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		for(int j = 0; j < DOMAIN_DIM_2; j++){
+			delete cellList[i][j];
+		}
+	}
+	    
+	delete theLonelyIsland;
+	
+	// Create new cells
+	for (int i = 0; i < DOMAIN_DIM_1; i++) 
+	{
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+		{
+			cellList[i][j] = new cell;
+	    }
+	}
+	  
+
+	//tell the cells who their neighbors are
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+	{
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+		{
+			
+			vector<cell*> v(8);
+			v[0] = cellList[i-1][j-1];
+			v[1] = cellList[i][j-1];
+			v[2] = cellList[i+1][j-1];
+
+			v[3] = cellList[i-1][j];
+			v[4] = cellList[i+1][j];
+			
+			v[5] = cellList[i-1][j+1];
+			v[6] = cellList[i][j+1];
+			v[7] = cellList[i+1][j+1];
+
+			if(i == 0)
+			{
+				v[0]=v[3]=v[5]=NULL;
+	        }
+			if((i+1) == DOMAIN_DIM_1)
+			{
+				v[2]=v[4]=v[7]=NULL;
+			}
+			if(j == 0)
+			{
+				v[0]=v[1]=v[2]=NULL;
+			}
+			if((j+1) == DOMAIN_DIM_2)
+			{
+				v[5]=v[6]=v[7]=NULL;
+			}
+	            
+			cellList[i][j]->set_neighbors(v);
+		}
+	}
+	theLonelyIsland = new cell;
+		
+	// Copy the values
+	char parameter [NUMBER][7];
+	for(int i = 0; i < agents_master.size(); i++) {
+		if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) {
+			finch* current = (finch*) agents_master[i];
+			for (int j = 0; j < 7; j++) {
+				parameter[i][j] = (*current).params[j];
+			}
+		}
+	}
+		
+	// Deleta all the agents
+	for(int i = 0; i < agents_master.size(); i++) {
+		delete agents_master[i];
+	}
+	
+	agents_master.clear();
+	
+}
