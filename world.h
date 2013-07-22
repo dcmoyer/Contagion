@@ -38,6 +38,7 @@ public:
 	vector<agent*> agents_master;
     cell* cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
     cell* theLonelyIsland; //no agent is an island.
+    int death_count;
     
     void add_agent(double x, double y, void (* up)(agent*,agent*));
     void add_predator(double x, double y, void (* up)(agent*,agent*));
