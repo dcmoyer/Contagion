@@ -39,6 +39,7 @@ public:
 	virtual void drag(); 
 
 	void kill();
+	void die();
 	void move_inside(int proj_x, int proj_y);
 	void iterate_NearestNeighbor();
 
