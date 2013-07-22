@@ -52,4 +52,6 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 //Wall Power
 #define WALL_PWR 500
 
+#define NUMBER 500
+
 #endif
