@@ -631,7 +631,7 @@ void world::move_to_cell() {
 						//current_agent->move_inside(x,y);
 						current_agent->die();
 						theLonelyIsland->add_top(current_node);
-						count = count + 1;
+						death_count = death_count + 1;
 					}
 					else{
 						cellList[x][y]->add_top(current_node);
