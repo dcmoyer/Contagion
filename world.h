@@ -51,6 +51,7 @@ public:
     void populate_predator_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_std(int n, void (* up)(agent*,agent*));
+	void repopulate(void (* up)(agent*,agent*));
 
 
 	
