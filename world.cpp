@@ -51,6 +51,7 @@ world::world()
         }
     }
 	theLonelyIsland = new cell;
+	death_count = 0;
 }
 
 //destructor
