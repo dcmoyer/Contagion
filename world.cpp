@@ -656,7 +656,7 @@ void world::print(std::ostream& strm)
 {
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
-			if(agents_master[i]->alive)
+			if(agents_master[i]->is_alive())
 			{
 			strm<< agents_master[i]->get_heading() << "," << (*agents_master[i]).get_x_coord() 
 		      <<"," << (*agents_master[i]).get_y_coord() 
@@ -781,4 +781,31 @@ void world::repopulate(void (* up)(agent*,agent*)) {
 	
 	agents_master.clear();
 	
+}
+
+void world::print_parameter(std::ostream& strm)
+{
+	for (size_t  i = 0; i < agents_master.size(); i++)
+		{
+			if(agents_master[i]->is_alive() && agents_master[i]->get_type() == 0)
+			{
+				finch* current = (finch*) agents_master[i];
+			strm << (*current).gamma << " " 
+			<< (*current).adrenaline << " " 
+			<< (*current).fear_decay << " " 
+			<< (*current).empathy << " " 
+			<< (*current).emote_pdpy_ratio << " " 
+			<< (*current).motion_pdpy_ratio << " " 
+			<< (*current).attr_align_ratio << " ";
+			} else {
+				strm << 0 << " " 
+				<< 0 << " " 
+				<< 0 << " " 
+				<< 0 << " " 
+				<< 0 << " " 
+				<< 0 << " " 
+				<< 0 << " "; 
+			}
+		}
+	strm << "\n";
 }
