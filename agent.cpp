@@ -257,6 +257,11 @@ void agent::kill() {
 		alive = false;
 	}
 }
+
+void agent::die() {
+	
+	alive = false;
+}
 /*
 void agent::move_inside(int proj_x, int proj_y){
 	if(!alive){
