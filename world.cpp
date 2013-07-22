@@ -628,7 +628,7 @@ void world::move_to_cell() {
 					if(x < 0 || x >= DOMAIN_DIM_1 || y < 0 || y >= DOMAIN_DIM_2){
 						
 						//current_agent->move_inside(x,y);
-						current_agent->kill();
+						current_agent->die();
 						theLonelyIsland->add_top(current_node);
 					}
 					else{
