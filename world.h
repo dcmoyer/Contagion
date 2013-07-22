@@ -69,6 +69,7 @@ public:
 	void move_to_cell();
 	void print(std::ostream& strm);
 	void print_csv(std::string filename);
+	void print_parameter(std::ostream& strm);
 
  private:
     
