@@ -370,11 +370,13 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 	for(int i = 1; i <= 4; i++)
 	{
         update_forward_velocs();
+		
 		update_agent_pos_euler();
 		move_to_cell();
 		if(i % print_every == 0){
 			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
 			print(strm);
+			
 		}
 		//w.print(str);
 		//w.print(std::cout);
@@ -385,6 +387,43 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 	{
 		update_forward_velocs();
 		update_agent_pos_ab4();
+		move_to_cell();
+		if(i % print_every == 0){
+			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
+			print(strm);
+		}
+		//w.print(str);
+		//w.print(std::cout);
+	}
+
+}
+
+void world::run_evolution(std::ostream& strm, int print_every, int iterations)
+{
+	
+    time_t t = time(NULL);
+	std::cout << 0 << " " << time(NULL) - t << " total seconds elapsed" << "\n";
+	print(strm);
+	for(int i = 1; i <= 4; i++)
+	{
+        update_forward_velocs();
+		
+		euler_evolve();
+		move_to_cell();
+		if(i % print_every == 0){
+			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
+			print(strm);
+			
+		}
+		//w.print(str);
+		//w.print(std::cout);
+    }
+
+	//solve using AB4
+	for(int i = 5; i <= iterations; i++)
+	{
+		update_forward_velocs();
+		ab4_evolve();
 		move_to_cell();
 		if(i % print_every == 0){
 			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
@@ -602,6 +641,48 @@ void world::update_agent_pos_ab4(){
   
 }
 
+void world::euler_evolve(){
+
+    for(int i = 0; i < DOMAIN_DIM_1; i++){
+        for(int j = 0; j < DOMAIN_DIM_2; j++){
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            for(target; target.current != NULL; target.next()){
+                if (target.current->get_agent()->is_alive()) {
+                    target.current->get_agent()->normalize_accel();
+					target.current->get_agent()->drag();
+                    target.current->get_agent()->euler_update();
+                } else {
+                    target.current->get_agent()->set_x_coord(-1);
+					target.current->get_agent()->set_y_coord(-1);
+					target.current->get_agent()->print_genome();
+				}
+			}
+		}
+	}
+    
+}
+
+
+void world::ab4_evolve(){
+
+  for(int i = 0; i < DOMAIN_DIM_1; i++){
+	for(int j = 0; j < DOMAIN_DIM_2; j++){
+		cell_node_iterator target = cellList[i][j]->get_iter();
+		for(target; target.current != NULL; target.next()){
+			if (target.current->get_agent()->is_alive()) {
+				target.current->get_agent()->normalize_accel();
+				target.current->get_agent()->drag();
+				target.current->get_agent()->ab4_update();
+			} else {
+				target.current->get_agent()->set_x_coord(-1);
+				target.current->get_agent()->set_y_coord(-1);
+				target.current->get_agent()->print_genome();
+				}
+			}
+		}
+	}
+  
+}
 
 void world::move_to_cell() {
 	for (int i = 0; i < DOMAIN_DIM_1; i++) {
@@ -612,8 +693,11 @@ void world::move_to_cell() {
 			while (current_node != NULL) {
 				agent* current_agent = current_node->get_agent();
 				if(!(current_agent->is_alive())) {
+					
 					cell_node* temp = current_node->get_next();
+				
 					current_cell->extract_node_and_add(current_node, theLonelyIsland);
+				
 					current_node = temp;
 					continue;
 				}
@@ -629,9 +713,10 @@ void world::move_to_cell() {
 					if(x < 0 || x >= DOMAIN_DIM_1 || y < 0 || y >= DOMAIN_DIM_2){
 						
 						//current_agent->move_inside(x,y);
-						current_agent->die();
+						current_agent->kill();
+						
 						theLonelyIsland->add_top(current_node);
-						death_count = death_count + 1;
+						death_count++;
 					}
 					else{
 						cellList[x][y]->add_top(current_node);
@@ -656,7 +741,7 @@ void world::print(std::ostream& strm)
 {
 	for (size_t  i = 0; i < agents_master.size(); i++)
 		{
-			if(agents_master[i]->is_alive())
+			if(agents_master[i]->alive)
 			{
 			strm<< agents_master[i]->get_heading() << "," << (*agents_master[i]).get_x_coord() 
 		      <<"," << (*agents_master[i]).get_y_coord() 
@@ -702,6 +787,7 @@ void world::print_csv(std::string filename){
     out.close();
 
 }
+
 
 void world::repopulate(void (* up)(agent*,agent*)) {
 	// Delete old cells
