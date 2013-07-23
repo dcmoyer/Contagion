@@ -52,8 +52,9 @@ public:
     void populate_predator_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_std(int n, void (* up)(agent*,agent*));
-	void repopulate(void (* up)(agent*,agent*), std::ostream& strm);
-	
+	void repopulate1(void (* up)(agent*,agent*), std::ostream& strm);
+	void repopulate2(void (* up)(agent*,agent*), std::ostream& strm);
+
 	void run(std::ostream& strm, int print_every, int iterations);
 	void run_evolution(std::ostream& g_out);
 
