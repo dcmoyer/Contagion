@@ -52,12 +52,10 @@ public:
     void populate_predator_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_std(int n, void (* up)(agent*,agent*));
-	void repopulate(void (* up)(agent*,agent*));
-
-	
+	void repopulate(void (* up)(agent*,agent*), std::ostream& strm);
 	
 	void run(std::ostream& strm, int print_every, int iterations);
-	void run_evolution(std::ostream& strm, int print_every, int iterations);
+	void run_evolution(std::ostream& g_out);
 
     cell* get_cell(int i, int j);
     int is_empty(int i, int j);
@@ -68,6 +66,7 @@ public:
     void update_agent_pos_ab4();
 	void euler_evolve();
     void ab4_evolve();
+	
 	void move_to_cell();
 	void print(std::ostream& strm);
 	void print_csv(std::string filename);

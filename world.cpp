@@ -398,41 +398,22 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 
 }
 
-void world::run_evolution(std::ostream& strm, int print_every, int iterations)
+void world::run_evolution(std::ostream& gen_out)
 {
-	
-    time_t t = time(NULL);
-	std::cout << 0 << " " << time(NULL) - t << " total seconds elapsed" << "\n";
-	print(strm);
 	for(int i = 1; i <= 4; i++)
 	{
         update_forward_velocs();
-		
 		euler_evolve();
 		move_to_cell();
-		if(i % print_every == 0){
-			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
-			print(strm);
-			
-		}
-		//w.print(str);
-		//w.print(std::cout);
     }
 
 	//solve using AB4
-	for(int i = 5; i <= iterations; i++)
+	while(death_count < 3)
 	{
 		update_forward_velocs();
 		ab4_evolve();
 		move_to_cell();
-		if(i % print_every == 0){
-			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
-			print(strm);
-		}
-		//w.print(str);
-		//w.print(std::cout);
 	}
-
 }
 
 // Functions that are helpful for debugging 
@@ -697,6 +678,8 @@ void world::move_to_cell() {
 					cell_node* temp = current_node->get_next();
 				
 					current_cell->extract_node_and_add(current_node, theLonelyIsland);
+					death_count++;
+					std::cout << "\n death count is  "<<  death_count << "\n";
 				
 					current_node = temp;
 					continue;
@@ -717,6 +700,8 @@ void world::move_to_cell() {
 						
 						theLonelyIsland->add_top(current_node);
 						death_count++;
+						std::cout << "\n out of bounds kill \n";
+						std::cout << "\n death count is  "<<  death_count << "\n";
 					}
 					else{
 						cellList[x][y]->add_top(current_node);
@@ -734,7 +719,6 @@ void world::move_to_cell() {
 		}
 	}
 }
-
 
 
 void world::print(std::ostream& strm)
@@ -789,7 +773,9 @@ void world::print_csv(std::string filename){
 }
 
 
-void world::repopulate(void (* up)(agent*,agent*)) {
+void world::repopulate(void (* up)(agent*,agent*), std::ostream& strm) 
+{
+
 	// Delete old cells
 	for(int i = 0; i < DOMAIN_DIM_1; i++){
 		for(int j = 0; j < DOMAIN_DIM_2; j++){
@@ -860,14 +846,20 @@ void world::repopulate(void (* up)(agent*,agent*)) {
 		}
 	}
 		
-	// Deleta all the agents
+	// Delete all the agents
 	for(int i = 0; i < agents_master.size(); i++) {
 		delete agents_master[i];
 	}
 	
 	agents_master.clear();
-	
+	death_count = 0;
+
+	//Repopulate!
+	populate_finches_std(15, up);
+
+
 }
+
 
 void world::print_parameter(std::ostream& strm)
 {
@@ -876,13 +868,13 @@ void world::print_parameter(std::ostream& strm)
 			if(agents_master[i]->is_alive() && agents_master[i]->get_type() == 0)
 			{
 				finch* current = (finch*) agents_master[i];
-			strm << (*current).gamma << " " 
-			<< (*current).adrenaline << " " 
-			<< (*current).fear_decay << " " 
-			<< (*current).empathy << " " 
-			<< (*current).emote_pdpy_ratio << " " 
-			<< (*current).motion_pdpy_ratio << " " 
-			<< (*current).attr_align_ratio << " ";
+			strm << (*current).params[0] << " " 
+			<< (*current).params[1] << " " 
+			<< (*current).params[2] << " " 
+			<< (*current).params[3] << " " 
+			<< (*current).params[4] << " " 
+			<< (*current).params[5] << " " 
+			<< (*current).params[6] << " ";
 			} else {
 				strm << 0 << " " 
 				<< 0 << " " 
