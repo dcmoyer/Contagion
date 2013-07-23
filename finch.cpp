@@ -111,8 +111,8 @@
 		y_accel_pred =  (y_accel_pred / (double) NearestPred_count);
 	}
 
-	x_accel[0] +=  motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred;
-	y_accel[0] +=  motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred;
+	x_accel[0] +=  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred;
+	y_accel[0] +=  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred;
 	q_change[0] = emote_pdpy_ratio * q_change_prey + (1 - emote_pdpy_ratio) *q_change_pred;
 
 	x_accel_prey =  0;
@@ -128,12 +128,124 @@
  void finch::drag()
 {
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-	double A = alpha_1*4*pow((q_mag - q_mag * adrenaline + adrenaline), 2);
-	x_accel[0] += (A - veloc_mag)*x_veloc[0];
-	y_accel[0] += (A - veloc_mag)*y_veloc[0];
+	double A = ALPHA*4*pow((q_mag - q_mag * adrenaline + adrenaline), 2);
+	x_accel[0] += (A - BETA * veloc_mag)*x_veloc[0];
+	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0];
 	q_change[0] += -q_mag * fear_decay;
     NearestNeighbor_count = 0;
+	
 } 
+
+ void finch::ab4_update()
+{
+    assert(HIST_LENGTH >= 4);
+    
+    double forward_v_x = x_veloc[0] +
+                ( (STEP_SIZE * (1.0/24.0)) * 
+                 ((55 * x_accel[0]) -
+                  (59 * x_accel[1]) +
+                  (37 * x_accel[2]) -
+                  (9  * x_accel[3])));
+    
+    double forward_v_y = y_veloc[0] +
+                ( (STEP_SIZE * (1.0/24.0)) * 
+                 ((55 * y_accel[0]) -
+                  (59 * y_accel[1]) +
+                  (37 * y_accel[2]) -
+                  (9  * y_accel[3])));
+
+    
+
+    x_coord = x_coord +
+                ( (STEP_SIZE * (1.0/24.0)) * 
+                  ((55 * forward_v_x) -
+                   (59 * x_veloc[0]) +
+                   (37 * x_veloc[1]) -
+                   (9  * x_veloc[2])));
+    
+    y_coord = y_coord +
+                ( (STEP_SIZE * (1.0/24.0)) *
+                  ((55 * forward_v_y) -
+                   (59 * y_veloc[0]) +
+                   (37 * y_veloc[1]) -
+                   (9  * y_veloc[2])));
+
+	q_mag = q_mag +
+                ( (STEP_SIZE * (1.0/24.0)) *
+                  ((55 * q_change[0]) -
+                   (59 * q_change[1]) +
+                   (37 * q_change[2]) -
+                   (9  * q_change[3])));
+    
+    //Move history forward.
+    
+    for(int i = HIST_LENGTH - 1; i > 0; --i){
+        
+        x_veloc[i] = x_veloc[i-1];
+        x_accel[i] = x_accel[i-1];
+        y_veloc[i] = y_veloc[i-1];
+        y_accel[i] = y_accel[i-1];
+		
+        q_change[i] = q_change[i-1];
+
+    }
+    
+    x_veloc[0] = forward_v_x;
+    y_veloc[0] = forward_v_y;
+    x_accel[0] = 0;
+    y_accel[0] = 0;
+
+	q_change[0] = 0;
+    
+	//std::cout << "\n NOW MY FEAR IS   " << q_mag << "\n";
+	if(q_mag < 0 || q_mag > 1)
+	{
+		q_mag = 1;
+		std::cout << "fuck";
+	}
+}
+
+void finch::euler_update()
+{
+    double forward_v_x = x_veloc[0] + (STEP_SIZE * x_accel[0]);
+    
+    double forward_v_y = y_veloc[0] + (STEP_SIZE * y_accel[0]);
+    
+	
+    x_coord = x_coord +
+        (STEP_SIZE * forward_v_x);
+    
+    y_coord = y_coord +
+        (STEP_SIZE * forward_v_y);
+
+    q_mag = (q_mag + (STEP_SIZE * q_change[0]));
+
+    for(int i = HIST_LENGTH - 1; i > 0; --i){
+        
+        x_veloc[i] = x_veloc[i-1];
+        x_accel[i] = x_accel[i-1];
+        y_veloc[i] = y_veloc[i-1];
+        y_accel[i] = y_accel[i-1];
+        
+		q_change[i] = q_change[i-1];
+
+    }
+    
+    x_veloc[0] = forward_v_x;
+    y_veloc[0] = forward_v_y;
+    x_accel[0] = 0;
+    y_accel[0] = 0;
+    
+	q_change[0] = 0;
+
+	//std::cout << "\n NOW MY FEAR IS   " << q_mag << "\n";
+	if(q_mag < 0 || q_mag > 1)
+	{
+		q_mag = 1;
+		std::cout << "fuck";
+	}
+}
+
 
 
 void finch::iterate_NearestPred(){
@@ -166,3 +278,20 @@ void finch::add_to_y_accel_pred(double add_to_accel){
     
 }
 
+void finch::add_to_q_change_prey(double q_c){
+    
+   
+        q_change_prey += q_c;
+    
+}
+
+void finch::add_to_q_change_pred(double q_c){
+    
+   
+        q_change_pred += q_c;
+    
+}
+
+void finch::print_genome(){
+	std::cout << 2;
+}

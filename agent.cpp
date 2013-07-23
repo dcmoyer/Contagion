@@ -252,15 +252,8 @@ void agent::drag()
 } 
 
 void agent::kill() {
-	double p = (double)rand()/(double)RAND_MAX;
-	if (p < PRECISION) {
-		alive = false;
-	}
-}
 
-void agent::die() {
-	
-	alive = false;
+		alive = false;
 }
 /*
 void agent::move_inside(int proj_x, int proj_y){
@@ -509,4 +502,8 @@ void agent::add_to_q_change(double q_c){
    
         q_change[0] += q_c;
     
+}
+
+void agent::print_genome(){
+	std::cout << 1;
 }

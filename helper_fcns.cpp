@@ -433,8 +433,8 @@ void prey_2012_fear(agent* me, agent* you){
             double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
             
             //update velocities
-            double fx = ugrad*dx/r;// - h*dvx;
-            double fy = ugrad*dy/r;// - h*dvy	//double fx = -h*dvx;
+            double fx = ugrad*dx/r - h*dvx;
+            double fy = ugrad*dy/r - h*dvy;
             
             me->add_to_x_accel(fx);
             me->add_to_y_accel(fy);
@@ -501,7 +501,7 @@ void wall_interaction(agent* me_fake, agent* you){
 	double p_n_y = n_dot_r * (me->normal_y);
 	if( sqrt(pow((r_x - p_n_x),2) + pow((r_y - p_n_y),2)) < (me->length) ){
 		
-		double u = (double) WALL_PWR / pow(n_dot_r,6);
+		double u = (double) WALL_PWR / pow(n_dot_r,4);
 		
 		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
 		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
@@ -535,7 +535,7 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 	double projected_impact = (std::tan(std::acos(n_dot_v/sqrt(v_x*v_x + v_y*v_y))) * n_dot_r );
 	if( n_dot_v < 0  && ( projected_impact < (me->length)/2.0 )){
 		 
-		double u = (1 - projected_impact/((me->length)/2.0)) * (double) WALL_PWR / pow(n_dot_r,6);
+		double u = (1 - projected_impact/((me->length)/2.0)) * 90001 * (double) WALL_PWR / pow(n_dot_r,4);
 		
 		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
 		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
@@ -586,10 +586,10 @@ void finch1(agent* me_cast, agent* you)
 			double dq = q2-q1;
 
 			//calculate attraction-repulsion
-            double ugrad = me->attr_align_ratio * 2 * (exp(-r ) - c1 * exp(-r / l1));
+            double ugrad = me->attr_align_ratio * 2 * (C_A/L_A * exp(-r / L_A) - C_R/L_R * exp(-r / L_R));
             
             //calculate alignment forces
-            double h = 1 / pow((1 + r*r), me->gamma);
+            double h = KAPPA / pow((1 + r*r), me->gamma);
             
             //update velocities
             double fx = ugrad*dx/r - 2*(1 - me->attr_align_ratio)*h*dvx;
@@ -609,7 +609,7 @@ void finch1(agent* me_cast, agent* you)
 			else
 			{
 				fq = 10 * (1-me->empathy)*h*dq;
-				me->add_to_q_change(fq);
+				me->add_to_q_change_prey(fq);
 			}
 
 
@@ -617,11 +617,20 @@ void finch1(agent* me_cast, agent* you)
             
 		}
         
-		if (you->get_type() == 1) 
+		else if (you->get_type() == 1) 
 		{
-			if (r < 5) {
-				me->kill();
-			} else {
+			if (r < 5) 
+			{
+				double p = (double)rand()/(double)RAND_MAX;
+				if (p < PRECISION) 
+				{
+					me->kill();
+					std::cout << "r = " << r << "\n";
+				}
+				
+			} 
+
+			else {
 				double u = -C_R/L_R * exp(-r / (L_R));  
 				//update velocities
 				double fx = u*dx/r;
@@ -637,7 +646,7 @@ void finch1(agent* me_cast, agent* you)
 				
 				double h = 10 / pow((SIGMA*SIGMA + r*r), me->gamma);
 				double fq =  h*dq;
-				me->add_to_q_change(fq);
+				me->add_to_q_change_pred(fq);
 			}
 
 			me->iterate_NearestPred();

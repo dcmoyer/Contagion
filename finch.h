@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cassert> 
 #include <cstdlib>
+#include <iostream>
 
 class finch : public agent {
 private:
@@ -35,13 +36,18 @@ public:
 	
 	virtual void normalize_accel();
 	virtual void drag();
+	virtual void ab4_update();
+	virtual void euler_update();
 
-	
+	virtual void print_genome();
 	void iterate_NearestPred();
 
 	void add_to_x_accel_prey(double add_to_accel);
     void add_to_y_accel_prey(double add_to_accel);
 	void add_to_x_accel_pred(double add_to_accel);
     void add_to_y_accel_pred(double add_to_accel);
+
+	void add_to_q_change_prey(double q_c);
+	void add_to_q_change_pred(double q_c);
 };
 #endif 

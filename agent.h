@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 
 
 
@@ -37,9 +38,9 @@ public:
 	virtual void euler_update();
     virtual void normalize_accel();
 	virtual void drag(); 
+	virtual void print_genome();
 
 	void kill();
-	void die();
 	void move_inside(int proj_x, int proj_y);
 	void iterate_NearestNeighbor();
 
