@@ -305,8 +305,8 @@ void predator_2012( agent* me_fake, agent* you){
     if(r < me->running_r){
         if (you->get_type() == 0) {	
         	me->running_r = r;
-        	me->set_x_accel( PRED_2012_ACCEL * dx/r);
-        	me->set_y_accel( PRED_2012_ACCEL * dy/r);
+        	me->set_target_interaction_x( PRED_2012_ACCEL * dx/r);
+        	me->set_target_interaction_y( PRED_2012_ACCEL * dy/r);
 		}
     }
     

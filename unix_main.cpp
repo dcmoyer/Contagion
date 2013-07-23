@@ -10,9 +10,12 @@ int main()
 	//std::string filename = "test_data.dat";
 	time_t t = time(NULL);
 	world w = world();
-	w.add_boundary(velocity_wall_interaction);
+	//w.add_boundary(velocity_wall_interaction);
 	w.add_boundary(wall_interaction);
-	w.populate_rand(100, swarm1 );
+	//w.populate_rand(1, swarm1 );
+	w.add_agent(10,10, prey_2012_fear);
+	w.add_agent(40,10, pre`y_2012_fear);
+	w.add_predator(40,40,predator_2012);
 	//w.populate_predator_rand(1, predator_2012);
 	//w.add_wall(100.0001, 100, 1, 0, 1000, wall_interaction);
 	//w.add_wall(50, 50, -1, 0, 1000, wall_interaction);

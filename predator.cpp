@@ -29,7 +29,8 @@ predator::predator(double x, double y, void (* up)(agent*,agent*)) {
 	    
 	    alive = true;
 
-		
+		target_interaction_x = 0;
+		target_interaction_y = 0;
 
     running_r = 1000000;
 	    
@@ -39,13 +40,27 @@ void predator::drag(){
     
     
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-    x_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*x_veloc[0];
-    y_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*y_veloc[0];
+    x_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*x_veloc[0] + target_interaction_x;
+    y_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*y_veloc[0] + target_interaction_y;
     running_r = 1000000;
     
+	target_interaction_x = 0;
+	target_interaction_y = 0;
     
 }
 
 double predator::get_running_r(){
     return running_r;
+}
+
+void predator::set_target_interaction_x(double x){
+	
+	target_interaction_x = x;
+			
+}
+
+void predator::set_target_interaction_y(double y){
+	
+	target_interaction_y = y;
+	
 }
