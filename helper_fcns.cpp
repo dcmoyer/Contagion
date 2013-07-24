@@ -501,7 +501,7 @@ void wall_interaction(agent* me_fake, agent* you){
 	double p_n_y = n_dot_r * (me->normal_y);
 	if( sqrt(pow((r_x - p_n_x),2) + pow((r_y - p_n_y),2)) < (me->length) ){
 		
-		double u = (double) WALL_PWR / pow(n_dot_r,4);
+		double u = (double) WALL_PWR / pow(n_dot_r,2);
 		
 		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
 		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
@@ -533,9 +533,10 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 	double n_dot_v = v_x * (me->normal_x) + v_y * (me->normal_y);
 	
 	double projected_impact = (std::tan(std::acos(n_dot_v/sqrt(v_x*v_x + v_y*v_y))) * n_dot_r );
-	if( n_dot_v < 0  && ( projected_impact < (me->length)/2.0 )){
+	if( n_dot_v < 0 ){
 		 
-		double u = (1 - projected_impact/((me->length)/2.0)) * 90001 * (double) WALL_PWR / pow(n_dot_r,4);
+		double scale = (abs(n_dot_v) + 1) * 100;
+		double u = scale * (double) WALL_PWR / pow(n_dot_r,4);
 		
 		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
 		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
