@@ -398,21 +398,21 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 
 }
 
-void world::run_evolution(std::ostream& gen_out)
+void world::run_evolution()
 {
 	for(int i = 1; i <= 4; i++)
 	{
         update_forward_velocs();
 		euler_evolve();
-		move_to_cell();
+		move_to_cell_evo();
     }
 
 	//solve using AB4
-	while(death_count < 3)
+	while(death_count < 5)
 	{
 		update_forward_velocs();
 		ab4_evolve();
-		move_to_cell();
+		move_to_cell_evo();
 	}
 }
 
@@ -635,7 +635,7 @@ void world::euler_evolve(){
                 } else {
                     target.current->get_agent()->set_x_coord(-1);
 					target.current->get_agent()->set_y_coord(-1);
-					target.current->get_agent()->print_genome();
+					
 				}
 			}
 		}
@@ -657,7 +657,7 @@ void world::ab4_evolve(){
 			} else {
 				target.current->get_agent()->set_x_coord(-1);
 				target.current->get_agent()->set_y_coord(-1);
-				target.current->get_agent()->print_genome();
+				
 				}
 			}
 		}
@@ -666,6 +666,8 @@ void world::ab4_evolve(){
 }
 
 void world::move_to_cell() {
+	/*Sorry for hijacking this for evolution stuff, you may want to revert it if you 
+	don't want the alerts. I will be using move_to_cel_evo instead. (Doug) */
 	for (int i = 0; i < DOMAIN_DIM_1; i++) {
 		for (int j = 0; j < DOMAIN_DIM_2; j++) {
 			cell* current_cell = cellList[i][j];
@@ -721,6 +723,92 @@ void world::move_to_cell() {
 }
 
 
+void world::move_to_cell_evo() {
+	for (int i = 0; i < DOMAIN_DIM_1; i++) {
+		for (int j = 0; j < DOMAIN_DIM_2; j++) {
+			cell* current_cell = cellList[i][j];
+			cell_node* current_node = current_cell->get_top();
+			cell_node* prev = NULL;
+			while (current_node != NULL) {
+				agent* current_agent = current_node->get_agent();
+				if(!(current_agent->is_alive())) {
+					
+					cell_node* temp = current_node->get_next();
+				
+					current_cell->extract_node_and_add(current_node, theLonelyIsland);
+					death_count++;
+					//std::cout << "\n death count is  "<<  death_count << " lemme check the pop \n";
+				
+					int ams = agents_master.size();
+					int count = 0;
+					for(int i = 0; i < ams; i++) 
+					{
+						if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) 
+						{								
+							count++;
+						}
+					}
+					std::cout << "Remaining population: " << count << " \n";
+
+
+					current_node = temp;
+					continue;
+				}
+				int x = current_agent->cell_num_dim1();
+				int y = current_agent->cell_num_dim2();
+				if ( (current_agent->get_type() != 2) && (x != i || y != j)) {
+					if (prev == NULL) {
+						current_node = current_cell->remove_top();
+					} else {
+						prev->set_next(current_node->get_next());
+						current_node->set_next(NULL);
+					}
+					if(x < 0 || x >= DOMAIN_DIM_1 || y < 0 || y >= DOMAIN_DIM_2){
+						
+						//current_agent->move_inside(x,y);
+						current_agent->kill();
+						
+						theLonelyIsland->add_top(current_node);
+						if (current_agent->get_type() == 0)
+						{
+							death_count++;
+							std::cout << "Out of bounds kill, THIS IS BAD \n";
+							int ams = agents_master.size();
+							int count = 0;
+							for(int i = 0; i < ams; i++) 
+							{
+								if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) 
+								{								
+									count++;
+								}
+							}
+							std::cout << "Remaining population: " << count << " \n";
+						}
+						else
+						{
+							
+							std::cout << "\n predator out of bounds, THIS IS BAD \n";
+							
+						}
+					}
+					else{
+						cellList[x][y]->add_top(current_node);
+					}
+					if(prev == NULL){
+						current_node = current_cell->get_top();
+					} else {
+						current_node = prev->get_next();
+					}
+				} else {
+					prev = current_node;
+					current_node = current_node->get_next();
+				}
+			}
+		}
+	}
+}
+
+
 void world::print(std::ostream& strm)
 {
 	for (size_t  i = 0; i < agents_master.size(); i++)
@@ -733,6 +821,7 @@ void world::print(std::ostream& strm)
 		      << "," << (*agents_master[i]).get_q_mag() 
 		      << ",";
 			}
+			
 			else
 			{
 				strm << 0 << "," << -100
@@ -773,8 +862,9 @@ void world::print_csv(std::string filename){
 }
 
 
-void world::repopulate1(void (* up)(agent*,agent*), std::ostream& strm) 
+void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out) 
 {
+	
 
 	// Delete old cells
 	for(int i = 0; i < DOMAIN_DIM_1; i++){
@@ -785,64 +875,72 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& strm)
 	    
 	delete theLonelyIsland;
 	
-	// Create new cells
-	for (int i = 0; i < DOMAIN_DIM_1; i++) 
-	{
-		for(int j = 0; j < DOMAIN_DIM_2; j++) 
-		{
-			cellList[i][j] = new cell;
-	    }
-	}
-	  
-
-	//tell the cells who their neighbors are
+	//create the cells
 	for (int i = 0; i < DOMAIN_DIM_1; i++)
-	{
+    {
 		for(int j = 0; j < DOMAIN_DIM_2; j++) 
-		{
-			
-			vector<cell*> v(8);
-			v[0] = cellList[i-1][j-1];
-			v[1] = cellList[i][j-1];
-			v[2] = cellList[i+1][j-1];
+        {
+			cellList[i][j] = new cell;
+        }
+    }
+  
+  //tell the cells who their neighbors are
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+    {
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+            vector<cell*> v(8);
+            v[0] = cellList[i-1][j-1];
+            v[1] = cellList[i][j-1];
+            v[2] = cellList[i+1][j-1];
 
-			v[3] = cellList[i-1][j];
-			v[4] = cellList[i+1][j];
-			
-			v[5] = cellList[i-1][j+1];
-			v[6] = cellList[i][j+1];
-			v[7] = cellList[i+1][j+1];
+            v[3] = cellList[i-1][j];
+            v[4] = cellList[i+1][j];
 
-			if(i == 0)
-			{
-				v[0]=v[3]=v[5]=NULL;
-	        }
-			if((i+1) == DOMAIN_DIM_1)
-			{
-				v[2]=v[4]=v[7]=NULL;
-			}
-			if(j == 0)
-			{
-				v[0]=v[1]=v[2]=NULL;
-			}
-			if((j+1) == DOMAIN_DIM_2)
-			{
-				v[5]=v[6]=v[7]=NULL;
-			}
-	            
-			cellList[i][j]->set_neighbors(v);
-		}
-	}
+            v[5] = cellList[i-1][j+1];
+            v[6] = cellList[i][j+1];
+            v[7] = cellList[i+1][j+1];
+
+            if(i == 0)
+            {
+                v[0]=v[3]=v[5]=NULL;
+            }
+             if((i+1) == DOMAIN_DIM_1)
+            {
+                v[2]=v[4]=v[7]=NULL;
+            }
+            if(j == 0)
+            {
+                v[0]=v[1]=v[2]=NULL;
+            }
+             if((j+1) == DOMAIN_DIM_2)
+            {
+                v[5]=v[6]=v[7]=NULL;
+            }
+            
+            cellList[i][j]->set_neighbors(v);
+        }
+    }
 	theLonelyIsland = new cell;
+	death_count = 0;
 		
 	// Copy the values
-	char parameter [NUMBER][7];
-	for(int i = 0; i < agents_master.size(); i++) {
-		if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) {
+	unsigned char oldparams [5][7];
+	unsigned char newparams [10][7];
+	int ams = agents_master.size();
+	int count = 0;
+	for(int i = 0; i < ams; i++) 
+	{
+		if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) 
+		{
+			count++;
 			finch* current = (finch*) agents_master[i];
-			for (int j = 0; j < 7; j++) {
-				parameter[i][j] = (*current).params[j];
+			for (int j = 0; j < 7; j++) 
+			{
+				oldparams[count-1][j] = current->params[j];
+				gen_out << (int)current->params[j] << ", ";
 			}
+			gen_out << "\n";
 		}
 	}
 		
@@ -852,17 +950,93 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& strm)
 	}
 	
 	agents_master.clear();
-	death_count = 0;
+	
+
+	//mutate
+	for(int i = 0; i < 5; i++)
+	{
+		for(int k = 0; k <2; k++)
+		{
+			unsigned short x = rand()% 128;
+			unsigned short y = rand()% 128;
+			unsigned short z = rand()% 128;
+			unsigned short M = x & y & z;
+
+			for(int j = 0; j < 7; j++)
+			{
+				if(M & (1u << j))
+				{
+					unsigned short N = rand()% 8;
+					newparams[2*i+k][j] ^= 1u << N;
+				}
+			}
+		}
+	}
+
+	/*for(int i = 0; i < 10; i++)
+	{
+		
+			for(int j = 0; j < 7; j++)
+			{
+				
+				newparams[i][j] = 1;
+				
+			}
+		
+	}*/
 
 	//Repopulate!
-	populate_finches_std(15, up);
+	//populate_finches_std(15, up);
+	for(int i  = 0; i < 10; i++)
+	{
+		double x, y;
+		/*Use this to restrict to the middle*/
+		if(DOMAIN_DIM_1 % 2 == 0)
+		{
+			int padx = DOMAIN_DIM_1 / 2 - 1;
+			x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+		}
+		else 
+		{
+			int padx = DOMAIN_DIM_1 / 2;
+			x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+		}
+		if(DOMAIN_DIM_2 % 2 == 0)
+		{
+			int pady = DOMAIN_DIM_2 / 2 - 1;
+			y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+		}
+		else 
+		{
+			int pady = DOMAIN_DIM_2 / 2;
+			y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+		}
+		
+		/*unsigned char pms[7];
+			pms[0] = .45 * 255;
+			pms[1] = .5 * 255;
+			pms[2] = .01 * 255;
+			pms[3] = .6 * 255;
+			pms[4] = .6 * 255;
+			pms[5] = .5 * 255;
+			pms[6] = .5 * 255;*/
 
 
+			unsigned char genes[7];
+		for(int z = 0; z < 7; z++)
+		{
+			genes[z] = newparams[i][z];
+		}
+
+		add_finch(x, y, up, genes);
+	}
+
+	//populate_finches_std(10, up);
 }
 
 void world::repopulate2(void (* up)(agent*,agent*), std::ostream& strm) 
 {
-
+	std::cout << "Now repopulating, death count is " << death_count;
 	// Delete old cells
 	for(int i = 0; i < DOMAIN_DIM_1; i++){
 		for(int j = 0; j < DOMAIN_DIM_2; j++){
@@ -923,12 +1097,19 @@ void world::repopulate2(void (* up)(agent*,agent*), std::ostream& strm)
 	theLonelyIsland = new cell;
 		
 	// Copy the values
-	char parameter [NUMBER][7];
-	for(int i = 0; i < agents_master.size(); i++) {
-		if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) {
+	char parameter [5][7];
+	int ams = agents_master.size();
+	int count = 0;
+	for(int i = 0; i < ams; i++) 
+	{
+		if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) 
+		{
+			count++;
+			std::cout << "count is " << count;
 			finch* current = (finch*) agents_master[i];
-			for (int j = 0; j < 7; j++) {
-				parameter[i][j] = (*current).params[j];
+			for (int j = 0; j < 7; j++) 
+			{
+				parameter[count-1][j] = (*current).params[j];
 			}
 		}
 	}
@@ -942,7 +1123,7 @@ void world::repopulate2(void (* up)(agent*,agent*), std::ostream& strm)
 	death_count = 0;
 
 	//Repopulate!
-	populate_finches_std(15, up);
+	populate_finches_std(10, up);
 
 
 }

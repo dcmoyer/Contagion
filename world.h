@@ -69,6 +69,7 @@ public:
     void ab4_evolve();
 	
 	void move_to_cell();
+	void move_to_cell_evo();
 	void print(std::ostream& strm);
 	void print_csv(std::string filename);
 	void print_parameter(std::ostream& strm);
