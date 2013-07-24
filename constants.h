@@ -11,7 +11,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define NUM_OF_AGENTS   2
+#define NUM_OF_AGENTS   1
 #define DOMAIN_DIM_1    1
 #define DOMAIN_DIM_2    1
 #define DOMAIN_DIM_3    0

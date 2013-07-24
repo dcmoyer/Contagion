@@ -22,6 +22,10 @@ public:
     double q_mag;
     double q_change[HIST_LENGTH];
     double NearestNeighbor_count;
+	
+	double wall_accel_x;
+	double wall_accel_y;
+	
     int agent_type; //default = 0; predator = 1;
     void (* update)(agent*, agent*);
     bool alive;
@@ -85,6 +89,9 @@ public:
     
     void add_to_x_accel(double add_to_accel);
     void add_to_y_accel(double add_to_accel);
+	
+	void add_to_wall_x(double x);
+	void add_to_wall_y(double y);
    
     void set_q_mag(double q);
 
