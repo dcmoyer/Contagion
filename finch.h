@@ -39,7 +39,7 @@ public:
 	virtual void ab4_update();
 	virtual void euler_update();
 
-	virtual void print_genome();
+	
 	void iterate_NearestPred();
 
 	void add_to_x_accel_prey(double add_to_accel);

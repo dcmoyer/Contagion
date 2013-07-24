@@ -625,7 +625,7 @@ void finch1(agent* me_cast, agent* you)
 				if (p < PRECISION) 
 				{
 					me->kill();
-					std::cout << "r = " << r << "\n";
+					std::cout << "Killed by predator. ";
 				}
 				
 			} 
