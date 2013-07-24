@@ -32,6 +32,9 @@ agent::agent(){
     
     alive = true;
 	
+	wall_accel_x = 0;
+	wall_accel_y = 0;
+	
 }
 
 //Constructor with x,y, and update rule
@@ -65,6 +68,9 @@ agent::agent(double x, double y, void (* up)(agent*,agent*) ){
     
     alive = true;
     
+	wall_accel_x = 0;
+	wall_accel_y = 0;
+	
 }
 
 ////Constructor with x,y, and velocities
@@ -95,6 +101,9 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     //Assign Update Rull
     update = 0; //NULL
     alive = true;
+	
+	wall_accel_x = 0;
+	wall_accel_y = 0;
     
 }
 
@@ -130,6 +139,9 @@ agent::agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH
     update = up; //NULL
     alive = true;
     
+	wall_accel_x = 0;
+	wall_accel_y = 0;
+	
 }
 
 void agent::ab4_update()
@@ -245,10 +257,13 @@ void agent::drag()
 	//MUST CALL DRAG AFTER ALL NEIGHBOR INTERACTIONS HAVE BEEN CALCULATED INTO X_ACCEL
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
 	double A = ALPHA*4*pow((0.5-0.5*q_mag+q_mag),2);
-	x_accel[0] += (A - BETA * veloc_mag)*x_veloc[0];
-	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0];
+	x_accel[0] += (A - BETA * veloc_mag)*x_veloc[0] + wall_accel_x;
+	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0] + wall_accel_y;
 	q_change[0] += -q_mag/100;
     NearestNeighbor_count = 0;
+	
+	wall_accel_x = 0;
+	wall_accel_y = 0;
 } 
 
 void agent::kill() {
@@ -489,6 +504,17 @@ void agent::add_to_y_accel(double add_to_accel){
     
     y_accel[0] += add_to_accel;
     
+}
+
+void agent::add_to_wall_x(double x){
+	
+	wall_accel_x += x;
+	
+}
+void agent::add_to_wall_y(double y){
+	
+	wall_accel_y += y;
+	
 }
 
 void agent::set_q_mag(double q){

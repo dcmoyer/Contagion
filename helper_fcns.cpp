@@ -305,8 +305,8 @@ void predator_2012( agent* me_fake, agent* you){
     if(r < me->running_r){
         if (you->get_type() == 0) {	
         	me->running_r = r;
-        	me->set_target_interaction_x( PRED_2012_ACCEL * dx/r);
-        	me->set_target_interaction_y( PRED_2012_ACCEL * dy/r);
+        	me->set_x_accel( PRED_2012_ACCEL * dx/r);
+        	me->set_y_accel( PRED_2012_ACCEL * dy/r);
 		}
     }
     
@@ -501,13 +501,13 @@ void wall_interaction(agent* me_fake, agent* you){
 	double p_n_y = n_dot_r * (me->normal_y);
 	if( sqrt(pow((r_x - p_n_x),2) + pow((r_y - p_n_y),2)) < (me->length) ){
 		
-		double u = (double) WALL_PWR / pow(n_dot_r,4);
+		double u = (double) WALL_PWR / pow(n_dot_r,2);
 		
 		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
 		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
 		
-		you->add_to_x_accel(fx);
-		you->add_to_y_accel(fy);
+		you->add_to_wall_x(fx);
+		you->add_to_wall_y(fy);
 		
 	}
 	
@@ -533,15 +533,16 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 	double n_dot_v = v_x * (me->normal_x) + v_y * (me->normal_y);
 	
 	double projected_impact = (std::tan(std::acos(n_dot_v/sqrt(v_x*v_x + v_y*v_y))) * n_dot_r );
-	if( n_dot_v < 0  && ( projected_impact < (me->length)/2.0 )){
+	if( n_dot_v < 0 ){
 		 
-		double u = (1 - projected_impact/((me->length)/2.0)) * 90001 * (double) WALL_PWR / pow(n_dot_r,4);
+		double scale = (abs(n_dot_v) + 1) * 100;
+		double u = scale * (double) WALL_PWR / pow(n_dot_r,4);
 		
 		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
 		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
 		
-		you->add_to_x_accel(fx);
-		you->add_to_y_accel(fy);
+		you->add_to_wall_x(fx);
+		you->add_to_wall_y(fy);
 	}
 }
 
@@ -625,7 +626,7 @@ void finch1(agent* me_cast, agent* you)
 				if (p < PRECISION) 
 				{
 					me->kill();
-					std::cout << "r = " << r << "\n";
+					std::cout << "Killed by predator. ";
 				}
 				
 			} 

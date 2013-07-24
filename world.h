@@ -45,18 +45,18 @@ public:
 	void add_wall(double c_x, double c_y, double n_x, double n_y, double len, void (* up)(agent*,agent*));
 	void add_boundary(void (* up)(agent*,agent*));	
 	void add_finch_rand(double x, double y, void (* up)(agent*,agent*));
-	void add_finch(double x, double y, void (* up)(agent*,agent*), unsigned char params[6]);
+	void add_finch(double x, double y, void (* up)(agent*,agent*), unsigned char params[7]);
 
 	void populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*));
     void populate_rand(int n, void (* up)(agent*,agent*));
     void populate_predator_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_std(int n, void (* up)(agent*,agent*));
-	void repopulate1(void (* up)(agent*,agent*), std::ostream& strm);
+	void repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out);
 	void repopulate2(void (* up)(agent*,agent*), std::ostream& strm);
 
 	void run(std::ostream& strm, int print_every, int iterations);
-	void run_evolution(std::ostream& g_out);
+	void run_evolution();
 
     cell* get_cell(int i, int j);
     int is_empty(int i, int j);
@@ -69,6 +69,7 @@ public:
     void ab4_evolve();
 	
 	void move_to_cell();
+	void move_to_cell_evo();
 	void print(std::ostream& strm);
 	void print_csv(std::string filename);
 	void print_parameter(std::ostream& strm);

@@ -32,6 +32,8 @@
 	
 		x_accel_prey = 0;
 		y_accel_prey = 0;
+		wall_accel_x = 0;
+		wall_accel_y = 0;
 
 		for(int i = 0; i < 7; i++)
 		{
@@ -81,6 +83,9 @@
 		x_accel_prey = 0;
 		y_accel_prey = 0;
 
+		wall_accel_x = 0;
+		wall_accel_y = 0;
+
 		for(int i = 0; i < 7; i++)
 		{
 			params[i] = genes[i];
@@ -111,8 +116,8 @@
 		y_accel_pred =  (y_accel_pred / (double) NearestPred_count);
 	}
 
-	x_accel[0] +=  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred;
-	y_accel[0] +=  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred;
+	x_accel[0] +=  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred  + wall_accel_x;
+	y_accel[0] +=  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred + wall_accel_y;
 	q_change[0] = emote_pdpy_ratio * q_change_prey + (1 - emote_pdpy_ratio) *q_change_pred;
 
 	x_accel_prey =  0;
@@ -122,6 +127,9 @@
 
 	q_change_prey = 0;
 	q_change_pred = 0;
+
+	wall_accel_x = 0;
+	wall_accel_y = 0;
 
 }
 
@@ -133,7 +141,7 @@
 	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0];
 	q_change[0] += -q_mag * fear_decay;
     NearestNeighbor_count = 0;
-	
+
 } 
 
  void finch::ab4_update()
@@ -201,7 +209,7 @@
 	if(q_mag < 0 || q_mag > 1)
 	{
 		q_mag = 1;
-		std::cout << "fuck";
+		std::cout << "err";
 	}
 }
 
@@ -242,10 +250,9 @@ void finch::euler_update()
 	if(q_mag < 0 || q_mag > 1)
 	{
 		q_mag = 1;
-		std::cout << "fuck";
+		std::cout << "err";
 	}
 }
-
 
 
 void finch::iterate_NearestPred(){
@@ -292,6 +299,3 @@ void finch::add_to_q_change_pred(double q_c){
     
 }
 
-void finch::print_genome(){
-	std::cout << 2;
-}
