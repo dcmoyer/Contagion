@@ -13,7 +13,6 @@ wall.o : wall.cpp agent.o
 finch.o : finch.cpp agent.o
 	g++ -o finch.o -c finch.cpp
 
-
 cell.o : cell.cpp
 	g++ -o cell.o -c cell.cpp
 
@@ -25,6 +24,9 @@ helper_fcns.o : helper_fcns.cpp predator.o wall.o finch.o
 
 #Trading_Thangs.BETA : Main_Interface.cpp cargo.2.o ship.o battle.o player.o mapgraph.o world.o
 #	g++ -o Trading_Thangs.BETA Main_Interface.cpp world.cpp mapgraph.cpp battle.cpp player.cpp ship.cpp cargo.2.cpp -framework OpenGL -framework GLUT
+
+evo_main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o wall.o
+	g++ evo_main.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o wall.o
 
 main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o
 	g++ main.cpp helper_fcns.o world.o cell.o agent.o predator.o
