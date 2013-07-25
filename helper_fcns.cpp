@@ -590,7 +590,7 @@ void finch1(agent* me_cast, agent* you)
             double ugrad = me->attr_align_ratio * 2 * (C_A/L_A * exp(-r / L_A) - C_R/L_R * exp(-r / L_R));
             
             //calculate alignment forces
-            double h = KAPPA / pow((1 + r*r), me->gamma);
+            double h = 1 / pow((1 + r*r), me->gamma);
             
             //update velocities
             double fx = ugrad*dx/r - 2*(1 - me->attr_align_ratio)*h*dvx;
