@@ -54,4 +54,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 #define NUMBER 500
 
+#define RESOLUTION_HEIGHT 1000
+#define RESOLUTION_WIDTH 1000
+
 #endif

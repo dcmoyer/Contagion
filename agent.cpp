@@ -503,7 +503,7 @@ void agent::add_to_x_accel(double add_to_accel){
 void agent::add_to_y_accel(double add_to_accel){
     
     y_accel[0] += add_to_accel;
-    
+	
 }
 
 void agent::add_to_wall_x(double x){
