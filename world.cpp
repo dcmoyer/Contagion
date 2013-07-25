@@ -457,31 +457,29 @@ void world::update_forward_velocs(){
     
 
 	//Same-cell comparison
-    for(int i = 0; i < DOMAIN_DIM_1; i++){
-      for(int j = 0; j < DOMAIN_DIM_2; j++){
-	
-	cell_node_iterator target = cellList[i][j]->get_iter();
-	cell_node_iterator target2 = cellList[i][j]-> get_iter();
-        
-	for(target; target.current != NULL; target.next()){
-	  
-	  for(target2; target2.current != NULL; target2.next()){
-	    if(target2.current == target.current)
-	      break;
-	    
-	    target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
-	    target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
-        //Do comparisons each way, since update rules might be different
-	  }
-          
-	  target2.reset_current();
-          
-	}    
-        
-      }
-    }
+#pragma omp parallel for
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		for(int j = 0; j < DOMAIN_DIM_2; j++){
+			
+			cell_node_iterator target = cellList[i][j]->get_iter();
+			cell_node_iterator target2 = cellList[i][j]-> get_iter();
+			for(target; target.current != NULL; target.next()){
+				
+				for(target2; target2.current != NULL; target2.next()){
+					if(target2.current == target.current)
+						break;
+					
+					target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
+					target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
+					//Do comparisons each way, since update rules might be different
+				}
+				target2.reset_current();
+			}    
+		}
+	}
 	
 	//Compare to cell to the right
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
         
@@ -508,6 +506,7 @@ void world::update_forward_velocs(){
     }
     
 	//Compare to cell below
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -533,6 +532,7 @@ void world::update_forward_velocs(){
         }
     }
 	//Compare to cell to the bottomn right
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
@@ -558,6 +558,7 @@ void world::update_forward_velocs(){
 
 
 	//Compare to cell to the bottom left
+#pragma omp parallel for
     for(int i = 0; i < DOMAIN_DIM_1; i++){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             
