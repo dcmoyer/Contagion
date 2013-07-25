@@ -2,7 +2,7 @@
 #define GRID_WORLD_H
 
 #include "constants.h"
-#include "agent.h"
+#include "grid_agent.h"
 #include "wall.h"
 #include <vector>
 #include <iostream>
@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include <cmath>
+#include <set>
 
 
 class grid_point;
@@ -20,7 +21,7 @@ class grid_iter;
 class grid_world{
 private:
 	
-	vector<agent*> agents_master;
+	vector<grid_agent*> agents_master;
 	vector<static_agent*> static_agents_master;
 	grid_point* the_grid[RESOLUTION][RESOLUTION];
 	
@@ -62,6 +63,17 @@ public:
 	friend class grid_iter;
 	
 };
+
+struct edge{
+	grid_point* from;
+	grid_point* to;
+	grid_point* cardinality;
+	double value;
+}
+
+bool edge_comp(edge a, edge b){
+	return a.value < b.value;
+}
 
 class grid_iter{
 private:

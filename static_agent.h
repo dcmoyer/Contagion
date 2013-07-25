@@ -10,9 +10,11 @@ private:
 	
 	int node_pos_x;
 	int node_pos_y;
+	
+	int agent_type;
 public:
 	
-	static_agent(double x, double y, (* p)(double), (* vb)(double,double,double,double));
+	static_agent(double x, double y, double (* p)(double), double (* vb)(double,double,double,double));
 	
 	double (* potential)(double);
 	double (* velocity_block)(double, double, double, double);

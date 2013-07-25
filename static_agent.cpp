@@ -1,6 +1,6 @@
 #include "static_agent.h"
 
-static_agent::static_agent(double x, double y, (* p)(double), (* vb)(double,double,double,double)){
+static_agent::static_agent(double x, double y, int t, double (* p)(double), double (* vb)(double,double,double,double)){
 
 	x_pos = x;
 	y_pos = y;
@@ -9,10 +9,11 @@ static_agent::static_agent(double x, double y, (* p)(double), (* vb)(double,doub
 	node_pos_y = round(y);
 	
 	potential = p;
-	velocity_block = b;
-
+	velocity_block = vb;
+	
+	agent_type = t;
+	
 }
-
 
 double static_agent::get_x_pos(){
 	return x_pos;
