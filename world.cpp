@@ -400,6 +400,7 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 
 void world::run_evolution()
 {
+	int threshold = STUDYSIZE / 2;
 	for(int i = 1; i <= 4; i++)
 	{
         update_forward_velocs();
@@ -408,7 +409,7 @@ void world::run_evolution()
     }
 
 	//solve using AB4
-	while(death_count < 5)
+	while(death_count < threshold)
 	{
 		update_forward_velocs();
 		ab4_evolve();
@@ -865,7 +866,6 @@ void world::print_csv(std::string filename){
 void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out) 
 {
 	
-
 	// Delete old cells
 	for(int i = 0; i < DOMAIN_DIM_1; i++){
 		for(int j = 0; j < DOMAIN_DIM_2; j++){
@@ -925,8 +925,8 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 	death_count = 0;
 		
 	// Copy the values
-	unsigned char oldparams [5][7];
-	unsigned char newparams [10][7];
+	unsigned char oldparams [STUDYSIZE/2][7];
+	unsigned char newparams [STUDYSIZE][7];
 	int ams = agents_master.size();
 	int count = 0;
 	for(int i = 0; i < ams; i++) 
@@ -937,26 +937,28 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 			finch* current = (finch*) agents_master[i];
 			for (int j = 0; j < 7; j++) 
 			{
-				oldparams[count-1][j] = current->params[j];
-				gen_out << (int)current->params[j] << ", ";
+				int x = current->params[j];
+				oldparams[count-1][j] = x;
+				gen_out << x / 255.0 << ", ";
 			}
 			gen_out << "\n";
 		}
 	}
 		
 	// Delete all the agents
-	for(int i = 0; i < agents_master.size(); i++) {
+	for(int i = 0; i < ams; i++) {
 		delete agents_master[i];
 	}
 	
 	agents_master.clear();
 	
-
+	int half = STUDYSIZE/2;
 	//mutate
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < half; i++)
 	{
 		for(int k = 0; k <2; k++)
 		{
+			
 			unsigned short x = rand()% 128;
 			unsigned short y = rand()% 128;
 			unsigned short z = rand()% 128;
@@ -964,13 +966,16 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 
 			for(int j = 0; j < 7; j++)
 			{
+				newparams[2*i+k][j] = oldparams[i][j];
 				if(M & (1u << j))
 				{
 					unsigned short N = rand()% 8;
-					newparams[2*i+k][j] ^= 1u << N;
+					newparams[2*i+k][j] ^=  ( 1u << N);
+					//newparams[2*i+k][j] = oldparams[i][j]; //-10 + rand()%20;
 				}
 			}
 		}
+		
 	}
 
 	/*for(int i = 0; i < 10; i++)
@@ -987,7 +992,7 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 
 	//Repopulate!
 	//populate_finches_std(15, up);
-	for(int i  = 0; i < 10; i++)
+	for(int i  = 0; i < STUDYSIZE; i++)
 	{
 		double x, y;
 		/*Use this to restrict to the middle*/
@@ -1022,7 +1027,7 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 			pms[6] = .5 * 255;*/
 
 
-			unsigned char genes[7];
+		unsigned char genes[7];
 		for(int z = 0; z < 7; z++)
 		{
 			genes[z] = newparams[i][z];

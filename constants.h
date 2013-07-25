@@ -11,7 +11,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define NUM_OF_AGENTS   1
+#define NUM_OF_AGENTS   2
 #define DOMAIN_DIM_1    3
 #define DOMAIN_DIM_2    3
 #define DOMAIN_DIM_3    0
@@ -28,14 +28,14 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define L_A 100.0
 #define L_R 2.0
 
-#define c1 C_R/C_A
-#define l1 L_R/L_A
 
 
 //self-propulsion and friction
 #define ALPHA .07
 #define BETA  .05  
-#define alpha_1 ALPHA*BETA*L_A*L_A
+
+//Evolution simulation size
+#define STUDYSIZE 20
 
 
 
@@ -45,13 +45,13 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define KAPPA 0.5
 
 //2012 Predator Speed
-#define PRED_2012_ACCEL .1
+#define PRED_2012_ACCEL .25
 //Probability of kill
 #define PRECISION .5
 
 //Wall Power
 #define WALL_PWR 50
-
 #define NUMBER 500
 
 #endif
+
