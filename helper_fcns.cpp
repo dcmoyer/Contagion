@@ -1,5 +1,17 @@
 #include "helper_fcns.h"
 
+void fire_potential(double r){
+	
+	return (50 * exp(r*r/100));
+		
+}
+
+void exit_potential(double r){
+	
+	return -(50 * exp(r*r/100));
+	
+}
+
 void prey(agent* me, agent* you)
 {
 	if(you->get_type() == 2){

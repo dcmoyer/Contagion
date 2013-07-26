@@ -131,16 +131,16 @@ void grid_agent::euler_update()
 
 }
 
-/*void agent::drag()
+void agent::drag()
 {
 	//MUST CALL DRAG AFTER ALL NEIGHBOR INTERACTIONS HAVE BEEN CALCULATED INTO X_ACCEL
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
 	double A = ALPHA*4*pow((0.5-0.5*q_mag+q_mag),2);
 	x_accel[0] += (A - BETA * veloc_mag)*x_veloc[0] + wall_accel_x;
 	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0] + wall_accel_y;
-	q_change[0] += -q_mag/100;
+	//q_change[0] += -q_mag/100;
 	
-} */
+}
 
 void grid_agent::kill(){
 	

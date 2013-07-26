@@ -15,7 +15,7 @@ grid_world::grid_world(){
 		
 		for(int j = 0; j < RESOLUTION_WIDTH; j++){
 			
-			the_grid[i][j]->up = the_grid[i-1][j];
+			the_grid[i][j]->direction[0] = the_grid[i-1][j];
 			
 		}
 	}
@@ -24,7 +24,7 @@ grid_world::grid_world(){
 		
 		for(int j = 0; j < RESOLUTION_WIDTH; j++){
 			
-			the_grid[i][j]->down = the_grid[i+1][j];
+			the_grid[i][j]->direction[1] = the_grid[i+1][j];
 			
 		}
 	}
@@ -33,7 +33,7 @@ grid_world::grid_world(){
 		
 		for(int j = 0; j < (RESOLUTION_WIDTH-1); j++){
 			
-			the_grid[i][j]->right = the_grid[i][j+1];
+			the_grid[i][j]->direction[2] = the_grid[i][j+1];
 			
 		}
 	}
@@ -42,9 +42,30 @@ grid_world::grid_world(){
 		
 		for(int j = 1; j < RESOLUTION_WIDTH; j++){
 			
-			the_grid[i][j]->left = the_grid[i-1][j];
+			the_grid[i][j]->direction[3] = the_grid[i-1][j];
 			
 		}
+	}
+	
+}
+
+grid_world::~grid_world(){
+	
+	for(int i = 0; i < RESOLUION_HEIGHT; i++){
+		for(int j = 0; j < RESOLUTION_WIDTH; j++){
+			
+			delete the_grid[i][j];
+			
+		}
+	}
+	
+	double len = agents_master.size();
+	for(int i = 0; i < len; i++){
+		delete agents_master[i];
+	}
+	len = static_agents_master.size();
+	for(int i = 0; i < len; i++){
+		delete static_agents_master[i];
 	}
 	
 }
@@ -84,7 +105,7 @@ void grid_world::initialize_static_field(){
 		for(int j = 0; j < RESOLUTION_WIDTH; j++){
 			
 			//the_grid[i][j]->up = the_grid[i-1][j];
-			the_grid[i][j]->up_cost = the_grid[i-1][j]->down_cost = abs(the_grid[i-1][j]->value - the_grid[i][j]->value);
+			the_grid[i][j]->cost[0] = the_grid[i-1][j]->cost[1] = abs(the_grid[i-1][j]->value - the_grid[i][j]->value);
 			
 		}
 	}
@@ -94,7 +115,7 @@ void grid_world::initialize_static_field(){
 		for(int j = 1; j < RESOLUTION_WIDTH; j++){
 			
 			//the_grid[i][j]->up = the_grid[i-1][j];
-			the_grid[i][j]->right_cost = the_grid[i][j-1]->left_cost = abs(the_grid[i][j-1]->value - the_grid[i][j]->value);
+			the_grid[i][j]->cost[2] = the_grid[i][j-1]->cost[3] = abs(the_grid[i][j-1]->value - the_grid[i][j]->value);
 			
 		}
 	}
@@ -122,31 +143,153 @@ void grid_world::update_forward_accel(){
 			
 		}
 		
-		//shortest path
-		std::set queue<edge, edge_comp>;
-		queue.insert(edge(the_grid[y][x], /*from*/
-			the_grid[y][x]->up,/*to*/
-			the_grid[y][x]->up,/*cardinality*/
-			std::abs(the_grid[y][x]->up->value - the_grid[y][x]->value));
 		
-		queue.insert(edge(the_grid[y][x], /*from*/
-			the_grid[y][x]->down,/*to*/
-			the_grid[y][x]->down,/*cardinality*/
-			std::abs(the_grid[y][x]->down->value - the_grid[y][x]->value));
+		std::priority_queue<edge, edge_comp> p_q;
+		p_q.push(edge(the_grid[y][x], //from
+			the_grid[y][x]->direction[0],//to
+			0,//cardinality
+			std::abs(the_grid[y][x]->direction[0]->value - the_grid[y][x]->value));
 		
-		queue.insert(edge(the_grid[y][x], /*from*/
-			the_grid[y][x]->right,/*to*/
-			the_grid[y][x]->right,/*cardinality*/
-			std::abs(the_grid[y][x]->right->value - the_grid[y][x]->value));
+		p_q.push(edge(the_grid[y][x], //from
+			the_grid[y][x]->direction[1],//to
+			1,//cardinality
+			std::abs(the_grid[y][x]->direction[1]->value - the_grid[y][x]->value));
 		
-		queue.insert(edge(the_grid[y][x], /*from*/
-			the_grid[y][x]->left,/*to*/
-			the_grid[y][x]->left,/*cardinality*/
-			std::abs(the_grid[y][x]->left->value - the_grid[y][x]->value));
+		p_q.push(edge(the_grid[y][x], //from
+			the_grid[y][x]->direction[2],//to
+			2,//cardinality
+			std::abs(the_grid[y][x]->direction[2]->value - the_grid[y][x]->value));
 		
-		while(!queue.empty()){
+		p_q.push(edge(the_grid[y][x], //from
+			the_grid[y][x]->direction[3],//to
+			3,//cardinality
+			std::abs(the_grid[y][x]->direction[3]->value - the_grid[y][x]->value));
+		
+		bool break_flag = false;
+		edge current_edge;
+		grid_point* current_point,previous_point;
+		while(!p_q.empty()){
+			current_edge = p_q.pop();
+			current_point = current_edge.to;
+			previous_point = current_edge.from;
 			
+			for(int i = 0; i < 4; i++){
+				if(current_point->direction[i] == previous_point)
+					continue;
+				if(current_point->direction[i]->goal_flag){
+					break_flag = true;
+					break;
+				}
+				
+				double added_val = 0; //CHANGE THIS LATER. This is where we look out for people. Lol.
+				
+				p_q.push(edge(current_point,
+							current_point->direction[i],
+							current_edge.cardinality,
+							std::abs(current_point->direction[i]->value - current_point->value) + added_val));
+				
+			}
+			if(break_flag)
+				break;
 		}
+		
+		if(cardinality < 2)
+			agents_master[i]->add_to_y_accel( (-1 * cardinality)  +  (1 * (1 - cardinality)) );
+		else
+			agents_master[i]->add_to_x_accel( (1 * (cardinality % 2))  +  (-1 * (1 - (cardinality % 2))));
+		
+	}
+}
+
+void grid_world::place_fire(double x, double y, double (*p)(double), double (* v_s)(double, double, double, double) ){
+	
+	static_agents_master.push_back(new static_agent(x, y, 0, p, v_s));
+	
+}
+
+void grid_world::place_goal(double x, double y, double (*p)(double)){
+	
+	assert(x >= 0 && x < RESOLUTION_WIDTH && y >= 0 && y < RESOLUTION_HEIGHT);
+	static_agents_master.push_back(new static_agent(x,y, 1,p, NULL));
+	
+	the_grid[round(y)][round(x)]->goal_flag = true;
+	
+}
+
+void grid_world::place_agent(double x, double y, double (*p)(double), double (* v_s)(double, double, double, double)){
+	
+	agents_master.push_back(new grid_agent(x,y,2,p,v_s))
+	
+}
+
+void grid_world::print_csv(std::string filename){
+    // Output format is 
+    // x y v_x v_y type
+    
+    std::ofstream out;
+    out.open(filename.c_str());
+    
+    int len = (int) agents_master.size();
+    for(int i = 0; i < (len - 1); ++i){
+        
+        out <<  agents_master[i]->get_x_coord()
+            << " " << agents_master[i]->get_y_coord()
+            << " " << agents_master[i]->get_x_veloc_index(0)
+            << " " << agents_master[i]->get_y_veloc_index(0)
+            << " " << agents_master[i]->agent_type << "\n";
+            
+    }
+    
+    out  << agents_master[len - 1]->get_x_coord()
+    << " " << agents_master[len - 1]->get_y_coord()
+    << " " << agents_master[len - 1]->get_x_veloc_index(0)
+    << " " << agents_master[len - 1]->get_y_veloc_index(0)
+    << " " << agents_master[len - 1]->agent_type << "\n";
+    out.close();
+
+}
+
+void grid_world::print_static_csv(){
+    // Output format is 
+    // x y v_x v_y type
+    
+    std::ofstream out;
+    out.open('static_data.txt');
+    
+    int len = (int) agents_master.size();
+    for(int i = 0; i < (len - 1); ++i){
+        
+        out <<  agents_master[i]->get_x_coord()
+            << " " << agents_master[i]->get_y_coord()
+            << " " << agents_master[i]->agent_type << "\n";
+            
+    }
+    
+    out  << agents_master[len - 1]->get_x_coord()
+    << " " << agents_master[len - 1]->get_y_coord()
+    << " " << agents_master[len - 1]->agent_type << "\n";
+    out.close();
+
+}
+
+void world::update_agent_pos_euler(){
+	double len = agents_master.size();
+	for(int i = 0; i < len; i++){
+		if(!agents_master[i]->is_alive())
+			continue;
+		agents_master[i]->drag();
+		agents_master[i]->euler_update();
+	}
+}
+
+
+void world::update_agent_pos_ab4(){
+	double len = agents_master.size();
+	for(int i = 0; i < len; i++){
+		if(!agents_master[i]->is_alive())
+			continue;
+		agents_master[i]->drag();
+		agents_master[i]->ab4_update();
 	}
 }
 
@@ -154,15 +297,11 @@ grid_point::grid_point(){
 	
 	value = 0;
 	
-	up_cost = 0;
-	down_cost = 0;
-	left_cost = 0;
-	right_cost = 0;
+	for(int i = 0; i < 4; i++)
+		cost[i] = 0; //Up, Down, Left, Right
+	for(int i = 0; i < 4; i++)
+		direction[i] = 0; //Up, Down, Left, Right
 	
-	up = NULL;
-	down = NULL;
-	left = NULL;
-	right = NULL;
 	
 	goal_flag = false;
 	impass_flag = false;

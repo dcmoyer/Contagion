@@ -44,7 +44,7 @@ public:
 	virtual void ab4_update();
 	virtual void euler_update();
     //virtual void normalize_accel();
-	//virtual void drag(); 
+	virtual void drag(); 
 	//virtual void print_genome();
 
 	//void kill();

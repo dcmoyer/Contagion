@@ -1,4 +1,4 @@
-#include "world.h"
+#include "grid_world.h"
 #include "helper_fcns.h"
 #include <fstream>
 #include <ctime>

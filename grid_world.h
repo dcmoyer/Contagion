@@ -3,7 +3,6 @@
 
 #include "constants.h"
 #include "grid_agent.h"
-#include "wall.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -11,7 +10,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include <cmath>
-#include <set>
+#include <queue>
 
 
 class grid_point;
@@ -23,11 +22,22 @@ private:
 	
 	vector<grid_agent*> agents_master;
 	vector<static_agent*> static_agents_master;
-	grid_point* the_grid[RESOLUTION][RESOLUTION];
+	grid_point* the_grid[RESOLUTION_HEIGHT][RESOLUTION_WIDTH];
 	
 public:
 	grid_world();
 	~grid_world();
+	
+	void update_forward_accel();
+	void initialize_static_field();
+	void place_fire(double x, double y, double (*p)(double), double (* v_s)(double, double, double, double) );
+	void place_goal(double x, double y, double (*p)(double));
+	void place_agent(double x, double y, double (*p)(double), double (* v_s)(double, double, double, double) );
+	void print_csv(std::string filename);
+	void print_static_csv();
+	
+	void euler_update();
+	void ab4_update();
 	
 	friend class grid_point;
 	friend class grid_iter;
@@ -37,15 +47,19 @@ public:
 class grid_point{
 private:
 	double value;
-	double up_cost;
+	/*double up_cost;
 	double down_cost;
 	double left_cost;
-	double right_cost;
+	double right_cost;*/
 	
-	grid_point* up;
+	double cost[4];
+	
+	/*grid_point* up;
 	grid_point* down;
 	grid_point* left;
-	grid_point* right;
+	grid_point* right;*/
+	
+	grid_point* direction[4];
 	
 	bool goal_flag;
 	bool impass_flag;
@@ -53,9 +67,7 @@ private:
 public:
 	
 	grid_point();
-	
-	void intialize_static_field();
-	
+		
 	void add_to_value(double v);
 	void set_value(double v);
 	
@@ -67,12 +79,12 @@ public:
 struct edge{
 	grid_point* from;
 	grid_point* to;
-	grid_point* cardinality;
+	double cardinality;
 	double value;
 }
 
 bool edge_comp(edge a, edge b){
-	return a.value < b.value;
+	return a.value > b.value;
 }
 
 class grid_iter{
