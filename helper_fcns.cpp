@@ -550,13 +550,11 @@ void finch1(agent* me_cast, agent* you)
 {
 	finch* me = (finch*) me_cast;
     
-	
 	//wall check
 	if(you->get_type() == 2){
 		return;
 	}
 	
-
 	//get x,y,z coords
 	double x1 = me->x_coord;
 	double y1 = me->y_coord;
@@ -574,10 +572,10 @@ void finch1(agent* me_cast, agent* you)
 		if (you->agent_type == 0) 
 		{
             //get component-wise velocity
-			double vx1 = me->get_x_veloc_index(0);
-			double vy1 = me->get_y_veloc_index(0);
-			double vx2 = you->get_x_veloc_index(0);
-			double vy2 = you->get_y_veloc_index(0);
+			double vx1 = me->x_veloc[0];
+			double vy1 = me->y_veloc[0];
+			double vx2 = you->x_veloc[0];
+			double vy2 = you->y_veloc[0];
 			double dvx = vx2-vx1;
 			double dvy = vy2-vy1;
 
@@ -590,7 +588,7 @@ void finch1(agent* me_cast, agent* you)
             double ugrad = me->attr_align_ratio * 2 * (C_A/L_A * exp(-r / L_A) - C_R/L_R * exp(-r / L_R));
             
             //calculate alignment forces
-            double h = 1 / pow((1 + r*r), me->gamma);
+            double h = me->gamma  / exp(r*r);
             
             //update velocities
             double fx = ugrad*dx/r - 2*(1 - me->attr_align_ratio)*h*dvx;
@@ -618,9 +616,29 @@ void finch1(agent* me_cast, agent* you)
             
 		}
         
-		else if (you->get_type() == 1) 
+		else //if (you->get_type() == 1) 
 		{
-			if (r < 5) 
+			if (r >= 5)  
+			{
+				double u = -C_R/L_R * exp(-r / (L_R));  
+				//update velocities
+				double fx = u*dx/r;
+				double fy = u*dy/r;
+				me->add_to_x_accel_pred(fx);
+				me->add_to_y_accel_pred(fy);
+
+
+				//get fear
+				double q1 = me->q_mag;
+				double q2 = 1;
+				double dq = q2-q1;
+				
+				double h = me->gamma * 10.0 / exp(r*r);
+				double fq =  h*dq;
+				me->add_to_q_change_pred(fq);
+			}
+			
+			else
 			{
 				double p = (double)rand()/(double)RAND_MAX;
 				if (p < PRECISION) 
@@ -631,25 +649,7 @@ void finch1(agent* me_cast, agent* you)
 				
 			} 
 
-			else {
-				double u = -C_R/L_R * exp(-r / (L_R));  
-				//update velocities
-				double fx = u*dx/r;
-				double fy = u*dy/r;
-				me->add_to_x_accel_pred(fx);
-				me->add_to_y_accel_pred(fy);
-
-
-				//get fear
-				double q1 = me->get_q_mag();
-				double q2 = 1;
-				double dq = q2-q1;
-				
-				double h = 10 / pow((SIGMA*SIGMA + r*r), me->gamma);
-				double fq =  h*dq;
-				me->add_to_q_change_pred(fq);
-			}
-
+			
 			me->iterate_NearestPred();
 		}
 

@@ -40,7 +40,9 @@
 			params[i] = rand()% 256;
 		}
 
-		gamma =  params[0] / 255.0;
+	
+	
+		gamma = 1 / ( exp(params[0]/255.0));
 		adrenaline = params[1] / 255.0;
 		fear_decay = params[2] / 255.0;
 		empathy = params[3] / 255.0;
@@ -105,19 +107,19 @@
 {
 	if(NearestNeighbor_count != 0)
       {
-        x_accel_prey =  (x_accel_prey / (double) NearestNeighbor_count);
-		y_accel_prey =  (y_accel_prey / (double) NearestNeighbor_count);
-		q_change_prey = (q_change_prey / (double) NearestNeighbor_count);
+        x_accel_prey =  x_accel_prey * (1 / (double) NearestNeighbor_count);
+		y_accel_prey = y_accel_prey *  (1 / (double) NearestNeighbor_count);
+		q_change_prey = q_change_prey * (1 / (double) NearestNeighbor_count);
 	}
 
 	if(NearestPred_count != 0)
 	{
-		x_accel_pred =  (x_accel_pred / (double) NearestPred_count);
-		y_accel_pred =  (y_accel_pred / (double) NearestPred_count);
+		x_accel_pred *=  (1 / (double) NearestPred_count);
+		y_accel_pred *=  (1 / (double) NearestPred_count);
 	}
 
-	x_accel[0] +=  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred  + wall_accel_x;
-	y_accel[0] +=  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred + wall_accel_y;
+	x_accel[0] =  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred  + wall_accel_x;
+	y_accel[0] =  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred + wall_accel_y;
 	q_change[0] = emote_pdpy_ratio * q_change_prey + (1 - emote_pdpy_ratio) *q_change_pred;
 
 	x_accel_prey =  0;
@@ -136,12 +138,12 @@
  void finch::drag()
 {
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-	double A = ALPHA*4*pow((q_mag - q_mag * adrenaline + adrenaline), 2);
-	x_accel[0] += (A - BETA * veloc_mag)*x_veloc[0];
-	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0];
-	q_change[0] += -q_mag * fear_decay;
+	double fear_factor = q_mag - q_mag * adrenaline + adrenaline;
+	double A = ALPHA*4*fear_factor*fear_factor;
+	x_accel[0] = x_accel[0] + (A - BETA * veloc_mag)*x_veloc[0];
+	y_accel[0] = y_accel[0] + (A - BETA * veloc_mag)*y_veloc[0];
+	q_change[0] = q_change[0] - q_mag * fear_decay;
     NearestNeighbor_count = 0;
-
 } 
 
  void finch::ab4_update()
