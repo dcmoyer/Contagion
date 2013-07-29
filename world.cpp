@@ -467,8 +467,11 @@ void world::update_forward_velocs(){
 					if(target2.current == target.current)
 						break;
 					
-					target.current->get_agent()->update(target.current->get_agent(), target2.current->get_agent());
-					target2.current->get_agent()->update(target2.current->get_agent(), target.current->get_agent());
+					agent* agent_brown = target.current->get_agent();
+					agent* agent_jones = target2.current->get_agent();
+
+					agent_brown->update(agent_brown, agent_jones);
+					agent_jones->update(agent_jones, agent_brown);
 					//Do comparisons each way, since update rules might be different
 				}
 				target2.reset_current();
@@ -491,8 +494,14 @@ void world::update_forward_velocs(){
                 
                 for(right; right.current != NULL; right.next()){
                     
-                    target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
-                    right.current->get_agent()->update(right.current->get_agent(), target.current->get_agent());
+					agent* agent_brown = target.current->get_agent();
+					agent* agent_jones = right.current->get_agent();
+
+					agent_brown->update(agent_brown, agent_jones);
+					agent_jones->update(agent_jones, agent_brown);
+
+                   /* target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
+                    right.current->get_agent()->update(right.current->get_agent(), target.current->get_agent());*/
                     
                 }
                 
@@ -518,8 +527,14 @@ void world::update_forward_velocs(){
                 
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
-                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+					agent* agent_brown = target.current->get_agent();
+					agent* agent_jones = upwards.current->get_agent();
+
+					agent_brown->update(agent_brown, agent_jones);
+					agent_jones->update(agent_jones, agent_brown);
+
+                 /*   target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());*/
                     
                     
                 }
@@ -544,8 +559,14 @@ void world::update_forward_velocs(){
                 
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
-                    target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
-                   upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+					agent* agent_brown = target.current->get_agent();
+					agent* agent_jones = upwards.current->get_agent();
+
+					agent_brown->update(agent_brown, agent_jones);
+					agent_jones->update(agent_jones, agent_brown);
+
+                   /* target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
+                   upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());*/
                     
                 }
                 
@@ -570,8 +591,17 @@ void world::update_forward_velocs(){
                 
                 for(upwards; upwards.current != NULL; upwards.next()){
                     
+					 
+					agent* agent_brown = target.current->get_agent();
+					agent* agent_jones = upwards.current->get_agent();
+
+					agent_brown->update(agent_brown, agent_jones);
+					agent_jones->update(agent_jones, agent_brown);
+					
+					/*
+
                     target.current->get_agent()->update(target.current->get_agent(), upwards.current->get_agent());
-                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());
+                    upwards.current->get_agent()->update(upwards.current->get_agent(), target.current->get_agent());*/
                     
                 }
                 
@@ -587,13 +617,15 @@ void world::update_agent_pos_euler(){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             cell_node_iterator target = cellList[i][j]->get_iter();
             for(target; target.current != NULL; target.next()){
-                if (target.current->get_agent()->is_alive()) {
-                    target.current->get_agent()->normalize_accel();
-					target.current->get_agent()->drag();
-                    target.current->get_agent()->euler_update();
+				agent* agent_smith = target.current->get_agent();
+
+                if (agent_smith->is_alive()) {
+                   agent_smith->normalize_accel();
+					agent_smith->drag();
+                    agent_smith->euler_update();
                 } else {
-                    target.current->get_agent()->set_x_coord(-1);
-					target.current->get_agent()->set_y_coord(-1);
+                    agent_smith->set_x_coord(-1);
+					agent_smith->set_y_coord(-1);
 				}
 			}
 		}
@@ -608,13 +640,15 @@ void world::update_agent_pos_ab4(){
 	for(int j = 0; j < DOMAIN_DIM_2; j++){
 		cell_node_iterator target = cellList[i][j]->get_iter();
 		for(target; target.current != NULL; target.next()){
-			if (target.current->get_agent()->is_alive()) {
-				target.current->get_agent()->normalize_accel();
-				target.current->get_agent()->drag();
-				target.current->get_agent()->ab4_update();
+
+			agent* agent_smith = target.current->get_agent();
+			if (agent_smith->is_alive()) {
+				agent_smith->normalize_accel();
+				agent_smith->drag();
+				agent_smith->ab4_update();
 			} else {
-				target.current->get_agent()->set_x_coord(-1);
-				target.current->get_agent()->set_y_coord(-1);
+				agent_smith->set_x_coord(-1);
+				agent_smith->set_y_coord(-1);
 				}
 			}
 		}
@@ -628,14 +662,15 @@ void world::euler_evolve(){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             cell_node_iterator target = cellList[i][j]->get_iter();
             for(target; target.current != NULL; target.next()){
-                if (target.current->get_agent()->alive) {
-                    target.current->get_agent()->normalize_accel();
-					target.current->get_agent()->drag();
-                    target.current->get_agent()->euler_update();
+				agent* agent_smith = target.current->get_agent();
+
+                if (agent_smith->is_alive()) {
+                   agent_smith->normalize_accel();
+					agent_smith->drag();
+                    agent_smith->euler_update();
                 } else {
-                    target.current->get_agent()->set_x_coord(-1);
-					target.current->get_agent()->set_y_coord(-1);
-					
+                    agent_smith->set_x_coord(-1);
+					agent_smith->set_y_coord(-1);
 				}
 			}
 		}
@@ -654,16 +689,15 @@ void world::ab4_evolve()
 		cell_node_iterator target = cellList[i][j]->get_iter();
 		for(target; target.current != NULL; target.next())
 		{
-			if (target.current->get_agent()->alive) 
-			{
-				target.current->get_agent()->normalize_accel();
-				target.current->get_agent()->drag();
-				target.current->get_agent()->ab4_update();
-			} 
-			else 
-			{
-				target.current->get_agent()->set_x_coord(-1);
-				target.current->get_agent()->set_y_coord(-1);
+			agent* agent_smith = target.current->get_agent();
+			if (agent_smith->is_alive()) {
+				agent_smith->normalize_accel();
+				agent_smith->drag();
+				agent_smith->ab4_update();
+			} else {
+				agent_smith->set_x_coord(-1);
+				agent_smith->set_y_coord(-1);
+				
 			}
 		}
 	  }
