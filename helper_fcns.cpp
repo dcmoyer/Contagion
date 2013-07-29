@@ -555,20 +555,16 @@ void finch1(agent* me_cast, agent* you)
 {
 	finch* me = (finch*) me_cast;
     
+	int youtype = you->agent_type;
 	//wall check
-	if(you->get_type() == 2){
+	if(youtype == 2){
 		return;
 	}
 	
-	//get x,y,z coords
-	double x1 = me->x_coord;
-	double y1 = me->y_coord;
-	double x2 = you->x_coord;
-	double y2 = you->y_coord;
-	
+
     //calculate distances
-	double dx= x2-x1;
-	double dy= y2-y1;
+	double dx= you->x_coord-me->x_coord;
+	double dy= you->y_coord-me->y_coord;
 	double r = sqrt(dx*dx + dy*dy);
 
     
@@ -577,50 +573,42 @@ void finch1(agent* me_cast, agent* you)
 		int r_i = (int) r;
 		int g = me->params[0];
 		
-		if (you->agent_type == 0) 
+		if (youtype == 0) 
 		{
             //get component-wise velocity
-			double vx1 = me->x_veloc[0];
+		/*	double vx1 = me->x_veloc[0];
 			double vy1 = me->y_veloc[0];
 			double vx2 = you->x_veloc[0];
-			double vy2 = you->y_veloc[0];
-			double dvx = vx2-vx1;
-			double dvy = vy2-vy1;
+			double vy2 = you->y_veloc[0];*/
+			double dvx = you->x_veloc[0]-me->x_veloc[0];
+			double dvy = you->y_veloc[0]-me->y_veloc[0];
 
 			//get fear
-			double q1 = me->q_mag;
-			double q2 = you->q_mag;
-			double dq = q2-q1;
+			double dq = you->q_mag-me->q_mag;
 
 			//calculate attraction-repulsion
-            double ugrad1 = me->attr_align_ratio * 2 * (C_A/L_A *exp_hund[r_i] - C_R/L_R * exp_half[r_i]);
-	
+            double ugrad1 = me->attr_align_ratio * 2 * (CALA *exp_hund[r_i] - CRLR * exp_half[r_i]);
             
             //calculate alignment forces
             double h1 = h_gamma_r[g][r_i];
 		
-
-		
             //update velocities
-            double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
-            double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;	
+            //double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
+         //   double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;	
 
             
-            me->add_to_x_accel_prey(fx);
-            me->add_to_y_accel_prey(fy);
+            me->add_to_x_accel_prey(ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx);
+            me->add_to_y_accel_prey(ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy);
 
-
-			double fq;
-			
 			if (dq > 0)
 			{
-				fq = 10*me->empathy*h1*dq;
-				me->add_to_q_change(fq);
+				
+				me->add_to_q_change(10*me->empathy*h1*dq);
 			}
 			else
 			{
-				fq = 10 * (1-me->empathy)*h1*dq;
-				me->add_to_q_change_prey(fq);
+				
+				me->add_to_q_change_prey(10 * (1-me->empathy)*h1*dq);
 			}
 
 
@@ -632,28 +620,21 @@ void finch1(agent* me_cast, agent* you)
 		{
 			if (r >= 5)  
 			{
-				double u = -C_R/L_R * exp_half[r_i];  
+				//double u = -CRLR * exp_half[r_i];  
+				double ur = -CRLR * exp_half[r_i] / r;  
 				//update velocities
-				double fx = u*dx/r;
-				double fy = u*dy/r;
-				me->add_to_x_accel_pred(fx);
-				me->add_to_y_accel_pred(fy);
-
-
-				//get fear
-				double q1 = me->q_mag;
-				double q2 = 1;
-				double dq = q2-q1;
+			
+				me->add_to_x_accel_pred(ur * dx);
+				me->add_to_y_accel_pred(ur * dy);
 				
-				double h = 10*h_gamma_r[g][r_i];
-				double fq =  h*dq;
-				me->add_to_q_change_pred(fq);
+				//double h = 10*h_gamma_r[g][r_i];
+				me->add_to_q_change_pred(10*h_gamma_r[g][r_i]*(1-me->q_mag));
 			}
 			
 			else
 			{
-				double p = (double)rand()/(double)RAND_MAX;
-				if (p < PRECISION) 
+				//double p = (double)rand()/(double)RAND_MAX;
+				if ((double)rand()/(double)RAND_MAX < PRECISION) 
 				{
 					me->kill();
 					std::cout << "Killed by predator. ";

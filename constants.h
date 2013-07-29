@@ -28,7 +28,9 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define L_A 100.0
 #define L_R 2.0
 
-
+//CALA = CA/LA, CRLR = CR/LR
+#define CALA 0.2
+#define CRLR 25.0
 
 //self-propulsion and friction
 #define ALPHA .07
