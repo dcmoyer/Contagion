@@ -1,5 +1,10 @@
 #include "helper_fcns.h"
 
+//double exp_squared[76];
+//double exp_hund[76];
+//double exp_half[76];
+//
+
 void prey(agent* me, agent* you)
 {
 	if(you->get_type() == 2){
@@ -569,6 +574,9 @@ void finch1(agent* me_cast, agent* you)
     
     if (r < CELL_LENGTH) 
 	{
+		int r_i = (int) r;
+		int g = me->params[0];
+		
 		if (you->agent_type == 0) 
 		{
             //get component-wise velocity
@@ -585,14 +593,18 @@ void finch1(agent* me_cast, agent* you)
 			double dq = q2-q1;
 
 			//calculate attraction-repulsion
-            double ugrad = me->attr_align_ratio * 2 * (C_A/L_A * exp(-r / L_A) - C_R/L_R * exp(-r / L_R));
+            double ugrad1 = me->attr_align_ratio * 2 * (C_A/L_A *exp_hund[r_i] - C_R/L_R * exp_half[r_i]);
+	
             
             //calculate alignment forces
-            double h = me->gamma  / exp(r*r);
-            
+            double h1 = h_gamma_r[g][r_i];
+		
+
+		
             //update velocities
-            double fx = ugrad*dx/r - 2*(1 - me->attr_align_ratio)*h*dvx;
-            double fy = ugrad*dy/r - 2*(1 - me->attr_align_ratio)*h*dvy;	
+            double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
+            double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;	
+
             
             me->add_to_x_accel_prey(fx);
             me->add_to_y_accel_prey(fy);
@@ -602,12 +614,12 @@ void finch1(agent* me_cast, agent* you)
 			
 			if (dq > 0)
 			{
-				fq = 10*me->empathy*h*dq;
+				fq = 10*me->empathy*h1*dq;
 				me->add_to_q_change(fq);
 			}
 			else
 			{
-				fq = 10 * (1-me->empathy)*h*dq;
+				fq = 10 * (1-me->empathy)*h1*dq;
 				me->add_to_q_change_prey(fq);
 			}
 
@@ -620,7 +632,7 @@ void finch1(agent* me_cast, agent* you)
 		{
 			if (r >= 5)  
 			{
-				double u = -C_R/L_R * exp(-r / (L_R));  
+				double u = -C_R/L_R * exp_half[r_i];  
 				//update velocities
 				double fx = u*dx/r;
 				double fy = u*dy/r;
@@ -633,7 +645,7 @@ void finch1(agent* me_cast, agent* you)
 				double q2 = 1;
 				double dq = q2-q1;
 				
-				double h = me->gamma * 10.0 / exp(r*r);
+				double h = 10*h_gamma_r[g][r_i];
 				double fq =  h*dq;
 				me->add_to_q_change_pred(fq);
 			}

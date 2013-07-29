@@ -42,7 +42,7 @@
 
 	
 	
-		gamma = 1 / ( exp(params[0]/255.0));
+		gamma = params[0] / 255.0;
 		adrenaline = params[1] / 255.0;
 		fear_decay = params[2] / 255.0;
 		empathy = params[3] / 255.0;
@@ -93,7 +93,7 @@
 			params[i] = genes[i];
 		}
 
-		gamma =  params[0] / 255.0;
+		gamma = params[0] / 255.0;
 		adrenaline = params[1] / 255.0;
 		fear_decay = params[2] / 255.0;
 		empathy = params[3] / 255.0;

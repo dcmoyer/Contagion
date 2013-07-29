@@ -8,6 +8,9 @@
 #include "wall.h"
 #include <cmath>
 
+extern double h_gamma_r[256][76];
+extern double exp_hund[76];
+extern double exp_half[76];
 
 //basic attraction, repulsion, alignment model
 void prey(agent* me, agent* you);

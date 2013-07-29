@@ -114,11 +114,11 @@ void world::add_finch_rand(double x, double y, void (* up)(agent*,agent*))
 {
 	if(x < 0)
 		x = 0;
-	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+	else if(x >= CELL_LENGTH*DOMAIN_DIM_1)
 		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
 	if(y < 0)
 		y = 0;
-	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+	else if(y >= CELL_LENGTH*DOMAIN_DIM_2)
 		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
 	agents_master.push_back(new finch(x, y, up));
 	int i = (int) (x)/CELL_LENGTH;
@@ -453,8 +453,6 @@ void world::update_forward_velocs(){
 	//Iterates through all cells and does pairwise comparisons
     
     cell* origin = cellList[0][0];
-    cell* end = origin + (DOMAIN_DIM_1 * DOMAIN_DIM_3);
-    
 
 	//Same-cell comparison
 #pragma omp parallel for
@@ -630,7 +628,7 @@ void world::euler_evolve(){
         for(int j = 0; j < DOMAIN_DIM_2; j++){
             cell_node_iterator target = cellList[i][j]->get_iter();
             for(target; target.current != NULL; target.next()){
-                if (target.current->get_agent()->is_alive()) {
+                if (target.current->get_agent()->alive) {
                     target.current->get_agent()->normalize_accel();
 					target.current->get_agent()->drag();
                     target.current->get_agent()->euler_update();
@@ -646,23 +644,29 @@ void world::euler_evolve(){
 }
 
 
-void world::ab4_evolve(){
+void world::ab4_evolve()
+{
 
-  for(int i = 0; i < DOMAIN_DIM_1; i++){
-	for(int j = 0; j < DOMAIN_DIM_2; j++){
+  for(int i = 0; i < DOMAIN_DIM_1; i++)
+  {
+	for(int j = 0; j < DOMAIN_DIM_2; j++)
+	{
 		cell_node_iterator target = cellList[i][j]->get_iter();
-		for(target; target.current != NULL; target.next()){
-			if (target.current->get_agent()->is_alive()) {
+		for(target; target.current != NULL; target.next())
+		{
+			if (target.current->get_agent()->alive) 
+			{
 				target.current->get_agent()->normalize_accel();
 				target.current->get_agent()->drag();
 				target.current->get_agent()->ab4_update();
-			} else {
+			} 
+			else 
+			{
 				target.current->get_agent()->set_x_coord(-1);
 				target.current->get_agent()->set_y_coord(-1);
-				
-				}
 			}
 		}
+	  }
 	}
   
 }
@@ -733,7 +737,7 @@ void world::move_to_cell_evo() {
 			cell_node* prev = NULL;
 			while (current_node != NULL) {
 				agent* current_agent = current_node->get_agent();
-				if(!(current_agent->is_alive())) {
+				if(!(current_agent->alive)) {
 					
 					cell_node* temp = current_node->get_next();
 				
@@ -876,7 +880,7 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 	    
 	delete theLonelyIsland;
 	
-	//create the cells
+	//create new cells
 	for (int i = 0; i < DOMAIN_DIM_1; i++)
     {
 		for(int j = 0; j < DOMAIN_DIM_2; j++) 
@@ -884,8 +888,7 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 			cellList[i][j] = new cell;
         }
     }
-  
-  //tell the cells who their neighbors are
+
 	for (int i = 0; i < DOMAIN_DIM_1; i++)
     {
 		for(int j = 0; j < DOMAIN_DIM_2; j++) 
@@ -925,9 +928,10 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 	theLonelyIsland = new cell;
 	death_count = 0;
 		
+
 	// Copy the values
-	unsigned char oldparams [STUDYSIZE/2][7];
-	unsigned char newparams [STUDYSIZE][7];
+	unsigned char oldparams [STUDYSIZE][7];
+
 	int ams = agents_master.size();
 	int count = 0;
 	for(int i = 0; i < ams; i++) 
@@ -940,63 +944,69 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 			{
 				int x = current->params[j];
 				oldparams[count-1][j] = x;
-				gen_out << x / 255.0 << ", ";
+				gen_out << x  << ", ";
 			}
 			gen_out << "\n";
 		}
 	}
 		
 	// Delete all the agents
-	for(int i = 0; i < ams; i++) {
+	for(int i = 0; i < ams; i++) 
+	{
 		delete agents_master[i];
 	}
 	
 	agents_master.clear();
 	
-	int half = STUDYSIZE/2;
+	
+	//Shuffle, determine pairs
+
+	//Mating
+	for(int i = 0; i < count; i++)
+	{	
+		int dad = rand()% count;
+		int mom = rand()% count;
+
+		int crosspoint = rand()%8;
+		
+		for(int j = 0; j < crosspoint; j++)
+			{
+				oldparams[i+count][j] = oldparams[dad][j];
+			}
+
+		for(int k = crosspoint; k < 7; k++)
+			{
+				oldparams[i+count][k] = oldparams[mom][k];
+			}
+	}
+
+
 	//mutate
-	for(int i = 0; i < half; i++)
-	{
-		for(int k = 0; k <2; k++)
-		{
-			
+	for(int i = 0; i < STUDYSIZE; i++)
+	{	
+			//this will choose which genes mutate with chance (1/2)^5
 			unsigned short x = rand()% 128;
 			unsigned short y = rand()% 128;
 			unsigned short z = rand()% 128;
-			unsigned short M = x & y & z;
+			unsigned short a = rand()% 128;
+			unsigned short b = rand()% 128;
+			unsigned short M = x & y & z & a & b;
 
 			for(int j = 0; j < 7; j++)
 			{
-				newparams[2*i+k][j] = oldparams[i][j];
 				if(M & (1u << j))
 				{
 					unsigned short N = rand()% 8;
-					newparams[2*i+k][j] ^=  ( 1u << N);
-					//newparams[2*i+k][j] = oldparams[i][j]; //-10 + rand()%20;
+					oldparams[i][j] ^=  ( 1u << N);
 				}
 			}
-		}
-		
 	}
 
-	/*for(int i = 0; i < 10; i++)
-	{
-		
-			for(int j = 0; j < 7; j++)
-			{
-				
-				newparams[i][j] = 1;
-				
-			}
-		
-	}*/
-
-	//Repopulate!
-	//populate_finches_std(15, up);
+	
 	for(int i  = 0; i < STUDYSIZE; i++)
 	{
+		//generate random (x,y) position
 		double x, y;
-		/*Use this to restrict to the middle*/
 		if(DOMAIN_DIM_1 % 2 == 0)
 		{
 			int padx = DOMAIN_DIM_1 / 2 - 1;
@@ -1018,26 +1028,16 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 			y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
 		}
 		
-		/*unsigned char pms[7];
-			pms[0] = .45 * 255;
-			pms[1] = .5 * 255;
-			pms[2] = .01 * 255;
-			pms[3] = .6 * 255;
-			pms[4] = .6 * 255;
-			pms[5] = .5 * 255;
-			pms[6] = .5 * 255;*/
-
-
+		//funky business with arrays, can reduce?
 		unsigned char genes[7];
 		for(int z = 0; z < 7; z++)
 		{
-			genes[z] = newparams[i][z];
+			genes[z] = oldparams[i][z];
 		}
 
 		add_finch(x, y, up, genes);
 	}
 
-	//populate_finches_std(10, up);
 }
 
 void world::repopulate2(void (* up)(agent*,agent*), std::ostream& strm) 
