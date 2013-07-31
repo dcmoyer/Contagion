@@ -12,21 +12,22 @@ int main()
 	time_t t = time(NULL);
 	grid_world gw = grid_world();
 	
-	//gw.place_agent(50,50,NULL,NULL);
+	gw.place_agent(20,10,NULL,NULL);
 	//gw.place_fire(10,10, fire_potential, NULL);
-	//gw.place_goal(58,319, exit_potential);
+	gw.place_goal(50,50, exit_potential);
 	//exterior walls
-	gw.place_wall(0, 319, 1, 0, 330, wall_potential, NULL);
-	gw.place_wall(58, 319, 1, 0, 330, wall_potential, NULL);
+	gw.place_wall(0, 84, 1, 0, 84, wall_potential, NULL);
+	gw.place_wall(58, 84, 1, 0, 84, wall_potential, NULL);
+	
 	//seats
 	/*gw.place_wall(7, 6, 1, 0, 7, wall_potential, NULL);
 	gw.place_wall(29, 6, 1, 0, 7, wall_potential, NULL);
 	gw.place_wall(51, 6, 1, 0, 7, wall_potential, NULL);*/
-	for(int i = 1; i < 14; i++){
-		gw.place_wall(7, 6*i, 0, 1, 7, wall_potential, NULL);
-		gw.place_wall(29, 6*i, 0, 1, 7, wall_potential, NULL);
-		gw.place_wall(51, 6*i, 0, 1, 7, wall_potential, NULL);
-	}
+	/*for(int i = 1; i < 7; i++){
+		gw.place_wall(7, 15*i, 0, 1, 7, wall_potential, NULL);
+		gw.place_wall(29, 15*i, 0, 1, 7, wall_potential, NULL);
+		gw.place_wall(51, 15*i, 0, 1, 7, wall_potential, NULL);
+	}*/ 
 	
 	std::cout << "World Instantiated\n";
 	gw.initialize_static_field();

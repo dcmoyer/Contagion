@@ -84,13 +84,15 @@ struct edge{
 	grid_point* from;
 	grid_point* to;
 	int cardinality;
+	int cardinality2;
 	double value;
 	
-	edge(grid_point* f =0, grid_point* t = 0, int c=0, double v=0)
+	edge(grid_point* f =0, grid_point* t = 0, int c=0, int c2=0, double v=0)
 	{
 		from = f;
 		to = t;
 		cardinality = c;
+		cardinality2 = c2;
 		value = v;
 	}
 		

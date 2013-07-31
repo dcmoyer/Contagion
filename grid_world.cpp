@@ -149,6 +149,7 @@ void grid_world::update_forward_accel(){
 		
 		bool break_flag = false;
 		int cardinality = 0;
+		int cardinality2 = -1;
 		std::priority_queue<edge, std::vector<edge>, edge_comp2 > p_q;
 		//std::cout << "Position: " << x << " " << y << "\n";
 		checks[y][x] = true;
@@ -157,7 +158,9 @@ void grid_world::update_forward_accel(){
 			p_q.push(edge(the_grid[y][x], //from
 				the_grid[y][x]->direction[0],//to
 				0,//cardinality
+				-1,//cardinality2
 				(the_grid[y][x]->direction[0]->value + the_grid[y][x]->value)/2));
+			//checks[y+1][x] = true;
 		}else if(the_grid[y][x]->goal_flag){
 			break_flag = true;
 			cardinality = 0;
@@ -167,7 +170,9 @@ void grid_world::update_forward_accel(){
 			p_q.push(edge(the_grid[y][x], //from
 				the_grid[y][x]->direction[1],//to
 				1,//cardinality
+				-1,//cardinality2
 				(the_grid[y][x]->direction[1]->value + the_grid[y][x]->value)/2));
+			//checks[y-1][x] = true;
 		}else if(the_grid[y][x]->goal_flag){
 			break_flag = true;
 			cardinality = 1;
@@ -177,7 +182,9 @@ void grid_world::update_forward_accel(){
 			p_q.push(edge(the_grid[y][x], //from
 				the_grid[y][x]->direction[2],//to
 				2,//cardinality
+				-1,//cardinality2
 				(the_grid[y][x]->direction[2]->value + the_grid[y][x]->value)/2));
+			//checks[y][x-1] = true;
 		}else if(the_grid[y][x]->goal_flag){
 			break_flag = true;
 			cardinality = 2;
@@ -187,7 +194,9 @@ void grid_world::update_forward_accel(){
 			p_q.push(edge(the_grid[y][x], //from
 				the_grid[y][x]->direction[3],//to
 				3,//cardinality
+				-1,//cardinality2
 				(the_grid[y][x]->direction[3]->value + the_grid[y][x]->value)/2));
+			//checks[y][x+1] = true;
 		}else if(the_grid[y][x]->goal_flag){
 			break_flag = true;
 			cardinality = 3;
@@ -201,6 +210,11 @@ void grid_world::update_forward_accel(){
 		edge current_edge;
 		grid_point* current_point = NULL;
 		grid_point* previous_point = NULL;
+		int second_step = 0;
+		
+		double new_x_acc = 0;
+		double new_y_acc = 0;
+		double magnitude = 0;
 		//int LL = 0;
 		while(!p_q.empty()){
 			current_edge = p_q.top();
@@ -215,35 +229,124 @@ void grid_world::update_forward_accel(){
 			if(checks[current_point->i][current_point->j]){
 				continue;
 			}
+			
+			int placeholder;
+			for(int k = 0; k < RESOLUTION_WIDTH; k++){
+				for(int n = 0; n < RESOLUTION_HEIGHT; n++){
+					if(checks[n][k])
+						std::cout << "x";
+					else
+						std::cout << " ";
+				}
+				std::cout << "\n";
+			}
+			std::cin >> placeholder;
+			
+			
 			checks[current_point->i][current_point->j] = true;
 			
 			previous_point = current_edge.from;
 			
-			for(int i = 0; i < 4; i++){
-				if(current_point->direction[i] == previous_point || current_point->direction[i] == NULL)
+			for(int dir = 0; dir < 4; dir++){
+				if(current_point->direction[dir] == previous_point || current_point->direction[dir] == NULL)
 					continue;
-				if(current_point->direction[i]->goal_flag){
+				if(current_point->direction[dir]->goal_flag){
+					std::cout << "Found Goal \n";
 					break_flag = true;
 					cardinality = current_edge.cardinality;
+					cardinality2 = current_edge.cardinality2;
 					break;
 				}
 				
 				double added_val = 0; //CHANGE THIS LATER. This is where we look out for people. Lol.
-				
-				p_q.push(edge(current_point,
-							current_point->direction[i],
-							current_edge.cardinality,
-							(current_point->direction[i]->value + current_point->value)/2 + current_edge.value + added_val));
+				if(second_step > 8){
+					p_q.push(edge(current_point,
+								current_point->direction[dir],
+								current_edge.cardinality,
+								current_edge.cardinality2,
+								(current_point->direction[dir]->value + current_point->value)/2 + current_edge.value + added_val));
+				}else{
+					if(current_edge.cardinality2 > 0){
+						p_q.push(edge(current_point,
+								current_point->direction[dir],
+								current_edge.cardinality,
+								current_edge.cardinality2,
+								(current_point->direction[dir]->value + current_point->value)/2 + current_edge.value + added_val));
+					}else{ 
+						p_q.push(edge(current_point,
+									current_point->direction[dir],
+									current_edge.cardinality,
+									dir,
+									(current_point->direction[dir]->value + current_point->value)/2 + current_edge.value + added_val));
+						second_step++;
+					}
+					
+				}
 				
 			}
 			if(break_flag)
 				break;
 		}
-		//std::cout << cardinality;
-		if(cardinality < 2)
+		std::cout << "(" << cardinality << "," << cardinality2 << ") ";
+		
+		switch (cardinality){
+			case 0:
+				new_y_acc = 1;
+				break;
+			case 1:
+				new_y_acc = -1;
+				break;
+			case 2:
+				new_x_acc = -1;
+				break;
+			case 3:
+				new_x_acc = 1;
+				break;
+			default:
+				assert(false);
+		}
+		
+		switch (cardinality2){
+			case 0:
+				new_y_acc++;
+				break;
+			case 1:
+				new_y_acc--;
+				break;
+			case 2:
+				new_x_acc--;
+				break;
+			case 3:
+				new_x_acc++;
+				break;
+			case -1:
+				break;
+			default:
+				assert(false);
+		}
+		
+		magnitude = sqrt(new_y_acc*new_y_acc + new_x_acc*new_x_acc);
+		new_x_acc = new_x_acc/magnitude;
+		new_y_acc = new_y_acc/magnitude;
+		
+		agents_master[i]->add_to_y_accel(new_y_acc);
+		agents_master[i]->add_to_x_accel(new_x_acc);
+		
+		new_x_acc = 0;
+		new_y_acc = 0;
+		magnitude = 0;
+		
+		for(int k = 0; k < RESOLUTION_WIDTH; k++){
+			for(int n = 0; n < RESOLUTION_HEIGHT; n++){
+				std::cout << checks[i][k];
+			}
+			std::cout << "\n";
+		}
+		std::cin >> magnitude;
+		/*if(cardinality < 2)
 			agents_master[i]->add_to_y_accel( (-1 * cardinality)  +  (1 * (1 - cardinality)) );
 		else
-			agents_master[i]->add_to_x_accel( (1 * (cardinality % 2))  +  (-1 * (1 - (cardinality % 2))));
+			agents_master[i]->add_to_x_accel( (1 * (cardinality % 2))  +  (-1 * (1 - (cardinality % 2))));*/
 		
 	}
 }

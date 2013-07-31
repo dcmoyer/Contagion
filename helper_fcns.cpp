@@ -3,15 +3,15 @@
 double fire_potential(double dx, double dy, static_agent* target){
 	
 	double r = sqrt(dx*dx + dy*dy);
-	return (50 * exp(-r*r/100));
-		
+	//return (100 * exp(-r*r/400));
+	return 0;	
 }
 
 double exit_potential(double dx, double dy, static_agent* target){
 	
 	double r = sqrt(dx*dx + dy*dy);
-	return -(50 * exp(-r*r/100)) + 50;
-	
+	//return -(100 * exp(-r*r/400)) + 100;
+	return 0;
 }
 
 double wall_potential(double dx , double dy, static_agent* target_fake){
@@ -25,7 +25,7 @@ double wall_potential(double dx , double dy, static_agent* target_fake){
 	double p_n_y = n_dot_r * target->normal_y;
 	if( sqrt(pow((dx - p_n_x),2) + pow((dy - p_n_y),2)) < target->length ){
 		
-		return (50 * exp(-n_dot_r*n_dot_r));
+		return (500 * exp(-n_dot_r*n_dot_r/2));
 		
 	}
 	
