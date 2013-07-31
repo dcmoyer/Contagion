@@ -1,17 +1,37 @@
 #include "helper_fcns.h"
 
-void fire_potential(double r){
+double fire_potential(double dx, double dy, static_agent* target){
 	
-	return (50 * exp(r*r/100));
+	double r = sqrt(dx*dx + dy*dy);
+	return (50 * exp(-r*r/100));
 		
 }
 
-void exit_potential(double r){
+double exit_potential(double dx, double dy, static_agent* target){
 	
-	return -(50 * exp(r*r/100));
+	double r = sqrt(dx*dx + dy*dy);
+	return -(50 * exp(-r*r/100)) + 50;
 	
 }
 
+double wall_potential(double dx , double dy, static_agent* target_fake){
+	//This is the wall function.
+	
+	static_wall* target = (static_wall*) target_fake;
+	double r = sqrt(dx*dx + dy*dy);
+	
+	double n_dot_r = (dx * target->normal_x) + (dy * target->normal_y);
+	double p_n_x = n_dot_r * target->normal_x;
+	double p_n_y = n_dot_r * target->normal_y;
+	if( sqrt(pow((dx - p_n_x),2) + pow((dy - p_n_y),2)) < target->length ){
+		
+		return (50 * exp(-n_dot_r*n_dot_r));
+		
+	}
+	
+	
+}
+/*
 void prey(agent* me, agent* you)
 {
 	if(you->get_type() == 2){
@@ -40,13 +60,13 @@ void prey(agent* me, agent* you)
 	double dvx = vx2-vx1;
 	double dvy = vy2-vy1;
 	//double dvz = vz2-vz1;
-	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
-	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*//*);
+	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*//*;
 	
 
-}
+//}
 
-void predator_model(agent* me, agent* you)
+/*void predator_model(agent* me, agent* you)
 {
 	if(you->get_type() == 2){
 		return;
@@ -74,9 +94,9 @@ void predator_model(agent* me, agent* you)
 	double dvx = vx2-vx1;
 	double dvy = vy2-vy1;
 	//double dvz = vz2-vz1;
-	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
-	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
-	
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*//*);
+	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*//*;
+/*
 	if (r < 100) {
 		if (you->get_type() == 0) {	
 
@@ -111,7 +131,7 @@ void swarm1(agent* me, agent* you)
 	double dx= x2-x1;
 	double dy= y2-y1;
 	//double dz= z2-z1;
-	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*//*);
 
 	if(r<CELL_LENGTH)
 	{
@@ -147,7 +167,7 @@ void swarm1(agent* me, agent* you)
    // you->add_to_y_accel(-fy);
 	/*(*me).set_forward_v_x((*me).get_forward_v_x()+fx);
 	(*me).set_forward_v_y((*me).get_forward_v_y()+fy);
-	(*me).set_forward_v_z((*me).get_forward_v_z()+fz);*/
+	(*me).set_forward_v_z((*me).get_forward_v_z()+fz);*//*
 	//(*you).set_forward_v_x((*you).get_forward_v_x()+fx);
 	//(*you).set_forward_v_y((*you).get_forward_v_y()+fy);
 	//(*you).set_forward_v_z((*you).get_forward_v_z()+fz);
@@ -174,7 +194,7 @@ void swarm1_fear(agent* me, agent* you)
 	double dx= x2-x1;
 	double dy= y2-y1;
 	//double dz= z2-z1;
-	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*//*);
 
 	if(r<CELL_LENGTH)
 	{
@@ -238,7 +258,7 @@ void swarm1_fear(agent* me, agent* you)
 	//(*you).set_forward_v_x((*you).get_forward_v_x()+fx);
 	//(*you).set_forward_v_y((*you).get_forward_v_y()+fy);
 	//(*you).set_forward_v_z((*you).get_forward_v_z()+fz);
-    
+/*
     me->iterate_NearestNeighbor();
 	}
 
@@ -291,7 +311,7 @@ void go_left_test(agent* me, agent* you){
 		return;
 	}
 	
-    me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*/) / (double) 1000000);
+    me->add_to_x_accel( (- 1.0 /*+ me->get_x_veloc_index(0)*//*) / (double) 1000000);
 
 }
 
@@ -312,7 +332,7 @@ void predator_2012( agent* me_fake, agent* you){
 	double dx= x2-x1;
 	double dy= y2-y1;
     
-    double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+    double r = sqrt(dx*dx + dy*dy /*+ dz*dz*//*);
     
     if(r < me->running_r){
         if (you->get_type() == 0) {	
@@ -352,12 +372,12 @@ void prey_2012_nofear(agent* me, agent* you){
 	double dvx = vx2-vx1;
 	double dvy = vy2-vy1;
 	//double dvz = vz2-vz1;
-	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*//*);
 	//double sum = std::abs(dx)+std::abs(dy)/*+std::abs(dz)*/;
     
 	//calculate attraction/repulsion forces
 	//double u = -C_A * exp(-r / L_A) + C_R * exp(-r / L_R);
-
+/*
     me->iterate_NearestNeighbor();
     if (r < CELL_LENGTH) {
 		if (you->get_type() == 0) {
@@ -411,7 +431,7 @@ void prey_2012_fear(agent* me, agent* you){
 	double dx= x2-x1;
 	double dy= y2-y1;
 	//double dz= z2-z1;
-	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*//*);
 
     
     if (r < CELL_LENGTH) {
@@ -668,5 +688,5 @@ void finch1(agent* me_cast, agent* you)
 		
 	}
     
-}
+}*/
 

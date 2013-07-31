@@ -4,53 +4,71 @@
 #include <ctime>
 #include <string>
 #include <sstream>
+#include <iostream>
 
 int main()
 {
 	//std::string filename = "test_data.dat";
 	time_t t = time(NULL);
-	world w = world();
-	w.add_boundary(velocity_wall_interaction);
-	//w.add_boundary(wall_interaction);
-	w.populate_rand(100, swarm1 );
-	//w.add_agent(10,10, prey_2012_fear);
-	//w.add_agent(40,10, prey_2012_fear);
-	w.add_predator(40,40,predator_2012);
-	//w.populate_predator_rand(1, predator_2012);
-	//w.add_wall(100.0001, 100, 1, 0, 1000, wall_interaction);
-	//w.add_wall(50, 50, -1, 0, 1000, wall_interaction);
-    int jump_val = 4;
-    int print_val = 200;
+	grid_world gw = grid_world();
+	
+	//gw.place_agent(50,50,NULL,NULL);
+	//gw.place_fire(10,10, fire_potential, NULL);
+	//gw.place_goal(58,319, exit_potential);
+	//exterior walls
+	gw.place_wall(0, 319, 1, 0, 330, wall_potential, NULL);
+	gw.place_wall(58, 319, 1, 0, 330, wall_potential, NULL);
+	//seats
+	/*gw.place_wall(7, 6, 1, 0, 7, wall_potential, NULL);
+	gw.place_wall(29, 6, 1, 0, 7, wall_potential, NULL);
+	gw.place_wall(51, 6, 1, 0, 7, wall_potential, NULL);*/
+	for(int i = 1; i < 14; i++){
+		gw.place_wall(7, 6*i, 0, 1, 7, wall_potential, NULL);
+		gw.place_wall(29, 6*i, 0, 1, 7, wall_potential, NULL);
+		gw.place_wall(51, 6*i, 0, 1, 7, wall_potential, NULL);
+	}
+	
+	std::cout << "World Instantiated\n";
+	gw.initialize_static_field();
+	std::cout << "Field Initialized\n";
+	gw.print_static_csv();
+	
+	std::cout << "Statics Printed \n";
+	int jump_val = 4;
+	int print_val = 100;
+	
+	gw.print_field();
+	
 	for(int i = 1; i <=jump_val; i++)
 	{
-		w.update_forward_velocs();
-		w.update_agent_pos_euler();
-		w.move_to_cell();
-		if(i % 200 == 0){
+		//std::cout << "Step "<< i;
+		gw.update_forward_accel();
+		gw.update_agent_pos_euler();
+		if(i % print_val == 0){
 			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
             std::stringstream silly;
-            silly << (i/200);
-			w.print_csv(silly.str());
+            silly << (i/print_val);
+			gw.print_csv(silly.str());
 		}
 		//w.print(str);
 		//w.print(std::cout);
 	}
-    for(int i = jump_val + 1; i <= 100000; i++)
+    for(int i = jump_val + 1; i <= 10000; i++)
 	{
-		w.update_forward_velocs();
-		w.update_agent_pos_ab4();
-		w.move_to_cell();
+		gw.update_forward_accel();
+		gw.update_agent_pos_ab4();
 		if(i % print_val == 0){
 			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
             std::stringstream silly;
-            silly << (i/200);
-			w.print_csv(silly.str());
-		}
+            silly << (i/print_val);
+			gw.print_csv(silly.str());
+	}
 		//w.print(str);
 		//w.print(std::cout);
 	}
     
 	//std::cout << "Data printed to " << filename << "\n";    
+	
     
 	return 0;
 }

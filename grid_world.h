@@ -3,6 +3,7 @@
 
 #include "constants.h"
 #include "grid_agent.h"
+#include "static_agent.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -20,8 +21,8 @@ class grid_iter;
 class grid_world{
 private:
 	
-	vector<grid_agent*> agents_master;
-	vector<static_agent*> static_agents_master;
+	std::vector<grid_agent*> agents_master;
+	std::vector<static_agent*> static_agents_master;
 	grid_point* the_grid[RESOLUTION_HEIGHT][RESOLUTION_WIDTH];
 	
 public:
@@ -30,17 +31,18 @@ public:
 	
 	void update_forward_accel();
 	void initialize_static_field();
-	void place_fire(double x, double y, double (*p)(double), double (* v_s)(double, double, double, double) );
-	void place_goal(double x, double y, double (*p)(double));
-	void place_agent(double x, double y, double (*p)(double), double (* v_s)(double, double, double, double) );
+	void place_fire(double x, double y, double (*p)(double, double, static_agent*), double (* v_s)(double, double, double, double) );
+	void place_goal(double x, double y, double (*p)(double, double, static_agent*));
+	void place_agent(double x, double y, double (*p)(double, double, grid_agent*), double (* v_s)(double, double, double, double) );
+	void place_wall(double x, double y, double n_x, double n_y, double length ,double (*p)(double, double, static_agent*), double (* v_s)(double, double, double, double));
 	void print_csv(std::string filename);
 	void print_static_csv();
+	void print_field();
 	
-	void euler_update();
-	void ab4_update();
+	void update_agent_pos_euler();
+	void update_agent_pos_ab4();
 	
 	friend class grid_point;
-	friend class grid_iter;
 	
 };
 
@@ -64,6 +66,9 @@ private:
 	bool goal_flag;
 	bool impass_flag;
 	
+	int i;
+	int j;
+	
 public:
 	
 	grid_point();
@@ -72,29 +77,44 @@ public:
 	void set_value(double v);
 	
 	friend class grid_world;
-	friend class grid_iter;
 	
 };
 
 struct edge{
 	grid_point* from;
 	grid_point* to;
-	double cardinality;
+	int cardinality;
 	double value;
-}
-
-bool edge_comp(edge a, edge b){
-	return a.value > b.value;
-}
-
-class grid_iter{
-private:
-	grid_point* current;
 	
+	edge(grid_point* f =0, grid_point* t = 0, int c=0, double v=0)
+	{
+		from = f;
+		to = t;
+		cardinality = c;
+		value = v;
+	}
+		
+	/*edge& operator= (const edge& right){
+		from = right.from;
+		to = right.to;
+		cardinality = right.cardinality;
+		value = right.value;
+		return *this;
+	}*/
+	
+	/*edge(const edge& right){
+		from = right.from;
+		to = right.to;
+		cardinality = right.cardinality;
+		value = right.value;
+	}*/
+};
+
+class edge_comp2{
 public:
-	
-	friend class grid_point;
-	friend class grid_world;
+	bool operator () (edge a, edge b){
+		return a.value < b.value;
+	}
 	
 };
 

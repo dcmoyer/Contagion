@@ -30,12 +30,12 @@ public:
     //void (* update)(agent*, agent*);
     bool alive;
 	
-	double (* potential)(double);
+	double (* potential)(double, double, grid_agent*);
 	double (* velocity_block)(double, double, double, double); 
 	
 //functions:
 
-    grid_agent(double x, double y, int t, double (*p)(double,double), double (*vb)(double, double, double, double));
+    grid_agent(double x, double y, int t, double (*p)(double, double, grid_agent*), double (*vb)(double, double, double, double));
     //agent(double x, double y, void (* up)(agent*,agent*));
     //agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH]);
     //agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
@@ -47,7 +47,7 @@ public:
 	virtual void drag(); 
 	//virtual void print_genome();
 
-	//void kill();
+	void kill();
 	//void move_inside(int proj_x, int proj_y);
 	//void iterate_NearestNeighbor();
 

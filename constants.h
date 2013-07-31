@@ -12,8 +12,8 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define CONSTANTS_H
 
 #define NUM_OF_AGENTS   1
-#define DOMAIN_DIM_1    3
-#define DOMAIN_DIM_2    3
+#define DOMAIN_DIM_1    1
+#define DOMAIN_DIM_2    1
 #define DOMAIN_DIM_3    0
 #define CELL_LENGTH   75
 #define STEP_SIZE 0.005
@@ -54,7 +54,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 #define NUMBER 500
 
-#define RESOLUTION_HEIGHT 1000
-#define RESOLUTION_WIDTH 1000
+#define RESOLUTION_HEIGHT 1664 
+#define RESOLUTION_WIDTH 
 
 #endif

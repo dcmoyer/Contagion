@@ -1,7 +1,7 @@
 #include "grid_agent.h"
 
 //Default Constructor.
-grid_agent::grid_agent(double x, double y, int t, double (*p)(double,double), double (*vb)(double, double, double, double)){
+grid_agent::grid_agent(double x, double y, int t, double (*p)(double, double, grid_agent*), double (*vb)(double, double, double, double)){
   //Assign Coordinates
     x_coord = x;
     for(int i = 0; i < HIST_LENGTH; i++)
@@ -131,13 +131,13 @@ void grid_agent::euler_update()
 
 }
 
-void agent::drag()
+void grid_agent::drag()
 {
 	//MUST CALL DRAG AFTER ALL NEIGHBOR INTERACTIONS HAVE BEEN CALCULATED INTO X_ACCEL
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
 	double A = ALPHA*4*pow((0.5-0.5*q_mag+q_mag),2);
-	x_accel[0] += (A - BETA * veloc_mag)*x_veloc[0] + wall_accel_x;
-	y_accel[0] += (A - BETA * veloc_mag)*y_veloc[0] + wall_accel_y;
+	x_accel[0] += -x_veloc[0];
+	y_accel[0] += -y_veloc[0];
 	//q_change[0] += -q_mag/100;
 	
 }
@@ -162,12 +162,12 @@ double grid_agent::get_y_coord(){
 
 double grid_agent::get_x_node_pos(){
 	
-	return std::round(x_coord);
+	return round(x_coord);
 	
 }
 double grid_agent::get_y_node_pos(){
 	
-	return std::round(y_coord);
+	return round(y_coord);
 	
 }
 
@@ -177,7 +177,7 @@ double* grid_agent::get_x_veloc(){
     
 }
 
-double* agent::get_y_veloc(){
+double* grid_agent::get_y_veloc(){
     
     return &y_veloc[0];
     
