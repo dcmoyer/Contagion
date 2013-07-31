@@ -231,8 +231,8 @@ void grid_world::update_forward_accel(){
 			}
 			
 			int placeholder;
-			for(int k = 0; k < RESOLUTION_WIDTH; k++){
-				for(int n = 0; n < RESOLUTION_HEIGHT; n++){
+			for(int n = 0; n < RESOLUTION_HEIGHT; n++){
+				for(int k = 0; k < RESOLUTION_WIDTH; k++){
 					if(checks[n][k])
 						std::cout << "x";
 					else
