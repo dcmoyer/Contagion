@@ -12,7 +12,7 @@ static_agent::static_agent(){
 
 }
 
-static_agent::static_agent(double x, double y, int t, double (* p)(double, double, static_agent*), double (* vb)(double,double,double,double)){
+static_agent::static_agent(double x, double y, int t, double (* p)(double, double, static_agent*), double (* vb)(double,double,static_agent*)){
 
 	x_pos = x;
 	y_pos = y;
@@ -44,7 +44,7 @@ int static_agent::get_agent_type(){
 }
 
 static_wall::static_wall(double center_x, double center_y, int t, double n_x, double n_y, double len, 
-double (* p)(double ,double, static_agent*), double (* vb)(double, double, double, double)) :
+double (* p)(double ,double, static_agent*), double (* vb)(double, double, static_agent*)) :
  static_agent(center_x, center_y, t, p, vb) {
 	
 	double n_mag = sqrt(n_x*n_x + n_y*n_y);

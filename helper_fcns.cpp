@@ -3,15 +3,15 @@
 double fire_potential(double dx, double dy, static_agent* target){
 	
 	double r = sqrt(dx*dx + dy*dy);
-	//return (100 * exp(-r*r/400));
-	return 0;	
+	return (100 * exp(-r*r/400));
+	//return 0;	
 }
 
 double exit_potential(double dx, double dy, static_agent* target){
 	
 	double r = sqrt(dx*dx + dy*dy);
-	//return -(100 * exp(-r*r/400)) + 100;
-	return 0;
+	return -(100 * exp(-r*r/400)) + 100;
+	//return 0;
 }
 
 double wall_potential(double dx , double dy, static_agent* target_fake){
@@ -23,13 +23,39 @@ double wall_potential(double dx , double dy, static_agent* target_fake){
 	double n_dot_r = (dx * target->normal_x) + (dy * target->normal_y);
 	double p_n_x = n_dot_r * target->normal_x;
 	double p_n_y = n_dot_r * target->normal_y;
-	if( sqrt(pow((dx - p_n_x),2) + pow((dy - p_n_y),2)) < target->length ){
+	if( sqrt(pow((dx - p_n_x),2) + pow((dy - p_n_y),2)) < target->length + 1 ){
 		
 		return (500 * exp(-n_dot_r*n_dot_r/2));
 		
 	}
 	
 	
+}
+
+double agent_population_density(double dx, double dy, grid_agent* target){
+	
+	double r = sqrt(dx*dx + dy*dy);
+	if(r > 4){
+		return 0;
+	}
+	
+	return (exp(-r*r/3));
+	
+}
+
+double wall_density(double dx, double dy, static_agent* target_fake){
+	
+	static_wall* target = (static_wall*) target_fake;
+	double r = sqrt(dx*dx + dy*dy);
+	
+	double n_dot_r = (dx * target->normal_x) + (dy * target->normal_y);
+	double p_n_x = n_dot_r * target->normal_x;
+	double p_n_y = n_dot_r * target->normal_y;
+	if( sqrt(pow((dx - p_n_x),2) + pow((dy - p_n_y),2)) < target->length ){
+		
+		return 1;
+	
+	}
 }
 /*
 void prey(agent* me, agent* you)

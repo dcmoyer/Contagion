@@ -26,17 +26,20 @@ private:
 	grid_point* the_grid[RESOLUTION_HEIGHT][RESOLUTION_WIDTH];
 	
 public:
+	
+	double global_max;
 	grid_world();
 	~grid_world();
 	
 	void update_forward_accel();
 	void initialize_static_field();
-	void place_fire(double x, double y, double (*p)(double, double, static_agent*), double (* v_s)(double, double, double, double) );
+	void place_fire(double x, double y, double (*p)(double, double, static_agent*), double (* v_s)(double, double, static_agent*) );
 	void place_goal(double x, double y, double (*p)(double, double, static_agent*));
-	void place_agent(double x, double y, double (*p)(double, double, grid_agent*), double (* v_s)(double, double, double, double) );
-	void place_wall(double x, double y, double n_x, double n_y, double length ,double (*p)(double, double, static_agent*), double (* v_s)(double, double, double, double));
+	void place_agent(double x, double y, double (*p)(double, double, grid_agent*), double (* v_s)(double, double, grid_agent*) );
+	void place_wall(double x, double y, double n_x, double n_y, double length ,double (*p)(double, double, static_agent*), double (* v_s)(double, double, static_agent*));
 	void print_csv(std::string filename);
 	void print_static_csv();
+	void print_static_wall_csv();
 	void print_field();
 	
 	void update_agent_pos_euler();
@@ -115,7 +118,7 @@ struct edge{
 class edge_comp2{
 public:
 	bool operator () (edge a, edge b){
-		return a.value < b.value;
+		return a.value > b.value;
 	}
 	
 };

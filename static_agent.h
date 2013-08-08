@@ -14,10 +14,10 @@ private:
 	int agent_type;
 public:
 	static_agent();
-	static_agent(double x, double y, int t, double (* p)(double, double, static_agent*), double (* vb)(double,double,double,double));
+	static_agent(double x, double y, int t, double (* p)(double, double, static_agent*), double (* vb)(double,double,static_agent*));
 	
 	double (* potential)(double, double, static_agent* );
-	double (* velocity_block)(double, double, double, double);
+	double (* velocity_block)(double, double, static_agent*);
 	
 	double get_x_pos();
 	double get_y_pos();
@@ -34,7 +34,7 @@ public:
 	double normal_x;
 	double normal_y;
 	double length;
-	static_wall(double center_x, double center_y, int t, double n_x, double n_y, double len, double (* p)(double, double, static_agent*) , double (* vb)(double, double, double, double));
+	static_wall(double center_x, double center_y, int t, double n_x, double n_y, double len, double (* p)(double, double, static_agent*) , double (* vb)(double, double, static_agent*));
 		
 };
 

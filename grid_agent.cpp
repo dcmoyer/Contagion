@@ -1,7 +1,7 @@
 #include "grid_agent.h"
 
 //Default Constructor.
-grid_agent::grid_agent(double x, double y, int t, double (*p)(double, double, grid_agent*), double (*vb)(double, double, double, double)){
+grid_agent::grid_agent(double x, double y, int t, double (*p)(double, double, grid_agent*), double (*vb)(double, double, grid_agent*)){
   //Assign Coordinates
     x_coord = x;
     for(int i = 0; i < HIST_LENGTH; i++)
@@ -31,6 +31,8 @@ grid_agent::grid_agent(double x, double y, int t, double (*p)(double, double, gr
 	velocity_block = vb;
 	
 	agent_type = t;
+	
+	proj_density = 0;
 }
 
 void grid_agent::ab4_update()
@@ -54,14 +56,14 @@ void grid_agent::ab4_update()
     
 
     x_coord = x_coord +
-                ( (STEP_SIZE * (1.0/24.0)) * 
+                std::max(1 - proj_density, .2)*( (STEP_SIZE * (1.0/24.0)) * 
                   ((55 * forward_v_x) -
                    (59 * x_veloc[0]) +
                    (37 * x_veloc[1]) -
                    (9  * x_veloc[2])));
     
     y_coord = y_coord +
-                ( (STEP_SIZE * (1.0/24.0)) *
+                std::max(1 - proj_density, .2)*( (STEP_SIZE * (1.0/24.0)) *
                   ((55 * forward_v_y) -
                    (59 * y_veloc[0]) +
                    (37 * y_veloc[1]) -
@@ -134,10 +136,11 @@ void grid_agent::euler_update()
 void grid_agent::drag()
 {
 	//MUST CALL DRAG AFTER ALL NEIGHBOR INTERACTIONS HAVE BEEN CALCULATED INTO X_ACCEL
-    double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-	double A = ALPHA*4*pow((0.5-0.5*q_mag+q_mag),2);
+    //double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
+	//double A = ALPHA*4*pow((0.5-0.5*q_mag+q_mag),2);
 	x_accel[0] += -x_veloc[0];
 	y_accel[0] += -y_veloc[0];
+	q_change[0] += -q_mag/5;
 	//q_change[0] += -q_mag/100;
 	
 }
@@ -322,6 +325,13 @@ void grid_agent::set_q_mag(double q){
     q_mag = q;
     
 }
+
+void grid_agent::set_proj_density(double d){
+	
+	proj_density = d;
+	
+}
+
 
 void grid_agent::add_to_q_change(double q_c){
     

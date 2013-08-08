@@ -10,6 +10,8 @@ double fire_potential(double dx, double dy, static_agent* target);
 double exit_potential(double dx, double dy, static_agent* target);
 double wall_potential(double dx, double dy, static_agent* target);
 
+double agent_population_density(double dx, double dy, grid_agent* target);
+double wall_density(double dx, double dy, static_agent* target_fake);
 
 //basic attraction, repulsion, alignment model
 /*void prey(agent* me, agent* you);

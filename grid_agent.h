@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <algorithm>
 
 
 
@@ -31,11 +32,13 @@ public:
     bool alive;
 	
 	double (* potential)(double, double, grid_agent*);
-	double (* velocity_block)(double, double, double, double); 
+	double (* velocity_block)(double, double, grid_agent*);
+	
+	double proj_density;
 	
 //functions:
 
-    grid_agent(double x, double y, int t, double (*p)(double, double, grid_agent*), double (*vb)(double, double, double, double));
+    grid_agent(double x, double y, int t, double (*p)(double, double, grid_agent*), double (*vb)(double, double, grid_agent*));
     //agent(double x, double y, void (* up)(agent*,agent*));
     //agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH]);
     //agent(double x, double y, double v_x[HIST_LENGTH], double v_y[HIST_LENGTH], 
@@ -96,6 +99,7 @@ public:
     void add_to_y_accel(double add_to_accel);
    
     void set_q_mag(double q);
+	void set_proj_density(double d);
 
 	void add_to_q_change(double q_c);
 
