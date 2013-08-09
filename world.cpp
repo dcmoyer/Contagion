@@ -54,6 +54,593 @@ world::world()
 	death_count = 0;
 }
 
+world::world(void (* up1)(agent*,agent*), void (* up)(agent*,agent*))
+{
+//Pacman maze world generator. 
+
+
+//create the cells
+	for (int i = 0; i < 18; i++)
+    {
+		for(int j = 0; j < 9; j++) 
+        {
+			cellList[i][j] = new cell(i,j);
+        }
+    }
+  
+	theLonelyIsland = new cell;
+	death_count = 0;
+
+//empty some cells
+	for(int j = 1; j <= 3; j++)
+	{
+		cellList[1][j]->phantom_zone = true;
+		cellList[16][j]->phantom_zone = true;
+	}
+
+	for(int j = 5; j <= 7; j++)
+	{
+		cellList[1][j]->phantom_zone = true;
+		cellList[16][j]->phantom_zone = true;
+	}
+
+	cellList[2][1]->phantom_zone = true;
+	cellList[2][7]->phantom_zone = true;
+	cellList[15][1]->phantom_zone = true;
+	cellList[15][7]->phantom_zone = true;
+
+	for(int j = 0; j <= 1; j++)
+	{
+		cellList[4][j]->phantom_zone = true;
+		cellList[13][j]->phantom_zone = true;
+	}
+
+	for(int j = 7; j <= 8; j++)
+	{
+		cellList[4][j]->phantom_zone = true;
+		cellList[13][j]->phantom_zone = true;
+	}
+
+
+	for(int i = 3; i <= 4; i++)
+	{
+		cellList[i][3]->phantom_zone = true;
+		cellList[i][5]->phantom_zone = true;
+	}
+
+
+	for(int i = 13; i <= 14; i++)
+	{
+		cellList[i][3]->phantom_zone = true;
+		cellList[i][5]->phantom_zone = true;
+	}
+
+
+
+	for(int i = 6; i <= 11; i++)
+	{
+		cellList[i][1]->phantom_zone = true;
+		cellList[i][7]->phantom_zone = true;
+		for(int j = 3; j <= 5; j++)
+		{
+			cellList[i][j]->phantom_zone = true;
+		}
+	}
+
+	//set neighbors
+	for (int i = 0; i < 18; i++)
+    {
+		for(int j = 0; j < 9; j++) 
+        {
+
+			if(!(cellList[i][j]->phantom_zone))
+			{
+            vector<cell*> v;
+			
+
+
+			if(j >= 1 )
+			{
+				v.push_back(cellList[i][j-1]);
+				if(!(cellList[i][j-1]->phantom_zone))
+				{
+				if(j >= 2 && !(cellList[i][j-2]->phantom_zone))
+				{
+					v.push_back(cellList[i][j-2]);
+					if(j >= 3 && !(cellList[i][j-3]->phantom_zone))
+						{
+							v.push_back(cellList[i][j-3]);
+						}
+				}
+				}
+				else
+					{
+				//add bottom wall 
+				add_wall(i*CELL_LENGTH + (double)CELL_LENGTH/2.0, (j) * CELL_LENGTH +1, 0, 1, (double)(CELL_LENGTH/2)+10, up1);
+			}
+			
+			}
+
+            else
+			{
+				//add bottom wall 
+				add_wall(i*CELL_LENGTH + (double)CELL_LENGTH/2.0, (j) * CELL_LENGTH +1, 0, 1, (double)(CELL_LENGTH/2)+10, up1);
+			}
+
+
+
+
+
+			if(j < 8 )
+			{
+				v.push_back(cellList[i][j+1]);
+				if( !(cellList[i][j+1]->phantom_zone))
+				{
+				if(j <7 && !(cellList[i][j+2]->phantom_zone))
+				{
+					v.push_back(cellList[i][j+2]);
+					if(j <6 && !(cellList[i][j+3]->phantom_zone))
+						{
+							v.push_back(cellList[i][j+3]);
+						}
+				}
+				}
+				else
+			{
+				
+				//add top wall 
+				add_wall(i*CELL_LENGTH + (double)CELL_LENGTH/2.0, (j+1) * CELL_LENGTH - 1, 0, -1, (double)(CELL_LENGTH/2)+10 , up1);
+			}
+
+			}
+			else
+			{
+				
+				//add top wall 
+				add_wall(i*CELL_LENGTH + (double)CELL_LENGTH/2.0, (j+1) * CELL_LENGTH - 1, 0, -1, (double)(CELL_LENGTH/2)+10 , up1);
+			}
+
+
+
+			if(i >= 1)
+			{
+				v.push_back(cellList[i-1][j]);
+				if(  !(cellList[i-1][j]->phantom_zone))
+				{
+
+				if(i >= 2 && !(cellList[i-2][j]->phantom_zone))
+				{
+					v.push_back(cellList[i-2][j]);
+					if(i >= 3 && !(cellList[i-3][j]->phantom_zone))
+						{
+							v.push_back(cellList[i-3][j]);
+						}
+				}
+				}
+				else
+			{
+				//add left wall 
+				add_wall(i*CELL_LENGTH + 1, (j) * CELL_LENGTH + (double)CELL_LENGTH / 2.0 , 1, 0, (double)(CELL_LENGTH/2)+5 , up1);
+			}
+
+			}
+			else
+			{
+				//add left wall 
+				add_wall(i*CELL_LENGTH + 1, (j) * CELL_LENGTH + (double)CELL_LENGTH / 2.0 , 1, 0, (double)(CELL_LENGTH/2)+5 , up1);
+			}
+
+			if(i < 17 )
+			{
+				v.push_back(cellList[i+1][j]);
+				if( !(cellList[i+1][j]->phantom_zone))
+				{
+				if(i <16 && !(cellList[i+2][j]->phantom_zone))
+				{
+					v.push_back(cellList[i+2][j]);
+					if(i < 15 && !(cellList[i+3][j]->phantom_zone))
+						{
+							v.push_back(cellList[i+3][j]);
+						}
+				}
+				}
+				else
+			{
+				//add right wall 
+				add_wall((i+1)*CELL_LENGTH - 1, (j) * CELL_LENGTH + (double)CELL_LENGTH / 2.0, -1, 0, (double)(CELL_LENGTH/2) +5, up1);
+			}
+
+			}
+			else
+			{
+				//add right wall 
+				add_wall((i+1)*CELL_LENGTH - 1, (j) * CELL_LENGTH + (double)CELL_LENGTH / 2.0, -1, 0, (double)(CELL_LENGTH/2) +5, up1);
+			}
+
+
+			if( i >= 1 && j >= 1/* && !(cellList[i-1][j-1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i-1][j-1]);
+			}
+			
+			if( i >= 1 && j < 8 /*&& !(cellList[i-1][j+1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i-1][j+1]);
+			}
+
+			
+			if( i < 17 && j >= 1 /*&& !(cellList[i+1][j-1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i+1][j-1]);
+			}
+
+			
+			if( i < 17 && j < 8 /*&& !(cellList[i+1][j+1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i+1][j+1]);
+			}
+
+            cellList[i][j]->set_neighbors(v);
+			}
+
+
+			///// else this is a phantom cell
+			else
+			{
+				
+			/*	vector<cell*> v(8);
+			
+            v[0] = cellList[i-1][j-1];
+            v[1] = cellList[i][j-1];
+            v[2] = cellList[i+1][j-1];
+
+            v[3] = cellList[i-1][j];
+            v[4] = cellList[i+1][j];
+
+            v[5] = cellList[i-1][j+1];
+            v[6] = cellList[i][j+1];
+            v[7] = cellList[i+1][j+1];
+
+            if(i == 0)
+            {
+                v[0]=v[3]=v[5]=NULL;
+            }
+             if((i+1) == DOMAIN_DIM_1)
+            {
+                v[2]=v[4]=v[7]=NULL;
+            }
+            if(j == 0)
+            {
+                v[0]=v[1]=v[2]=NULL;
+            }
+             if((j+1) == DOMAIN_DIM_2)
+            {
+                v[5]=v[6]=v[7]=NULL;
+            }
+            
+            cellList[i][j]->set_neighbors(v);*/
+
+
+            vector<cell*> v;
+			
+
+
+			if(j >= 1 && !(cellList[i][j-1]->phantom_zone))
+			{
+				v.push_back(cellList[i][j-1]);
+				if(j >= 2 && !(cellList[i][j-2]->phantom_zone))
+				{
+					v.push_back(cellList[i][j-2]);
+					if(j >= 3 && !(cellList[i][j-3]->phantom_zone))
+						{
+							v.push_back(cellList[i][j-3]);
+						}
+				}
+			}
+         
+
+
+
+
+
+			if(j < 8 && !(cellList[i][j+1]->phantom_zone))
+			{
+				v.push_back(cellList[i][j+1]);
+				if(j <7 && !(cellList[i][j+2]->phantom_zone))
+				{
+					v.push_back(cellList[i][j+2]);
+					if(j <6 && !(cellList[i][j+3]->phantom_zone))
+						{
+							v.push_back(cellList[i][j+3]);
+						}
+				}
+			}
+		
+
+
+
+			if(i >= 1 && !(cellList[i-1][j]->phantom_zone))
+			{
+				v.push_back(cellList[i-1][j]);
+				if(i >= 2 && !(cellList[i-2][j]->phantom_zone))
+				{
+					v.push_back(cellList[i-2][j]);
+					if(i >= 3 && !(cellList[i-3][j]->phantom_zone))
+						{
+							v.push_back(cellList[i-3][j]);
+						}
+				}
+			}
+		
+
+			if(i < 17 && !(cellList[i+1][j]->phantom_zone))
+			{
+				v.push_back(cellList[i+1][j]);
+				if(i <16 && !(cellList[i+2][j]->phantom_zone))
+				{
+					v.push_back(cellList[i+2][j]);
+					if(i < 15 && !(cellList[i+3][j]->phantom_zone))
+						{
+							v.push_back(cellList[i+3][j]);
+						}
+				}
+			}
+			
+
+			if( i >= 1 && j >= 1/* && !(cellList[i-1][j-1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i-1][j-1]);
+			}
+			
+			if( i >= 1 && j < 8 /*&& !(cellList[i-1][j+1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i-1][j+1]);
+			}
+
+			
+			if( i < 17 && j >= 1 /*&& !(cellList[i+1][j-1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i+1][j-1]);
+			}
+
+			
+			if( i < 17 && j < 8 /*&& !(cellList[i+1][j+1]->phantom_zone)*/)
+			{
+				v.push_back(cellList[i+1][j+1]);
+			}
+
+            cellList[i][j]->set_neighbors(v);
+			}
+			}
+
+			
+			
+        }
+
+		
+
+
+
+		
+    
+
+/*add_wall(51,49, -1, -1, 16, up);
+add_wall(51,249, -1, -1, 16, up);
+add_wall(149,149, -1, -1, 16, up);
+add_wall(149,249, -1, -1, 16, up);
+add_wall(199,349, -1, -1, 16, up);
+add_wall(299,49, -1, -1, 16, up);
+add_wall(299,149, -1, -1, 16, up);
+add_wall(299,349, -1, -1, 16, up);
+add_wall(649,149, -1, -1, 16, up);
+add_wall(649,249, -1, -1, 16, up);
+add_wall(649,349, -1, -1, 16, up);
+add_wall(749,49, -1, -1, 16, up);
+add_wall(749,349, -1, -1, 16, up);
+add_wall(799,249, -1, -1, 16, up);*/
+
+	//add corner walls
+add_wall(52,52, -1, -1, 16, up);
+add_wall(52,252, -1, -1, 16, up);
+add_wall(152,152, -1, -1, 16, up);
+add_wall(152,252, -1, -1, 16, up);
+add_wall(202,352, -1, -1, 16, up);
+add_wall(302,52, -1, -1, 16, up);
+add_wall(302,152, -1, -1, 16, up);
+add_wall(302,352, -1, -1, 16, up);
+add_wall(652,152, -1, -1, 16, up);
+add_wall(652,252, -1, -1, 16, up);
+add_wall(652,352, -1, -1, 16, up);
+add_wall(752,52, -1, -1, 16, up);
+add_wall(752,352, -1, -1, 16, up);
+add_wall(802,252, -1, -1, 16, up);
+
+
+
+//add_wall(851,49, 1, -1, 16, up);
+//add_wall(851,249, 1, -1, 16, up);
+//add_wall(751,149, 1, -1, 16, up);
+//add_wall(751,249, 1, -1, 16, up);
+//add_wall(701,349, 1, -1, 16, up);
+//add_wall(601,49, 1, -1, 16, up);
+//add_wall(601,149, 1, -1, 16, up);
+//add_wall(601,349, 1, -1,  16, up);
+//add_wall(251,149, 1, -1,  16, up);
+//add_wall(251,249, 1, -1,  16, up);
+//add_wall(251,349, 1, -1,  16, up);
+//add_wall(151,49, 1, -1,  16, up);
+//add_wall(151,349, 1, -1,  16, up);
+//add_wall(101,249, 1, -1,  16, up);
+
+
+add_wall(848,52, 1, -1, 16, up);
+add_wall(848,252, 1, -1, 16, up);
+add_wall(748,152, 1, -1, 16, up);
+add_wall(748,252, 1, -1, 16, up);
+add_wall(698,352, 1, -1, 16, up);
+add_wall(598,52, 1, -1, 16, up);
+add_wall(598,152, 1, -1, 16, up);
+add_wall(598,352, 1, -1,  16, up);
+add_wall(248,152, 1, -1,  16, up);
+add_wall(248,252, 1, -1,  16, up);
+add_wall(248,352, 1, -1,  16, up);
+add_wall(148,52, 1, -1,  16, up);
+add_wall(148,352, 1, -1,  16, up);
+add_wall(98,252, 1, -1,  16, up);
+
+
+
+
+//add_wall(101,201, 1, 1,  16, up);
+//add_wall(151,101, 1, 1,  16, up);
+//add_wall(151,401, 1, 1,  16, up);
+//add_wall(251,101, 1, 1,  16, up);
+//add_wall(251,201, 1, 1,  16, up);
+//add_wall(251,301, 1, 1,  16, up);
+//add_wall(601,101, 1, 1,  16, up);
+//add_wall(601,301, 1, 1,  16, up);
+//add_wall(601,401, 1, 1,  16, up);
+//add_wall(701,101, 1, 1,  16, up);
+//add_wall(751,201, 1, 1,  16, up);
+//add_wall(751,301, 1, 1,  16, up);
+//add_wall(851,201, 1, 1,  16, up);
+//add_wall(851,401, 1, 1,  16, up);
+
+add_wall(98,198, 1, 1,  16, up);
+add_wall(148,98, 1, 1,  16, up);
+add_wall(148,398, 1, 1,  16, up);
+add_wall(248,98, 1, 1,  16, up);
+add_wall(248,198, 1, 1,  16, up);
+add_wall(248,298, 1, 1,  16, up);
+add_wall(598,98, 1, 1,  16, up);
+add_wall(598,298, 1, 1,  16, up);
+add_wall(598,398, 1, 1,  16, up);
+add_wall(698,98, 1, 1,  16, up);
+add_wall(748,198, 1, 1,  16, up);
+add_wall(748,298, 1, 1,  16, up);
+add_wall(848,198, 1, 1,  16, up);
+add_wall(848,398, 1, 1,  16, up);
+
+
+
+
+//add_wall(49,201, -1, 1,  16, up);
+//add_wall(49,401, -1, 1,  16, up);
+//add_wall(149,201, -1, 1,  16, up);
+//add_wall(149,301, -1, 1,  16, up);
+//add_wall(199,101, -1, 1,  16, up);
+//add_wall(299,101, -1, 1,  16, up);
+//add_wall(299,301, -1, 1,  16, up);
+//add_wall(299,401, -1, 1,  16, up);
+//add_wall(649,101, -1, 1,  16, up);
+//add_wall(649,201, -1, 1,  16, up);
+//add_wall(649,301, -1, 1,  16, up);
+//add_wall(749,101, -1, 1,  16, up);
+//add_wall(749,401, -1, 1,  16, up);
+//add_wall(799,201, -1, 1,  16, up);
+
+add_wall(52,198, -1, 1,  16, up);
+add_wall(52,398, -1, 1,  16, up);
+add_wall(152,198, -1, 1,  16, up);
+add_wall(152,298, -1, 1,  16, up);
+add_wall(202,98, -1, 1,  16, up);
+add_wall(302,98, -1, 1,  16, up);
+add_wall(302,298, -1, 1,  16, up);
+add_wall(302,398, -1, 1,  16, up);
+add_wall(652,98, -1, 1,  16, up);
+add_wall(652,198, -1, 1,  16, up);
+add_wall(652,298, -1, 1,  16, up);
+add_wall(752,98, -1, 1,  16, up);
+add_wall(752,398, -1, 1,  16, up);
+add_wall(802,198, -1, 1,  16, up);
+
+for(int i = 0; i <= 18; i++)
+{
+
+	add_wall(i*50-1,0, -1, 1,  16, up);
+	add_wall(i*50-1,449, -1, 1,  16, up);
+}
+
+
+
+for(int j = 1; j < 9; j++)
+{
+
+	add_wall(0,j*50-1, -1, 1,  16, up);
+	add_wall(0,j*50-1, -1, 1,  16, up);
+
+}
+
+	add_wall(100,50, -1, 1,  16, up);
+	add_wall(200,50, -1, 1,  16, up);
+	add_wall(250,50, -1, 1,  16, up);
+
+	add_wall(800,50, -1, 1,  16, up);
+	add_wall(700,50, -1, 1,  16, up);
+	add_wall(650,50, -1, 1,  16, up);
+
+	for(int i = 6; i <= 12; i++)
+{
+
+	add_wall(i*50-1,50, -1, 1,  16, up);
+	add_wall(i*50-1,100, -1, 1,  16, up);
+	add_wall(i*50-1,150, -1, 1,  16, up);
+	add_wall(i*50-1,300, -1, 1,  16, up);
+	add_wall(i*50-1,350, -1, 1,  16, up);
+	add_wall(i*50-1,400, -1, 1,  16, up);
+}
+
+
+	add_wall(50,100, -1, 1,  16, up);
+	add_wall(100,100, -1, 1,  16, up);
+	add_wall(800,100, -1, 1,  16, up);
+	add_wall(850,100, -1, 1,  16, up);
+
+	add_wall(50,150, -1, 1,  16, up);
+	add_wall(100,150, -1, 1,  16, up);
+	add_wall(800,150, -1, 1,  16, up);
+	add_wall(850,150, -1, 1,  16, up);
+
+	add_wall(200,150, -1, 1,  16, up);
+	add_wall(700,150, -1, 1,  16, up);
+
+	add_wall(200,200, -1, 1,  16, up);
+	add_wall(700,200, -1, 1,  16, up);
+	add_wall(300,200, -1, 1,  16, up);
+	add_wall(600,200, -1, 1,  16, up);
+
+	add_wall(300,250, -1, 1,  16, up);
+	add_wall(600,250, -1, 1,  16, up);
+	add_wall(200,250, -1, 1,  16, up);
+	add_wall(700,250, -1, 1,  16, up);
+
+	add_wall(50,300, -1, 1,  16, up);
+	add_wall(100,300, -1, 1,  16, up);
+	add_wall(200,300, -1, 1,  16, up);
+
+
+	add_wall(850,300, -1, 1,  16, up);
+	add_wall(800,300, -1, 1,  16, up);
+	add_wall(700,300, -1, 1,  16, up);
+
+	add_wall(50,350, -1, 1,  16, up);
+	add_wall(100,350, -1, 1,  16, up);
+	add_wall(850,350, -1, 1,  16, up);
+	add_wall(800,350, -1, 1,  16, up);
+
+
+
+	add_wall(100,400, -1, 1,  16, up);
+	add_wall(200,400, -1, 1,  16, up);
+	add_wall(250,400, -1, 1,  16, up);
+
+	add_wall(800,400, -1, 1,  16, up);
+	add_wall(700,400, -1, 1,  16, up);
+	add_wall(650,400, -1, 1,  16, up);
+}
+
+
+
 //destructor
 world::~world()
 {    
@@ -350,8 +937,8 @@ void world::populate_finches_std(int n, void (* up)(agent*,agent*))
 			unsigned char params[7];
 			params[0] = .45 * 255;
 			params[1] = .5 * 255;
-			params[2] = .01 * 255;
-			params[3] = .6 * 255;
+			params[2] = .03 * 255;
+			params[3] = .7 * 255;
 			params[4] = .6 * 255;
 			params[5] = .5 * 255;
 			params[6] = .5 * 255;
@@ -360,6 +947,30 @@ void world::populate_finches_std(int n, void (* up)(agent*,agent*))
 		}
 }
 
+void world::populate_prey_pacman(void (* up)(agent*,agent*))
+{
+	unsigned char params[7];
+	params[0] = .45 * 255;
+	params[1] = 1.0 * 255;
+	params[2] = .05 * 255;
+	params[3] = .7 * 255;
+	params[4] = .5 * 255;
+	params[5] = .2 * 255;
+	params[6] = .8 * 255;
+
+	
+	for(int i = 0; i < DOMAIN_DIM_1; i++)
+	{
+		for(int j = 0; j < DOMAIN_DIM_2; j++)
+		{
+			if(!(cellList[i][j]->phantom_zone))
+			{
+				add_finch(CELL_LENGTH/2 + CELL_LENGTH * i, CELL_LENGTH/2 + CELL_LENGTH * j, up, params);
+			}
+		}
+	}
+
+}
 
 void world::run(std::ostream& strm, int print_every, int iterations)
 {
@@ -398,6 +1009,47 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 
 }
 
+
+void world::run_pacman(std::ostream& strm, int print_every, int iterations)
+{
+	
+    time_t t = time(NULL);
+	std::cout << 0 << " " << time(NULL) - t << " total seconds elapsed" << "\n";
+	print(strm);
+	for(int i = 1; i <= 4; i++)
+	{
+        update_forward_velocs_pacman();
+		
+		update_agent_pos_euler();
+		//std::cerr << "\n";
+		move_to_cell_pac();
+		if(i % print_every == 0){
+			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
+			print(strm);
+			
+		}
+		//w.print(str);
+		//w.print(std::cout);
+    }
+
+	//solve using AB4
+	for(int i = 5; i <= iterations; i++)
+	{
+		update_forward_velocs_pacman();
+		update_agent_pos_ab4();
+		//std::cerr << "\n";
+		move_to_cell_pac();
+		if(i % print_every == 0){
+			std::cout << i << " " << time(NULL) - t << " total seconds elapsed" << "\n";
+			print(strm);
+		}
+		//w.print(str);
+		//w.print(std::cout);
+		if(death_count >= 100)
+			break;
+	}
+
+}
 void world::run_evolution()
 {
 	int threshold = STUDYSIZE / 2;
@@ -611,6 +1263,78 @@ void world::update_forward_velocs(){
     }
 }
 
+void world::update_forward_velocs_pacman(){
+	//Iterates through all cells and does pairwise comparisons
+    
+
+	//Same-cell comparison
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		for(int j = 0; j < DOMAIN_DIM_2; j++){
+			
+			cell_node_iterator target = cellList[i][j]->get_iter();
+			cell_node_iterator target2 = cellList[i][j]-> get_iter();
+			for(target; target.current != NULL; target.next()){
+				
+				for(target2; target2.current != NULL; target2.next()){
+					if(target2.current == target.current)
+						break;
+					
+					agent* agent_brown = target.current->get_agent();
+					agent* agent_jones = target2.current->get_agent();
+
+					agent_brown->update(agent_brown, agent_jones);
+					
+				}
+				target2.reset_current();
+			}    
+		}
+	}
+
+
+	//all other neighbor comparisons
+	for(int i = 0; i < DOMAIN_DIM_1; i++)
+	{
+        for(int j = 0; j < DOMAIN_DIM_2; j++)
+		{
+        
+			/*if(cellList[i][j]->phantom_zone)
+				continue;*/
+
+			int n_end = cellList[i][j]->neighbors.size();
+			for(int z = 0; z < n_end; z++)
+			{
+
+            cell_node_iterator target = cellList[i][j]->get_iter();
+            cell_node_iterator right = cellList[i][j]->get_neighbor(z) -> get_iter();
+            
+            for(target; target.current != NULL; target.next())
+			{
+                
+                for(right; right.current != NULL; right.next())
+				{
+                    
+					agent* agent_brown = target.current->get_agent();
+					agent* agent_jones = right.current->get_agent();
+
+					agent_brown->update(agent_brown, agent_jones);
+				//	agent_jones->update(agent_jones, agent_brown);
+
+                   /* target.current->get_agent()->update(target.current->get_agent(), right.current->get_agent());
+                    right.current->get_agent()->update(right.current->get_agent(), target.current->get_agent());*/
+                    
+                }
+                
+                right.reset_current();
+                
+            }    
+        
+			}
+		}
+	}
+
+}
+
+
 void world::update_agent_pos_euler(){
 
     for(int i = 0; i < DOMAIN_DIM_1; i++){
@@ -621,6 +1345,7 @@ void world::update_agent_pos_euler(){
 
                 if (agent_smith->is_alive()) {
                    agent_smith->normalize_accel();
+				   
 					agent_smith->drag();
                     agent_smith->euler_update();
                 } else {
@@ -742,7 +1467,69 @@ void world::move_to_cell() {
 						
 						theLonelyIsland->add_top(current_node);
 						death_count++;
-						std::cout << "\n out of bounds kill \n";
+						
+						std::cout << "\n death count is  "<<  death_count << "\n";
+					}
+					else{
+						cellList[x][y]->add_top(current_node);
+					}
+					if(prev == NULL){
+						current_node = current_cell->get_top();
+					} else {
+						current_node = prev->get_next();
+					}
+				} else {
+					prev = current_node;
+					current_node = current_node->get_next();
+				}
+			}
+		}
+	}
+}
+
+void world::move_to_cell_pac() 
+{
+	for (int i = 0; i < DOMAIN_DIM_1; i++) {
+		for (int j = 0; j < DOMAIN_DIM_2; j++) {
+
+			cell* current_cell = cellList[i][j];
+
+			/*if(current_cell->phantom_zone)
+				continue;*/
+
+			cell_node* current_node = current_cell->get_top();
+			cell_node* prev = NULL;
+			while (current_node != NULL) {
+				agent* current_agent = current_node->get_agent();
+				if(!(current_agent->is_alive())) {
+					
+					cell_node* temp = current_node->get_next();
+				
+					current_cell->extract_node_and_add(current_node, theLonelyIsland);
+					death_count++;
+					std::cout << "\n death count is  "<<  death_count << "\n";
+				
+					current_node = temp;
+					continue;
+				}
+				int x = current_agent->cell_num_dim1();
+				int y = current_agent->cell_num_dim2();
+				if ( (current_agent->get_type() != 2) && (x != i || y != j)) {
+					if (prev == NULL) {
+						current_node = current_cell->remove_top();
+					} else {
+						prev->set_next(current_node->get_next());
+						current_node->set_next(NULL);
+					}
+					if(x < 0 || x >= DOMAIN_DIM_1 || y < 0 || y >= DOMAIN_DIM_2 /*|| cellList[x][y]->phantom_zone*/){
+						
+						//current_agent->move_inside(x,y);
+						current_agent->kill();
+						
+						theLonelyIsland->add_top(current_node);
+						death_count++;
+					//	std::cout << "\n out of bounds kill \n";
+						std::cout << "\n out of bounds kill at " << current_agent->x_coord << "," << current_agent->y_coord <<"\n";
 						std::cout << "\n death count is  "<<  death_count << "\n";
 					}
 					else{

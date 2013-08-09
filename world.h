@@ -34,7 +34,8 @@ using std::vector;
 class world {
 public:
     world();
-    ~world();
+	world(void (* up1)(agent*,agent*), void (* up)(agent*,agent*));
+	~world();
 	vector<agent*> agents_master;
     cell* cellList[DOMAIN_DIM_1][DOMAIN_DIM_2];
     cell* theLonelyIsland; //no agent is an island.
@@ -52,10 +53,12 @@ public:
     void populate_predator_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_std(int n, void (* up)(agent*,agent*));
+	void populate_prey_pacman(void (* up)(agent*,agent*));
 	void repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out);
 	void repopulate2(void (* up)(agent*,agent*), std::ostream& strm);
 
 	void run(std::ostream& strm, int print_every, int iterations);
+	void run_pacman(std::ostream& strm, int print_every, int iterations);
 	void run_evolution();
 
     cell* get_cell(int i, int j);
@@ -63,12 +66,14 @@ public:
     
 
 	void update_forward_velocs();
+	void update_forward_velocs_pacman();
     void update_agent_pos_euler();
     void update_agent_pos_ab4();
 	void euler_evolve();
     void ab4_evolve();
 	
 	void move_to_cell();
+	void move_to_cell_pac();
 	void move_to_cell_evo();
 	void print(std::ostream& strm);
 	void print_csv(std::string filename);

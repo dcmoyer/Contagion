@@ -41,3 +41,16 @@ wall::wall(double center_x, double center_y, double n_x, double n_y, double len,
 void wall::drag(){
     return;
 }
+
+int wall::get_heading()
+{
+	double xx = normal_x * normal_x;
+	double yy = normal_y * normal_y;
+	if(yy == 1)
+		return 1;
+	else if(xx == 1)
+		return 2;
+	else
+		return 0;
+
+}

@@ -40,10 +40,13 @@ void predator::drag(){
     
     
     double veloc_mag = x_veloc[0]*x_veloc[0] + y_veloc[0]*y_veloc[0];
-    x_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*x_veloc[0] + wall_accel_x;
-    y_accel[0] += (ALPHA*4.25 - BETA * veloc_mag)*y_veloc[0] + wall_accel_y;
+    x_accel[0] += (ALPHA*10 - BETA * veloc_mag)*x_veloc[0] + wall_accel_x;
+    y_accel[0] += (ALPHA*10 - BETA * veloc_mag)*y_veloc[0] + wall_accel_y;
     running_r = 1000000;
     
+	//x_accel[0] = wall_accel_x;
+ //   y_accel[0] = wall_accel_y;
+
 	wall_accel_x = 0;
 	wall_accel_y = 0;
     

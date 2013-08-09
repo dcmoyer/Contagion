@@ -43,7 +43,8 @@
 	
 	
 		gamma = params[0] / 255.0;
-		adrenaline = params[1] / 255.0;
+		//adrenaline = params[1] / 255.0;
+		adrenaline = 0.5;
 		fear_decay = params[2] / 255.0;
 		empathy = params[3] / 255.0;
 		emote_pdpy_ratio = params[4] / 255.0;
@@ -95,6 +96,7 @@
 
 		gamma = params[0] / 255.0;
 		adrenaline = params[1] / 255.0;
+		//adrenaline = 0.5;
 		fear_decay = params[2] / 255.0;
 		empathy = params[3] / 255.0;
 		emote_pdpy_ratio = params[4] / 255.0;
@@ -105,6 +107,8 @@
 
  void finch::normalize_accel()
 {
+
+
 	if(NearestNeighbor_count != 0)
       {
         x_accel_prey =  x_accel_prey * (1 / (double) NearestNeighbor_count);
@@ -118,8 +122,17 @@
 		y_accel_pred *=  (1 / (double) NearestPred_count);
 	}
 
-	x_accel[0] =  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred  + wall_accel_x;
-	y_accel[0] =  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred + wall_accel_y;
+	/*if(x_coord < 100 && y_coord > 200)
+	{std::cerr << "position: " << x_coord << "," << y_coord << " q_dot prey: " << q_change_prey << "  q_dot predator: " 
+		<< q_change_pred << " q: " << q_mag << "\n";}*/
+
+	x_accel[0] =  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred  +  5*wall_accel_x;
+	y_accel[0] =  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred + 5*wall_accel_y;
+	
+	x_accel[0] *= pow(1.1*q_mag, 0.3);
+	y_accel[0] *= pow(1.1*q_mag, 0.3);
+
+
 	q_change[0] = emote_pdpy_ratio * q_change_prey + (1 - emote_pdpy_ratio) *q_change_pred;
 
 	x_accel_prey =  0;
@@ -144,10 +157,13 @@
 	y_accel[0] = y_accel[0] + (A - BETA * veloc_mag)*y_veloc[0];
 	q_change[0] = q_change[0] - q_mag * fear_decay;
     NearestNeighbor_count = 0;
+	/*std::cout <<  (A - BETA * veloc_mag)*x_veloc[0];
+	system("PAUSE");*/
 } 
 
  void finch::ab4_update()
 {
+	double q_dummy = q_mag;
     assert(HIST_LENGTH >= 4);
     
     double forward_v_x = x_veloc[0] +
@@ -164,7 +180,28 @@
                   (37 * y_accel[2]) -
                   (9  * y_accel[3])));
 
-    
+	if(q_mag < 0.1)
+	{
+		forward_v_x = forward_v_y = 0;
+	}
+	else{
+    if(forward_v_x > 3.7)
+	{
+		forward_v_x = 3.7;
+	}
+	else if(forward_v_x < -3.7)
+		forward_v_x = -3.7;
+
+	if(forward_v_y > 3.7)
+		forward_v_y = 3.7;
+	else if(forward_v_y < -3.7)
+		forward_v_y = -3.7;
+	}
+
+
+	/*forward_v_x *= pow(1.1*q_mag, 0.3);
+	forward_v_y *= pow(1.1*q_mag, 0.3);*/
+
 
     x_coord = x_coord +
                 ( (STEP_SIZE * (1.0/24.0)) * 
@@ -186,7 +223,16 @@
                    (59 * q_change[1]) +
                    (37 * q_change[2]) -
                    (9  * q_change[3])));
-    
+
+	//if(x_coord == 25 && y_coord == 375)
+	//{
+ //   std::cerr << "change in q: " << ( (STEP_SIZE * (1.0/24.0)) *
+ //                 ((55 * q_change[0]) -
+ //                  (59 * q_change[1]) +
+ //                  (37 * q_change[2]) -
+ //                  (9  * q_change[3]))) << "\n";
+	//}
+
     //Move history forward.
     
     for(int i = HIST_LENGTH - 1; i > 0; --i){
@@ -208,11 +254,28 @@
 	q_change[0] = 0;
     
 	//std::cout << "\n NOW MY FEAR IS   " << q_mag << "\n";
-	if(q_mag < 0 || q_mag > 1)
+	//if(q_mag < 0 || q_mag > 1)
+	//{
+	//	
+	//	std::cerr <<  "err" <<  "position: " << x_coord << "," << y_coord <<" q: " << q_mag << "\n"
+	//	<< "change in q: " << ( (STEP_SIZE * (1.0/24.0)) *
+ //                 ((55 * q_change[0]) -
+ //                  (59 * q_change[1]) +
+ //                  (37 * q_change[2]) -
+ //                  (9  * q_change[3]))) <<  " q_dummy was: " << q_dummy << "\n";
+	//	q_mag = 1;
+	//}
+
+		if(q_mag > 1)
 	{
 		q_mag = 1;
-		std::cout << "err";
+		//std::cout << "err";
 	}
+	else if (q_mag < 0)
+	{
+		q_mag = 0;
+	}
+
 }
 
 void finch::euler_update()
@@ -249,11 +312,16 @@ void finch::euler_update()
 	q_change[0] = 0;
 
 	//std::cout << "\n NOW MY FEAR IS   " << q_mag << "\n";
-	if(q_mag < 0 || q_mag > 1)
+	if(q_mag > 1)
 	{
 		q_mag = 1;
-		std::cout << "err";
+		//std::cout << "err";
 	}
+	else if (q_mag < 0)
+	{
+		q_mag = 0;
+	}
+
 }
 
 

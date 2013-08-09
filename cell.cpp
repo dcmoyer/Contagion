@@ -11,6 +11,16 @@ cell::cell()
 {
 	top = NULL;  
 	//neighbors is empty
+	phantom_zone = false;
+}
+
+cell::cell(int i, int j)
+{
+	top = NULL;  
+	//neighbors is empty
+	phantom_zone = false;
+	x = i;
+	y = j;
 }
 
 //Copy Constructor
@@ -146,6 +156,8 @@ cell_node_iterator cell::get_iter(){
 cell* cell::get_neighbor(int index){
     
     if(index > neighbors.size())
+
+		
         return NULL;
     
     return neighbors[index];
@@ -166,6 +178,19 @@ void cell::move_top(cell* target){
     target->add_top(top);
     top = temp;
     
+}
+
+
+void cell::print()
+{
+	std::cout << "Cell [" << x << "," << y << "] has neighbors: ";
+	int z = neighbors.size();
+	for (int i = 0; i < z; i++)
+	{
+		std::cout << "[" << neighbors[i]->x << "," << neighbors[i]->y
+			<< "] ";
+
+	}
 }
 
 

@@ -162,7 +162,18 @@ void agent::ab4_update()
                   (37 * y_accel[2]) -
                   (9  * y_accel[3])));
 
-    
+	 if(forward_v_x > 100)
+	{
+		forward_v_x = 100;
+	}
+	else if(forward_v_x < -100)
+		forward_v_x = -100;
+
+	if(forward_v_y > 100)
+		forward_v_y = 100;
+	else if(forward_v_y < -100)
+		forward_v_y = -100;
+
 
     x_coord = x_coord +
                 ( (STEP_SIZE * (1.0/24.0)) * 
@@ -171,6 +182,8 @@ void agent::ab4_update()
                    (37 * x_veloc[1]) -
                    (9  * x_veloc[2])));
     
+	
+
     y_coord = y_coord +
                 ( (STEP_SIZE * (1.0/24.0)) *
                   ((55 * forward_v_y) -
@@ -318,28 +331,28 @@ int agent::get_heading()
 {
 	if(agent_type == 1)
 	{
-	if(abs(x_veloc[0]) > abs(y_veloc[0]))
-	{
-		if(x_veloc[0] > 0)
+		if(abs(x_veloc[0]) > abs(y_veloc[0]))
 		{
-			return 2;
+			if(x_veloc[0] > 0)
+			{
+				return 2;
+			}
+			else
+			{
+				return 4;
+			}
 		}
 		else
 		{
-			return 4;
+			if(y_veloc[0] > 0)
+			{
+				return 1;
+			}
+			else
+			{
+				return 3;
+			}
 		}
-	}
-	else
-	{
-		if(y_veloc[0] > 0)
-		{
-			return 1;
-		}
-		else
-		{
-			return 3;
-		}
-	}
 	}
 	else
 	{
@@ -533,3 +546,104 @@ void agent::add_to_q_change(double q_c){
 void agent::print_genome(){
 	std::cout << 1;
 }
+
+
+//
+//if(you->get_type() == 2){
+//		return;
+//	}
+//	
+//	//get x,y,z coords
+//	double x1 = me->get_x_coord();
+//	double y1 = me->get_y_coord();
+//	//double z1 = (*me).get_z_coord();
+//	double x2 = you->get_x_coord();
+//	double y2 = you->get_y_coord();
+//	//double z2 = (*you).get_z_coord();
+//    //calculate distances
+//	double dx= x2-x1;
+//	double dy= y2-y1;
+//	//double dz= z2-z1;
+//	double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+//
+//    
+//    if (r < CELL_LENGTH) {
+//
+//		//get component-wise velocity
+//	double vx1 = me->get_x_veloc_index(0);
+//	double vy1 = me->get_y_veloc_index(0);
+//	//double vz1 = (*me).get_z_veloc_index(0);
+//	double vx2 = you->get_x_veloc_index(0);
+//	double vy2 = you->get_y_veloc_index(0);
+//	//double vz2 = (*you).get_z_veloc_index(0);
+//    
+//	
+//	double dvx = vx2-vx1;
+//	double dvy = vy2-vy1;
+//	//double dvz = vz2-vz1;
+//
+//	
+//
+//		if (you->get_type() == 0) {
+//            
+//
+//			//get fear
+//			double q1 = me->get_q_mag();
+//			double q2 = you->get_q_mag();
+//			double dq = q2-q1;
+//
+//            double ugrad = C_A/L_A * exp(-r / L_A) - C_R/L_R * exp(-r / L_R);
+//            
+//            //calculate alignment forces
+//            double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
+//            
+//            //update velocities
+//            double fx = ugrad*dx/r - h*dvx;
+//            double fy = ugrad*dy/r - h*dvy;
+//            
+//            me->add_to_x_accel(fx);
+//            me->add_to_y_accel(fy);
+//
+//
+//			double fq;
+//			
+//			if (dq > 0)
+//			{
+//				 fq =6*h*dq;
+//				me->add_to_q_change(fq);
+//			}
+//			else
+//			{
+//				 fq = 3*h*dq;
+//				me->add_to_q_change(fq);
+//			}
+//
+//            
+//		}
+//        
+//		else if (you->get_type() == 1) {
+//			if (r < 5) {
+//				me->kill();
+//			} else {
+//				double u = - 2/30.0 *C_R/L_R * exp(-r / (30 * L_R));  
+//
+//				//update velocities
+//				double fx = u*dx/r;
+//				double fy = u*dy/r;
+//				me->add_to_x_accel(fx);
+//				me->add_to_y_accel(fy);
+//
+//
+//				//get fear
+//				double q1 = me->get_q_mag();
+//				double q2 = 1;
+//				double dq = q2-q1;
+//				
+//				double h = KAPPA / pow((SIGMA*SIGMA + r*r), GAMMA);
+//				double fq =40*h*dq;
+//				me->add_to_q_change(fq);
+//			}
+//		}
+//
+//		me->iterate_NearestNeighbor();
+//	}

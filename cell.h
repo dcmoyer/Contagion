@@ -18,8 +18,12 @@ class cell
 public:
     cell_node* top; 
     vector<cell*> neighbors; 
+	bool phantom_zone;
+	int x;
+	int y;
     
     cell(); //Default Constructor
+	cell(int i, int j);
 	cell(const cell& rhs); //Copy Constructor
     ~cell(); //Destructor
     cell& operator=(const cell& rhs); //Assignment Operator
@@ -34,6 +38,9 @@ public:
     cell_node_iterator get_iter();
     
     cell* get_neighbor(int index);
+
+
+	void print();
     
     void move_top(cell* target);
 	void extract_node_and_add(cell_node* target, cell* new_home);
@@ -44,6 +51,7 @@ public:
     friend class cell_node_iterator;
     
 	cell_node get_top() const;
+
 
 };
 

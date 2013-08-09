@@ -3,7 +3,7 @@
 //double exp_squared[76];
 //double exp_hund[76];
 //double exp_half[76];
-//
+
 
 void prey(agent* me, agent* you)
 {
@@ -317,6 +317,36 @@ void predator_2012( agent* me_fake, agent* you){
     
 }
 
+void predator_pac( agent* me_fake, agent* you){
+	if(you->get_type() == 2){
+		return;
+	}
+    predator* me = (predator*) me_fake;
+    //get x,y,z coords
+	double x1 = me->get_x_coord();
+	double y1 = me->get_y_coord();
+	//double z1 = (*me).get_z_coord();
+	double x2 = you->get_x_coord();
+	double y2 = you->get_y_coord();
+	//double z2 = (*you).get_z_coord();
+    
+    //calculate distances
+	double dx= x2-x1;
+	double dy= y2-y1;
+    
+    double r = sqrt(dx*dx + dy*dy /*+ dz*dz*/);
+    
+    if(r < me->running_r){
+        if (you->get_type() == 0) {	
+        	me->running_r = r;
+        	me->set_x_accel( PRED_2012_ACCEL * dx/r);
+        	me->set_y_accel( PRED_2012_ACCEL * dy/r);
+		}
+    }
+    
+}
+
+
 void prey_2012_nofear(agent* me, agent* you){
 	if(you->get_type() == 2){
 		return;
@@ -465,10 +495,11 @@ void prey_2012_fear(agent* me, agent* you){
 			if (r < 5) {
 				me->kill();
 			} else {
-				double u = - 2/30 *C_R/L_R * exp(-r / (30 * L_R));  
+				double u = - 2/30.0 *C_R/L_R * exp(-r / (30 * L_R));  
+
 				//update velocities
-				double fx = 10000*u*dx/r;
-				double fy = 12000*u*dy/r;
+				double fx = u*dx/r;
+				double fy = u*dy/r;
 				me->add_to_x_accel(fx);
 				me->add_to_y_accel(fy);
 
@@ -511,10 +542,39 @@ void wall_interaction(agent* me_fake, agent* you){
 		double fx = n_dot_r / abs(n_dot_r) * u * me->normal_x;
 		double fy = n_dot_r / abs(n_dot_r) * u * me->normal_y;
 		
-		you->add_to_wall_x(fx);
-		you->add_to_wall_y(fy);
+		you->add_to_wall_x(3*fx);
+		you->add_to_wall_y(3*fy);
 		
 	}
+	
+	
+}
+
+void repellor(agent* me, agent* you){
+	//This is the wall function.
+	
+	if(you->get_type() == 2){
+		return;
+	}
+
+
+	
+
+	double r_x = you->x_coord - me->x_coord;
+	double r_y = you->y_coord - me->y_coord;
+	double r = sqrt(r_x*r_x + r_y*r_y);
+
+	if(r > 10)
+		return;
+
+	//double u = - 2/30.0 *C_R/L_R * exp(-r / (30 * L_R));  
+		
+		you->add_to_wall_x(200*r_x);
+		you->add_to_wall_y(200*r_y);
+		
+
+		//you->q_mag = .5;
+	
 	
 	
 }
@@ -525,6 +585,7 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 		return;
 	}
 	
+
 	wall* me = (wall* ) me_fake;
 	
 	double r_x = you->x_coord - me->x_coord;
@@ -537,8 +598,8 @@ void velocity_wall_interaction(agent* me_fake, agent* you){
 	double v_y = you->get_y_veloc_index(0);
 	double n_dot_v = v_x * (me->normal_x) + v_y * (me->normal_y);
 	
-	double projected_impact = (std::tan(std::acos(n_dot_v/sqrt(v_x*v_x + v_y*v_y))) * n_dot_r );
-	if( n_dot_v < 0 ){
+	double projected_impact = (std::tan(std::acos(n_dot_v/sqrt(v_x*v_x + v_y*v_y))) * n_dot_r ) + sqrt(r*r - n_dot_r*n_dot_r);
+	if( n_dot_v < 0 && projected_impact < me->length/2 ){
 		 
 		double scale = (abs(n_dot_v) + 1) * 100;
 		double u = scale * (double) WALL_PWR / pow(n_dot_r,4);
@@ -571,6 +632,7 @@ void finch1(agent* me_cast, agent* you)
     if (r < CELL_LENGTH) 
 	{
 		int r_i = (int) r;
+		int r2i = (int) (r*r);
 		int g = me->params[0];
 		
 		if (youtype == 0) 
@@ -589,8 +651,9 @@ void finch1(agent* me_cast, agent* you)
 			//calculate attraction-repulsion
             double ugrad1 = me->attr_align_ratio * 2 * (CALA *exp_hund[r_i] - CRLR * exp_half[r_i]);
             
+
             //calculate alignment forces
-            double h1 = h_gamma_r[g][r_i];
+            double h1 = h_gamma_r[g][r2i];
 		
             //update velocities
             //double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
@@ -603,7 +666,7 @@ void finch1(agent* me_cast, agent* you)
 			if (dq > 0)
 			{
 				
-				me->add_to_q_change(10*me->empathy*h1*dq);
+				me->add_to_q_change_prey(10*me->empathy*h1*dq);
 			}
 			else
 			{
@@ -628,7 +691,7 @@ void finch1(agent* me_cast, agent* you)
 				me->add_to_y_accel_pred(ur * dy);
 				
 				//double h = 10*h_gamma_r[g][r_i];
-				me->add_to_q_change_pred(10*h_gamma_r[g][r_i]*(1-me->q_mag));
+				me->add_to_q_change_pred(10*h_gamma_r[g][r2i]*(1-me->q_mag));
 			}
 			
 			else
@@ -650,4 +713,121 @@ void finch1(agent* me_cast, agent* you)
 	}
     
 }
+
+void pacman1(agent* me_cast, agent* you)
+{
+	finch* me = (finch*) me_cast;
+    
+	int youtype = you->agent_type;
+	//wall check
+	if(youtype == 2){
+		return;
+	}
+	
+
+    //calculate distances
+	double dx= you->x_coord-me->x_coord;
+	double dy= you->y_coord-me->y_coord;
+	double r = sqrt(dx*dx + dy*dy);
+
+
+
+	
+    
+    if (r < 3*CELL_LENGTH) 
+	{
+	
+		int r_i = (int) (r+0.5);
+		int r2i = (int) (r*r);
+		int g = me->params[0];
+		
+		
+
+		if (youtype == 0) 
+		{
+            //get component-wise velocity
+		/*	double vx1 = me->x_veloc[0];
+			double vy1 = me->y_veloc[0];
+			double vx2 = you->x_veloc[0];
+			double vy2 = you->y_veloc[0];*/
+			double dvx = you->x_veloc[0]-me->x_veloc[0];
+			double dvy = you->y_veloc[0]-me->y_veloc[0];
+
+			
+
+			//get fear
+			double dq = you->q_mag-me->q_mag;
+
+			//calculate attraction-repulsion
+          //  double ugrad1 = me->attr_align_ratio * 2 * (CALA *exp_hund[r_i] - CRLR * exp_half[r_i]);
+            
+
+			 double ugrad1 = me->attr_align_ratio * 2 * (CALA *exp_hund[r_i] - CRLR * exp_half[r_i]);
+			 //double ugrad1 =0;
+		//	std::cout << ugrad1-ugrad  << "\n";
+		//	system("PAUSE");
+
+
+            //calculate alignment forces
+            //double h1 = h_gamma_r[g][r2i];
+			double h1 = 1 / pow((1 + r*r), (double)me->gamma);
+		
+            //update velocities
+            //double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
+         //   double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;	
+
+            
+            me->add_to_x_accel_prey(ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx);
+            me->add_to_y_accel_prey(ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy);
+
+			if (dq > 0)
+			{
+				
+				me->add_to_q_change_prey(10*me->empathy*h1*dq);
+			}
+			else
+			{
+				
+				me->add_to_q_change_prey(10 * (1-me->empathy)*h1*dq);
+			}
+
+
+			me->iterate_NearestNeighbor();
+            
+		}
+        
+		else //if (you->get_type() == 1) 
+		{
+			if (r >= 20)  
+			{
+				//double u = -CRLR * exp_half[r_i];  
+				double ur = -CRLR * exp(-r / L_R / 20.0) / r * 20;  
+			
+				//update velocities
+			
+				me->add_to_x_accel_pred(6*ur * dx);
+				me->add_to_y_accel_pred(6*ur * dy);
+				
+				//double h = 10*h_gamma_r[g][r_i];
+				me->add_to_q_change_pred(10*1 / pow((1 + r*r), (double)me->gamma)*(1-me->q_mag));
+			}
+			
+			else
+			{
+				//double p = (double)rand()/(double)RAND_MAX;
+					me->kill();
+					std::cout << "Killed by predator. ";
+				
+			} 
+
+			
+			me->iterate_NearestPred();
+		}
+
+		
+	}
+    
+}
+
+
 

@@ -12,11 +12,11 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define CONSTANTS_H
 
 #define NUM_OF_AGENTS   2
-#define DOMAIN_DIM_1    3
-#define DOMAIN_DIM_2    3
+#define DOMAIN_DIM_1    18
+#define DOMAIN_DIM_2    9
 #define DOMAIN_DIM_3    0
-#define CELL_LENGTH   75
-#define STEP_SIZE 0.005
+#define CELL_LENGTH   50
+#define STEP_SIZE 0.0075
 #define HIST_LENGTH 4
 
 
@@ -32,12 +32,13 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define CALA 0.2
 #define CRLR 25.0
 
+
 //self-propulsion and friction
 #define ALPHA .07
 #define BETA  .05  
 
 //Evolution simulation size
-#define STUDYSIZE 20
+#define STUDYSIZE 500
 
 
 
@@ -52,7 +53,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define PRECISION .5
 
 //Wall Power
-#define WALL_PWR 50
+#define WALL_PWR 100
 #define NUMBER 500
 
 #endif

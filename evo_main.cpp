@@ -7,7 +7,7 @@
 #include <sstream>
 #include <cmath>
 
-double h_gamma_r[256][76];
+double h_gamma_r[256][5626];
 double exp_hund[76];
 double exp_half[76];
 
@@ -17,23 +17,24 @@ int main()
 {
 
 
-for(int r = 0; r <= 75; r++)
+for(int r = 0; r <= 5625; r++)
 {
 	for(int gamma = 0; gamma <= 255; gamma++)
 	{
 		
-		h_gamma_r[gamma][r] = 1 / pow((1 + r*r), GAMMA);
+		h_gamma_r[gamma][r] = 1 / pow((1 + r), (double)gamma/ 250.0);
+		
 	}
 }
 
 for(int r = 0; r <= 75; r++)
 {
-	exp_hund[r] = exp(-r/100.0);
+	exp_hund[r] = exp(-r/L_A);
 }
 
 for(int r = 0; r <= 75; r++)
 {
-	exp_half[r] = exp(-r/2.0);
+	exp_half[r] = exp(-r/L_R);
 }
 
 
@@ -57,14 +58,14 @@ for(int r = 0; r <= 75; r++)
 	{
 		std::stringstream ss;
 		ss << i;
-		std::string filepath = "C:\\Users\\dougyd\\Desktop\\withcrossover\\newtest" + ss.str() + ".txt";
+		std::string filepath = "C:\\Users\\dougyd\\Desktop\\withcrossover\\makingsure" + ss.str() + ".txt";
 		strm.open(filepath);
 		std::cout << "Generation " << i << " initializing... \n";
 		
 		
 		w.run_evolution();
 		w.repopulate1(finch1, strm);
-		w.add_boundary(wall_interaction);
+		w.add_boundary(velocity_wall_interaction);
 		w.populate_predator_rand(predator_size, predator_2012);
 
 		strm.close();
@@ -74,3 +75,4 @@ for(int r = 0; r <= 75; r++)
 	system("PAUSE");
 	return 0;
 }
+

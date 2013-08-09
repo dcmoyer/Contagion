@@ -8,9 +8,9 @@
 #include "wall.h"
 #include <cmath>
 
-extern double h_gamma_r[256][76];
-extern double exp_hund[76];
-extern double exp_half[76];
+extern double h_gamma_r[256][5626];
+extern double exp_hund[151];
+extern double exp_half[151];
 
 //basic attraction, repulsion, alignment model
 void prey(agent* me, agent* you);
@@ -22,7 +22,10 @@ void go_left_test(agent* me, agent* you);
 void predator_2012( agent* me, agent* you);
 void prey_2012_nofear(agent* me, agent* you);
 void prey_2012_fear(agent* me, agent* you);
+void predator_pac( agent* me, agent* you);
 void wall_interaction(agent* me_fake, agent* you);
 void finch1(agent* me_cast, agent* you);
+void pacman1(agent* me_cast, agent* you);
 void velocity_wall_interaction(agent* me_fake, agent* you);
+void repellor(agent* me, agent* you);
 #endif

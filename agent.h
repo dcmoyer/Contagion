@@ -51,7 +51,7 @@ public:
 	//Accessor Functions:
 	int cell_num_dim1();
     int cell_num_dim2();
-	int get_heading();
+	virtual int get_heading();
 
     double get_x_coord();
     double get_y_coord();

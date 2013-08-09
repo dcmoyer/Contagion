@@ -13,7 +13,8 @@ public:
     wall(double center_x, double center_y, double n_x, double n_y, double len,  void (* up)(agent*,agent*));
     virtual ~wall(){;}
 	virtual void drag();
-	
+	virtual int get_heading();
+
 	double normal_x;
 	double normal_y;
 	double length; //The Length of a wall is not guarenteed effective past the length of a cell =( 
