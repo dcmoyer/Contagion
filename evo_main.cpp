@@ -38,7 +38,7 @@ for(int r = 0; r <= 75; r++)
 
 
 	std::cout << "WAIT! Did you change the filepath?";
-	system("PAUSE");
+	system("read -p 'Press [Enter] key to start backup...'");
 
 	int predator_size = 5;
 
@@ -51,14 +51,15 @@ for(int r = 0; r <= 75; r++)
 	w.populate_finches_rand(STUDYSIZE, finch1);
 	w.populate_predator_rand(predator_size, predator_2012);
 	
-	
+	std::stringstream timecheck;
+  timecheck << t;
 
 	for(int i = 1; i <= 200; i++)
 	{
 		std::stringstream ss;
 		ss << i;
-		std::string filepath = "C:\\Users\\dougyd\\Desktop\\withcrossover\\newtest" + ss.str() + ".txt";
-		strm.open(filepath);
+		std::string filepath = "./data/" + timecheck.str() + "_" + ss.str() + ".txt";
+		strm.open(filepath.c_str());
 		std::cout << "Generation " << i << " initializing... \n";
 		
 		
@@ -71,6 +72,6 @@ for(int r = 0; r <= 75; r++)
 		std::cout << "Generation " << i << " complete! Genome saved to " << filepath << ". \n";
 	}
 
-	system("PAUSE");
+	system("read -p 'Press [Enter] key to start backup...'");
 	return 0;
 }

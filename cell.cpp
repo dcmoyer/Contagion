@@ -131,6 +131,18 @@ void cell::extract_node_and_add(cell_node* target, cell* new_home){
 	new_home->add_top(target);
 }
 
+void cell::remove_all(){
+    
+    cell_node* temp;
+    
+    while(!isempty()){
+        temp = top->next;
+        delete top;
+        top = temp;
+    }
+    
+}
+
 cell_node* cell::get_top(){
     
     return top;
