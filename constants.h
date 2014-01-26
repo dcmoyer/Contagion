@@ -37,9 +37,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define BETA  .05  
 
 //Evolution simulation size
-#define STUDYSIZE 20
-
-
+#define STUDYSIZE 100
 
 //constants for alignment model
 #define SIGMA 1

@@ -20,13 +20,13 @@ public:
     vector<cell*> neighbors; 
     
     cell(); //Default Constructor
-	cell(const cell& rhs); //Copy Constructor
+    cell(const cell& rhs); //Copy Constructor
     ~cell(); //Destructor
     cell& operator=(const cell& rhs); //Assignment Operator
 
     void set_neighbors(vector<cell*> &neigh); 
    
-	void add_top(cell_node* new_node);
+    void add_top(cell_node* new_node);
     void add_top(agent* target);
     cell_node* remove_top();
     cell_node* get_top();
@@ -36,14 +36,15 @@ public:
     cell* get_neighbor(int index);
     
     void move_top(cell* target);
-	void extract_node_and_add(cell_node* target, cell* new_home);
-
+    void extract_node_and_add(cell_node* target, cell* new_home);
+    void remove_all();
+    
     bool isempty();
     
     friend class cell_node; //Yes, bad practice, but they're tied. Don't do this at home kids.
     friend class cell_node_iterator;
     
-	cell_node get_top() const;
+    cell_node get_top() const;
 
 };
 
@@ -85,8 +86,8 @@ public:
     void reset_current();
     
     agent* get_current();
-	
-	friend class cell; 
+    
+    friend class cell; 
 };
 
 #endif
