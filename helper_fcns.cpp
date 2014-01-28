@@ -571,7 +571,9 @@ void finch1(agent* me_cast, agent* you)
     if (r < CELL_LENGTH) 
 	{
 		int r_i = (int) r;
-		int g = me->params[0];
+		int g_v = me->params[0];
+        int g_emo_prey = me->params[7];
+        int g_emo_pred = me->params[8];
 		
 		if (youtype == 0) 
 		{
@@ -590,8 +592,8 @@ void finch1(agent* me_cast, agent* you)
             double ugrad1 = me->attr_align_ratio * 2 * (CALA *exp_hund[r_i] - CRLR * exp_half[r_i]);
             
             //calculate alignment forces
-            double h1 = h_gamma_r[g][r_i];
-		
+            double h1 = h_gamma_r[g_v][r_i];
+            double h2 = h_gamma_r[g_emo_prey][r_i];		
             //update velocities
             //double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
          //   double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;	
@@ -603,12 +605,12 @@ void finch1(agent* me_cast, agent* you)
 			if (dq > 0)
 			{
 				
-				me->add_to_q_change(10*me->empathy*h1*dq);
+				me->add_to_q_change(10*me->empathy*h2*dq);
 			}
 			else
 			{
 				
-				me->add_to_q_change_prey(10 * (1-me->empathy)*h1*dq);
+				me->add_to_q_change_prey(10 * (1-me->empathy)*h2*dq);
 			}
 
 
@@ -628,7 +630,7 @@ void finch1(agent* me_cast, agent* you)
 				me->add_to_y_accel_pred(ur * dy);
 				
 				//double h = 10*h_gamma_r[g][r_i];
-				me->add_to_q_change_pred(10*h_gamma_r[g][r_i]*(1-me->q_mag));
+				me->add_to_q_change_pred(10*h_gamma_r[g_emo_pred][r_i]*(1-me->q_mag));
 			}
 			
 			else

@@ -22,17 +22,19 @@ public:
 	double y_accel_prey;
 
 
-	unsigned char params[7];
-	double gamma;
+	unsigned char params[9];
+	double gamma_v;
 	double adrenaline;
 	double fear_decay;
 	double empathy;
 	double emote_pdpy_ratio;
 	double motion_pdpy_ratio;
 	double attr_align_ratio;
+    double gamma_emo_prey;
+    double gamma_emo_pred;
 
 	finch(double x, double y, void (* up)(agent*,agent*));
-	finch(double x, double y, void (* up)(agent*,agent*), unsigned char genes[7]);
+	finch(double x, double y, void (* up)(agent*,agent*), unsigned char genes[9]);
 	
 	virtual void normalize_accel();
 	virtual void drag();

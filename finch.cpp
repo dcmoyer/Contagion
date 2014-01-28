@@ -35,24 +35,26 @@
 		wall_accel_x = 0;
 		wall_accel_y = 0;
 
-		for(int i = 0; i < 7; i++)
+		for(int i = 0; i < 9; i++)
 		{
 			params[i] = rand()% 256;
 		}
 
 	
 	
-		gamma = params[0] / 255.0;
+		gamma_v = params[0] / 255.0;
 		adrenaline = params[1] / 255.0;
 		fear_decay = params[2] / 255.0;
 		empathy = params[3] / 255.0;
 		emote_pdpy_ratio = params[4] / 255.0;
 		motion_pdpy_ratio = params[5] / 255.0;
 		attr_align_ratio = params[6] / 255.0;
+        gamma_emo_prey = params[7] / 255.0;
+        gamma_emo_pred = params[8] / 255.0;
 
 } 
  
- finch::finch(double x, double y, void (* up)(agent*,agent*), unsigned char genes[7]) {
+ finch::finch(double x, double y, void (* up)(agent*,agent*), unsigned char genes[9]) {
   //Assign Coordinates
 	    x_coord = x;
 	    for(int i = 0; i < HIST_LENGTH; i++)
@@ -88,18 +90,20 @@
 		wall_accel_x = 0;
 		wall_accel_y = 0;
 
-		for(int i = 0; i < 7; i++)
+		for(int i = 0; i < 9; i++)
 		{
 			params[i] = genes[i];
 		}
 
-		gamma = params[0] / 255.0;
+		gamma_v = params[0] / 255.0;
 		adrenaline = params[1] / 255.0;
 		fear_decay = params[2] / 255.0;
 		empathy = params[3] / 255.0;
 		emote_pdpy_ratio = params[4] / 255.0;
 		motion_pdpy_ratio = params[5] / 255.0;
 		attr_align_ratio = params[6] / 255.0;
+        gamma_emo_prey = params[7] / 255.0;
+        gamma_emo_pred = params[8] / 255.0;
 
 } 
 

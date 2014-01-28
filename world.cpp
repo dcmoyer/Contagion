@@ -236,47 +236,65 @@ void world::populate_rand(int n, void (* up)(agent*,agent*))
 //randomly populate world with n predators using given model
 void world::populate_predator_rand(int n, void (* up)(agent*,agent*))
 {
+  double x, y, temp;
+  int x_ring, y_ring;
 	for (int i = 0; i < n; i ++)
 		{
+      
 			//double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
 			//double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
 			
-			double x, y;
 			/*Use this to restrict to the middle*/
-			if(DOMAIN_DIM_1 % 2 == 0)
-			{
-				int padx = std::max(DOMAIN_DIM_1 / 2 - 2,0);
-				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
-				if( rand() % 2)
-					if(DOMAIN_DIM_1 > 2 )
-						x += 3*CELL_LENGTH;
-					else
-						x += CELL_LENGTH;
-			}
-			else 
-			{
-				int padx = std::max(DOMAIN_DIM_1 / 2 -1,0);
-				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
-				if(DOMAIN_DIM_1 >= 3 && rand() % 2)
-					x += 2*CELL_LENGTH;
-			}
-			if(DOMAIN_DIM_2 % 2 == 0)
-			{
-				int pady = std::max(DOMAIN_DIM_2 / 2 - 2,0);
-				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
-				if(rand() % 2)
-					if(DOMAIN_DIM_2 > 2 )
-						y += 3*CELL_LENGTH;
-					else
-						y += CELL_LENGTH;
-			}
-			else 
-			{
-				int pady = std::max(DOMAIN_DIM_2 / 2 -1,0);
-				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
-				if(DOMAIN_DIM_2 >= 3 && rand() % 2)
-					y += 2*CELL_LENGTH;
-			}
+      
+      //Take the edge pieces and line them up.
+      //If in first section, it's in the x-ring edge pieces.
+      //  (along bottom or top of annulus)
+      //If in the next section, flip flop x and y
+      //  it's in the y-ring section.
+      //  (along left or right of annulus)
+      //Final section is corners
+      
+      x_ring = DOMAIN_DIM_1-2;
+      y_ring = DOMAIN_DIM_2-2;
+      
+      x = rand() % ((x_ring + y_ring + 1)* CELL_LENGTH);
+      y = rand() % CELL_LENGTH;
+      if(x / CELL_LENGTH  < x_ring){
+        x += CELL_LENGTH;
+        if(y < CELL_LENGTH/2){
+          y += CELL_LENGTH/2;
+        }else{
+          y += y_ring* CELL_LENGTH + CELL_LENGTH/2;
+        }
+      } else if ( x / CELL_LENGTH < x_ring + y_ring) {
+        temp = y;
+        y = x;
+        x = temp;
+        
+        y -= x_ring*CELL_LENGTH;
+        y += CELL_LENGTH;
+        
+        if(x < CELL_LENGTH/2){
+          x += CELL_LENGTH/2;
+        }else{
+          x += x_ring* CELL_LENGTH + CELL_LENGTH/2;
+        }
+        
+      } else{
+        x -= (x_ring + y_ring) * CELL_LENGTH;
+        if(x < CELL_LENGTH){
+          x += CELL_LENGTH/2;
+        }else{
+          x += x_ring* CELL_LENGTH + CELL_LENGTH/2;
+        }
+        if(y < CELL_LENGTH){
+          y += CELL_LENGTH/2;
+        }else{
+          y += y_ring* CELL_LENGTH + CELL_LENGTH/2;
+        }
+        
+      }
+      std::cout << x << " "<< y << "\n";
 			add_predator(x, y, up);
 		}
 }
@@ -286,7 +304,7 @@ void world::populate_finches_rand(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
 		{
-			
+			//TODO: REWRITE THIS.
 			double x, y;
 			/*Use this to restrict to the middle*/
 			if(DOMAIN_DIM_1 % 2 == 0)
@@ -398,10 +416,11 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 
 }
 
-void world::run_evolution()
+void world::run_evolution(std::ostream& strm)
 {
 	int threshold = STUDYSIZE / 2;
-	for(int i = 1; i <= 4; i++)
+  int i;
+	for( i = 1; i <= 4; i++)
 	{
         update_forward_velocs();
 		euler_evolve();
@@ -411,10 +430,13 @@ void world::run_evolution()
 	//solve using AB4
 	while(death_count < threshold)
 	{
+    i++;
 		update_forward_velocs();
 		ab4_evolve();
 		move_to_cell_evo();
 	}
+  
+  strm << i << "\n";
 }
 
 // Functions that are helpful for debugging 
@@ -825,8 +847,7 @@ void world::move_to_cell_evo() {
 							std::cout << "Remaining population: " << count << " \n";
 						}
 						else
-						{
-							
+              {
 							std::cout << "\n predator out of bounds, THIS IS BAD \n";
 							
 						}
@@ -904,7 +925,7 @@ void world::print_csv(std::string filename){
 
 void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out) 
 {
-	
+	//TODO: use cell_node delete function (maybe)?
 	// Delete old cells
 	for(int i = 0; i < DOMAIN_DIM_1; i++){
 		for(int j = 0; j < DOMAIN_DIM_2; j++){
@@ -964,7 +985,7 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 		
 
 	// Copy the values
-	unsigned char oldparams [STUDYSIZE][7];
+	unsigned char oldparams [STUDYSIZE][9];
 
 	int ams = agents_master.size();
 	int count = 0;
@@ -974,7 +995,7 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 		{
 			count++;
 			finch* current = (finch*) agents_master[i];
-			for (int j = 0; j < 7; j++) 
+			for (int j = 0; j < 9; j++) 
 			{
 				int x = current->params[j];
 				oldparams[count-1][j] = x;
@@ -1001,14 +1022,14 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 		int dad = rand()% count;
 		int mom = rand()% count;
 
-		int crosspoint = rand()%8;
+		int crosspoint = rand()%10;
 		
 		for(int j = 0; j < crosspoint; j++)
 			{
 				oldparams[i+count][j] = oldparams[dad][j];
 			}
 
-		for(int k = crosspoint; k < 7; k++)
+		for(int k = crosspoint; k < 9; k++)
 			{
 				oldparams[i+count][k] = oldparams[mom][k];
 			}
@@ -1019,14 +1040,14 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 	for(int i = 0; i < STUDYSIZE; i++)
 	{	
 			//this will choose which genes mutate with chance (1/2)^5
-			unsigned short x = rand()% 128;
-			unsigned short y = rand()% 128;
-			unsigned short z = rand()% 128;
-			unsigned short a = rand()% 128;
-			unsigned short b = rand()% 128;
+			unsigned short x = rand()% 512;
+			unsigned short y = rand()% 512;
+			unsigned short z = rand()% 512;
+			unsigned short a = rand()% 512;
+			unsigned short b = rand()% 512;
 			unsigned short M = x & y & z & a & b;
 
-			for(int j = 0; j < 7; j++)
+			for(int j = 0; j < 9; j++)
 			{
 				if(M & (1u << j))
 				{
@@ -1063,8 +1084,8 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 		}
 		
 		//funky business with arrays, can reduce?
-		unsigned char genes[7];
-		for(int z = 0; z < 7; z++)
+		unsigned char genes[9];
+		for(int z = 0; z < 9; z++)
 		{
 			genes[z] = oldparams[i][z];
 		}

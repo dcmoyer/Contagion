@@ -29,6 +29,7 @@
 void ab4_update(agent smith);
 void euler_update(agent &smith);
 
+
 using std::vector;
 
 class world {
@@ -56,7 +57,7 @@ public:
 	void repopulate2(void (* up)(agent*,agent*), std::ostream& strm);
 
 	void run(std::ostream& strm, int print_every, int iterations);
-	void run_evolution();
+	void run_evolution(std::ostream& strm);
 
     cell* get_cell(int i, int j);
     int is_empty(int i, int j);

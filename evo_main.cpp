@@ -43,7 +43,7 @@ for(int r = 0; r <= 75; r++)
 	int predator_size = 5;
 
 	//Setup
-	std::ofstream strm;
+	std::ofstream strm, runtime;
 	time_t t = time(NULL);
 	srand(t);
 	world w = world();
@@ -53,8 +53,11 @@ for(int r = 0; r <= 75; r++)
 	
 	std::stringstream timecheck;
   timecheck << t;
+  
+  std::string runtime_filepath = "./data/" + timecheck.str() + "_runtimes.txt";
+  runtime.open(runtime_filepath.c_str());
 
-	for(int i = 1; i <= 200; i++)
+	for(int i = 1; i <= STUDYLENGTH; i++)
 	{
 		std::stringstream ss;
 		ss << i;
@@ -63,7 +66,7 @@ for(int r = 0; r <= 75; r++)
 		std::cout << "Generation " << i << " initializing... \n";
 		
 		
-		w.run_evolution();
+		w.run_evolution(runtime);
 		w.repopulate1(finch1, strm);
 		w.add_boundary(wall_interaction);
 		w.populate_predator_rand(predator_size, predator_2012);
@@ -71,7 +74,7 @@ for(int r = 0; r <= 75; r++)
 		strm.close();
 		std::cout << "Generation " << i << " complete! Genome saved to " << filepath << ". \n";
 	}
-
+  runtime.close();
 	system("read -p 'Press [Enter] key to start backup...'");
 	return 0;
 }
