@@ -1,0 +1,7 @@
+Structure:
+
+-Run Sim
+-Measure Utility function.
+
+-Rank order
+-Remove

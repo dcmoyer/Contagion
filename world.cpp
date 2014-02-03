@@ -428,9 +428,8 @@ void world::run_evolution(std::ostream& strm)
     }
 
 	//solve using AB4
-	while(death_count < threshold)
+	for(i ; i <= STEPS_PER_GEN; i++)
 	{
-    i++;
 		update_forward_velocs();
 		ab4_evolve();
 		move_to_cell_evo();
@@ -812,7 +811,9 @@ void world::move_to_cell_evo() {
 					}
 					std::cout << "Remaining population: " << count << " \n";
 
-
+                    if(count == 0){
+                        exit(1);
+                    }
 					current_node = temp;
 					continue;
 				}
@@ -1017,7 +1018,7 @@ void world::repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out)
 	//Shuffle, determine pairs
 
 	//Mating
-	for(int i = 0; i < count; i++)
+	for(int i = 0; i < STUDYSIZE - count; i++)
 	{	
 		int dad = rand()% count;
 		int mom = rand()% count;
@@ -1188,6 +1189,16 @@ void world::repopulate2(void (* up)(agent*,agent*), std::ostream& strm)
 
 
 }
+
+/* TODO: FINISH THIS (DM)
+void world::repopulate_CS_util(void (* up)(agent*, agent*), std::ostream& gen_out){
+    for(int i = 0; i < STUDYSIZE; i++){
+        
+        
+        
+    }
+    
+}*/
 
 void world::print_parameter(std::ostream& strm)
 {

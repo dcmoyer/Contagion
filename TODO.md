@@ -1,4 +1,4 @@
-Prey Modifications:
+Prey Modifications:
 --------
 
 Unlink Kernels (gamma)
@@ -11,7 +11,7 @@ Not 100% eff.
 Lower with high density predator.
 
 Follow distance weighted prey density instead of nearest neighbor
-Velocity Alignment \[\frac{B(v^* - v)}{| v^* - v |}\]
+Velocity Alignment B(v^* - v)/| v^* - v |
 
 
 Utility Functions:
@@ -19,13 +19,10 @@ Utility Functions:
 
 Change from Predator selection to:
 
-\[ \int_t^T |v_{bar} - v|^2\]
+\[ \int_t^T |v_bar - v|^2
+|d - min_j (d_j) |^2 + \frac{1}{d_{i,j}} \]
 
-and
-
-\[|d - \min_j (d_j) |^2 + \frac{1}{d_{i,j}} \]
-
-First is CS, second is Ber/D'Or. Select on this and remove a percentile.
+Select on this and remove a percentile.
 
 
 Runtime length and Evo Parameters:
