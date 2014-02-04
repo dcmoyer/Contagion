@@ -41,6 +41,10 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define STUDYLENGTH 50
 #define STEPS_PER_GEN 8000 //DETERMINED BY exp. 1390971257 (mean)
 
+//other evolution things
+#define UTIL_CAP_CS 10.0
+#define UTIL_CAP_BERT 10.0
+
 //constants for alignment model
 #define SIGMA 1
 #define GAMMA .45

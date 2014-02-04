@@ -1,6 +1,7 @@
 #ifndef HELPER_FCNS
 #define HELPER_FCNS
 
+#include "finch2.h"
 #include "constants.h"
 #include "agent.h"
 #include "predator.h"
@@ -25,4 +26,7 @@ void prey_2012_fear(agent* me, agent* you);
 void wall_interaction(agent* me_fake, agent* you);
 void finch1(agent* me_cast, agent* you);
 void velocity_wall_interaction(agent* me_fake, agent* you);
+void finch_two(agent* me_cast, agent* you);
+void CS_util(double x, double y, double v_x, double v_y, finch2* me);
+void Bert_DOrg_util(double x, double y, double v_x, double v_y, finch2* me);
 #endif

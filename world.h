@@ -17,6 +17,7 @@
 #include "finch.h"
 #include "cell.h"
 #include "wall.h"
+#include "finch2.h"
 #include <vector>
 //#include "helper_fcns.h"
 #include <iostream>
@@ -25,6 +26,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include <cmath>
+#include <algorithm>
 
 void ab4_update(agent smith);
 void euler_update(agent &smith);
@@ -47,17 +49,26 @@ public:
 	void add_boundary(void (* up)(agent*,agent*));	
 	void add_finch_rand(double x, double y, void (* up)(agent*,agent*));
 	void add_finch(double x, double y, void (* up)(agent*,agent*), unsigned char params[7]);
+	void add_finch2(double x, double y, void (* up)(agent*,agent*), void (* util_up)(double , double , double , double, finch2* ), unsigned char params[7]);
+	void add_finch2_rand(double x, double y, void (* up)(agent*,agent*), void (* util_up)(double , double , double , double, finch2* ));
+    
+    
 
 	void populate(int n, vector<double>& xpos, vector<double>& ypos, void (* up)(agent*,agent*));
     void populate_rand(int n, void (* up)(agent*,agent*));
     void populate_predator_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_rand(int n, void (* up)(agent*,agent*));
 	void populate_finches_std(int n, void (* up)(agent*,agent*));
+    void populate_finches2_rand(int n, void (* up)(agent*, agent*), void (* util_up)(double , double , double , double, finch2* ));
+    
 	void repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out);
 	void repopulate2(void (* up)(agent*,agent*), std::ostream& strm);
+    void repopulate_CS_util(void (* up)(agent*, agent*), void (* util_up)(double , double , double , double, finch2* ), std::ostream& gen_out);
+    
 
 	void run(std::ostream& strm, int print_every, int iterations);
 	void run_evolution(std::ostream& strm);
+    void run_evolution_2(std::ostream& strm);
 
     cell* get_cell(int i, int j);
     int is_empty(int i, int j);
@@ -68,6 +79,7 @@ public:
     void update_agent_pos_ab4();
 	void euler_evolve();
     void ab4_evolve();
+    void update_utility();
 	
 	void move_to_cell();
 	void move_to_cell_evo();

@@ -142,6 +142,37 @@ void world::add_finch(double x, double y, void (* up)(agent*,agent*), unsigned c
 	cellList[i][j]->add_top(agents_master.back());
 }
 
+void world::add_finch2(double x, double y, void (* up)(agent*,agent*), void (* util_up)(double , double , double , double, finch2* ), unsigned char params[7]){
+	if(x < 0)
+		x = 0;
+	if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+	agents_master.push_back(new finch2(x, y, up, util_up, params));
+	int i = (int) (x)/CELL_LENGTH;
+	int j = (int) (y)/CELL_LENGTH;
+	cellList[i][j]->add_top(agents_master.back());
+
+}
+
+void world::add_finch2_rand(double x, double y, void (* up)(agent*,agent*), void (* util_up)(double , double , double , double, finch2* )){
+	if(x < 0)
+		x = 0;
+	else if(x >= CELL_LENGTH*DOMAIN_DIM_1)
+		x = CELL_LENGTH*DOMAIN_DIM_1 - 1;
+	if(y < 0)
+		y = 0;
+	else if(y >= CELL_LENGTH*DOMAIN_DIM_2)
+		y = CELL_LENGTH*DOMAIN_DIM_2 - 1;
+	agents_master.push_back(new finch2(x, y, up, util_up));
+	int i = (int) (x)/CELL_LENGTH;
+	int j = (int) (y)/CELL_LENGTH;
+	cellList[i][j]->add_top(agents_master.back());
+}
+
 void world::add_wall(double c_x, double c_y, double n_x, double n_y, double len, void (* up)(agent*,agent*)){
   
   if(c_x < 0)
@@ -335,6 +366,40 @@ void world::populate_finches_rand(int n, void (* up)(agent*,agent*))
 		}
 }
 
+void world::populate_finches2_rand(int n, void (* up)(agent*, agent*), void (* util_up)(double , double , double , double, finch2* )){
+	for (int i = 0; i < n; i ++)
+		{
+			//TODO: REWRITE THIS.
+			double x, y;
+			/*Use this to restrict to the middle*/
+			if(DOMAIN_DIM_1 % 2 == 0)
+			{
+				int padx = DOMAIN_DIM_1 / 2 - 1;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int padx = DOMAIN_DIM_1 / 2;
+				x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
+			if(DOMAIN_DIM_2 % 2 == 0)
+			{
+				int pady = DOMAIN_DIM_2 / 2 - 1;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+			}
+			else 
+			{
+				int pady = DOMAIN_DIM_2 / 2;
+				y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+			}
+			
+			//double x = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_1);
+			//double y = (double)rand() / RAND_MAX * (CELL_LENGTH*DOMAIN_DIM_2);
+			
+			add_finch2_rand(x, y, up, util_up);
+		}
+}
+
 void world::populate_finches_std(int n, void (* up)(agent*,agent*))
 {
 	for (int i = 0; i < n; i ++)
@@ -433,6 +498,30 @@ void world::run_evolution(std::ostream& strm)
 		update_forward_velocs();
 		ab4_evolve();
 		move_to_cell_evo();
+	}
+  
+  strm << i << "\n";
+}
+
+void world::run_evolution_2(std::ostream& strm)
+{
+	int threshold = STUDYSIZE / 2;
+  int i;
+	for( i = 1; i <= 4; i++)
+	{
+        update_forward_velocs();
+		euler_evolve();
+		move_to_cell_evo();
+        update_utility();
+    }
+
+	//solve using AB4
+	for(i ; i <= STEPS_PER_GEN; i++)
+	{
+		update_forward_velocs();
+		ab4_evolve();
+		move_to_cell_evo();
+        update_utility();
 	}
   
   strm << i << "\n";
@@ -870,6 +959,33 @@ void world::move_to_cell_evo() {
 	}
 }
 
+void world::update_utility(){
+    int ams = agents_master.size();
+    double x=0;
+    double y=0;
+    double v_x = 0;
+    double v_y = 0;
+    for(int i = 0; i < ams; i++){
+        if(agents_master[i]->get_type() == 0){
+            x += agents_master[i]->get_x_coord();
+            y += agents_master[i]->get_y_coord();
+            v_x += agents_master[i]->get_x_veloc_index(0);
+            v_y += agents_master[i]->get_y_veloc_index(0);
+        }
+    }
+    x = x/STUDYSIZE;
+    y = y/STUDYSIZE;
+    
+    v_x = v_x/STUDYSIZE;
+    v_y = v_y/STUDYSIZE;
+    
+    for(int i = 0; i < ams; i++){
+        if(agents_master[i]->get_type() == 0){
+            ((finch2*) agents_master[i])-> util_update(x,y,v_x,v_y,(finch2*)agents_master[i]);
+        }
+    }
+    
+}
 
 void world::print(std::ostream& strm)
 {
@@ -1190,15 +1306,189 @@ void world::repopulate2(void (* up)(agent*,agent*), std::ostream& strm)
 
 }
 
-/* TODO: FINISH THIS (DM)
-void world::repopulate_CS_util(void (* up)(agent*, agent*), std::ostream& gen_out){
-    for(int i = 0; i < STUDYSIZE; i++){
-        
-        
-        
+bool sort_func(agent* left, agent* right){ 
+    return ((finch2*) left) -> util < ((finch2*) right) -> util;
+}
+
+void world::repopulate_CS_util(void (* up)(agent*, agent*), void (* util_up)(double , double , double , double, finch2* ), std::ostream& gen_out){
+    
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		for(int j = 0; j < DOMAIN_DIM_2; j++){
+			delete cellList[i][j];
+		}
+	}
+	    
+	delete theLonelyIsland;
+	
+	//create new cells
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+    {
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+			cellList[i][j] = new cell;
+        }
+    }
+
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+    {
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+            vector<cell*> v(8);
+            v[0] = cellList[i-1][j-1];
+            v[1] = cellList[i][j-1];
+            v[2] = cellList[i+1][j-1];
+
+            v[3] = cellList[i-1][j];
+            v[4] = cellList[i+1][j];
+
+            v[5] = cellList[i-1][j+1];
+            v[6] = cellList[i][j+1];
+            v[7] = cellList[i+1][j+1];
+
+            if(i == 0)
+            {
+                v[0]=v[3]=v[5]=NULL;
+            }
+             if((i+1) == DOMAIN_DIM_1)
+            {
+                v[2]=v[4]=v[7]=NULL;
+            }
+            if(j == 0)
+            {
+                v[0]=v[1]=v[2]=NULL;
+            }
+             if((j+1) == DOMAIN_DIM_2)
+            {
+                v[5]=v[6]=v[7]=NULL;
+            }
+            
+            cellList[i][j]->set_neighbors(v);
+        }
+    }
+	theLonelyIsland = new cell;
+    
+    int ams = agents_master.size();
+    unsigned char oldparams [STUDYSIZE][9];
+    
+    for(int i = 0; i < ams; i++){
+        if(agents_master[i]->get_type() != 0){
+            delete agents_master[i];
+            agents_master.erase(agents_master.begin() + i);
+            i--;
+            ams--;
+        }
     }
     
-}*/
+    int SS_over2 = STUDYSIZE/2;
+    if(agents_master.size() == SS_over2){
+        exit(1);
+    }
+    
+    std::sort(agents_master.begin(), agents_master.end(), sort_func);
+    
+    for(int i = 0; i < SS_over2; i++){
+		finch2* current = (finch2*) agents_master[i];
+        int x = 0;
+		for (int j = 0; j < 9; j++) 
+		{
+			x = current->params[j];
+			oldparams[i][j] = x;
+			gen_out << x << ", ";
+		}
+		x = current->util;
+		gen_out << x;
+        
+		gen_out << "\n";
+    }
+    
+	for(int i = 0; i < STUDYSIZE; i++) 
+	{
+		delete agents_master[i];
+	}
+	
+	agents_master.clear();
+	
+	
+	//Shuffle, determine pairs
+
+	//Mating
+	for(int i = 0; i < SS_over2; i++)
+    {	
+		int dad = rand()% SS_over2;
+		int mom = rand()% SS_over2;
+
+		int crosspoint = rand()%10;
+		
+		for(int j = 0; j < crosspoint; j++)
+		{
+			oldparams[i+SS_over2][j] = oldparams[dad][j];
+		}
+
+		for(int k = crosspoint; k < 9; k++)
+		{
+			oldparams[i+SS_over2][k] = oldparams[mom][k];
+		}
+	}
+
+
+	//mutate
+	for(int i = 0; i < STUDYSIZE; i++)
+	{	
+			//this will choose which genes mutate with chance (1/2)^5
+			unsigned short x = rand()% 512;
+			unsigned short y = rand()% 512;
+			unsigned short z = rand()% 512;
+			unsigned short a = rand()% 512;
+			unsigned short b = rand()% 512;
+			unsigned short M = x & y & z & a & b;
+
+			for(int j = 0; j < 9; j++)
+			{
+				if(M & (1u << j))
+				{
+					unsigned short N = rand()% 8;
+					oldparams[i][j] ^=  ( 1u << N);
+				}
+			}
+	}
+
+	
+	for(int i  = 0; i < STUDYSIZE; i++)
+	{
+		//generate random (x,y) position
+		double x, y;
+		if(DOMAIN_DIM_1 % 2 == 0)
+		{
+			int padx = DOMAIN_DIM_1 / 2 - 1;
+			x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+		}
+		else 
+		{
+			int padx = DOMAIN_DIM_1 / 2;
+			x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+		}
+		if(DOMAIN_DIM_2 % 2 == 0)
+		{
+			int pady = DOMAIN_DIM_2 / 2 - 1;
+			y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+		}
+		else 
+		{
+			int pady = DOMAIN_DIM_2 / 2;
+			y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+		}
+		
+		//funky business with arrays, can reduce?
+		unsigned char genes[9];
+		for(int z = 0; z < 9; z++)
+		{
+			genes[z] = oldparams[i][z];
+		}
+
+		add_finch2(x, y, up, util_up, genes);
+	}
+    
+}
 
 void world::print_parameter(std::ostream& strm)
 {

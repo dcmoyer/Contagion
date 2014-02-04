@@ -1,5 +1,4 @@
 #include "helper_fcns.h"
-
 //double exp_squared[76];
 //double exp_hund[76];
 //double exp_half[76];
@@ -653,3 +652,117 @@ void finch1(agent* me_cast, agent* you)
     
 }
 
+
+void finch_two(agent* me_cast, agent* you){
+    finch2* me = (finch2*) me_cast;
+    
+	int youtype = you->agent_type;
+	//wall check
+	if(youtype == 2){
+		return;
+	}
+	
+
+    //calculate distances
+	double dx= you->x_coord-me->x_coord;
+	double dy= you->y_coord-me->y_coord;
+	double r = sqrt(dx*dx + dy*dy);
+    
+    if (r < CELL_LENGTH) 
+	{
+		int r_i = (int) r;
+		int g_v = me->params[0];
+        int g_emo_prey = me->params[7];
+        int g_emo_pred = me->params[8];
+		
+		if (youtype == 0) 
+		{
+            //get component-wise velocity
+		/*	double vx1 = me->x_veloc[0];
+			double vy1 = me->y_veloc[0];
+			double vx2 = you->x_veloc[0];
+			double vy2 = you->y_veloc[0];*/
+			double dvx = you->x_veloc[0]-me->x_veloc[0];
+			double dvy = you->y_veloc[0]-me->y_veloc[0];
+
+			//get fear
+			double dq = you->q_mag-me->q_mag;
+
+			//calculate attraction-repulsion
+            double ugrad1 = me->attr_align_ratio * 2 * (CALA *exp_hund[r_i] - CRLR * exp_half[r_i]);
+            
+            //calculate alignment forces
+            double h1 = h_gamma_r[g_v][r_i];
+            double h2 = h_gamma_r[g_emo_prey][r_i];		
+            //update velocities
+            //double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
+         //   double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;	
+
+            
+            me->add_to_x_accel_prey(ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx);
+            me->add_to_y_accel_prey(ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy);
+
+			if (dq > 0)
+			{
+				
+				me->add_to_q_change(10*me->empathy*h2*dq);
+			}
+			else
+			{
+				
+				me->add_to_q_change_prey(10 * (1-me->empathy)*h2*dq);
+			}
+
+
+			me->iterate_NearestNeighbor();
+            
+		}
+		else //if (you->get_type() == 1) 
+		{
+			if (r >= 5)  
+			{
+				//double u = -CRLR * exp_half[r_i];  
+				double ur = -CRLR * exp_half[r_i] / r;  
+				//update velocities
+			
+				me->add_to_x_accel_pred(ur * dx);
+				me->add_to_y_accel_pred(ur * dy);
+				
+				//double h = 10*h_gamma_r[g][r_i];
+				me->add_to_q_change_pred(10*h_gamma_r[g_emo_pred][r_i]*(1-me->q_mag));
+			}
+			
+			else
+			{
+				//double p = (double)rand()/(double)RAND_MAX;
+				if ((double)rand()/(double)RAND_MAX < PRECISION) 
+				{
+					me->kill();
+					std::cout << "Killed by predator. ";
+				}
+				
+			} 
+
+			
+			me->iterate_NearestPred();
+		}
+
+		
+	}
+    
+}
+
+void CS_util(double x, double y, double v_x, double v_y, finch2* me){
+    double dx = (v_x*(me->get_x_veloc_index(0)));
+    double dy = (v_y*(me->get_y_veloc_index(0)));
+    double dot_prod = (dx + dy);
+    me->add_to_util((-dot_prod + 1)*UTIL_CAP_CS);
+    
+}
+
+void Bert_DOrg_util(double x, double y, double v_x, double v_y, finch2* me){
+    double dx = (x-(me->get_x_coord()));
+    double dy = (y-(me->get_y_coord()));
+    double r = sqrt(dx*dx + dy*dy);
+    me->add_to_util(std::max(r + (1.0/r), UTIL_CAP_BERT));
+}

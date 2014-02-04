@@ -5,3 +5,16 @@ Structure:
 
 -Rank order
 -Remove
+
+
+020314 1205
+-----
+
+Created Finch2 class. (NOT finished)
+Created repopulate_CS_util (NOT finished)
+	-associated order function in World Main (Requires finch2, no inclusion made).
+
+TODO:
+	Finish Finch2 class.
+	Modify makefile to make finch2 and associated inclusions.
+	Use <algorithm> lib to shift items around.
