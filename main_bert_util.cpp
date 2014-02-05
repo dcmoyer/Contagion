@@ -57,7 +57,7 @@ for(int r = 0; r <= 75; r++)
 	{
 		std::stringstream ss;
 		ss << i;
-		std::string filepath = "./data/" + timecheck.str() + "_" + ss.str() + "_CS.txt";
+		std::string filepath = "./data/" + timecheck.str() + "_" + ss.str() + "_Bert.txt";
 		strm.open(filepath.c_str());
 		std::cout << "Generation " << i << " initializing... \n";
 		

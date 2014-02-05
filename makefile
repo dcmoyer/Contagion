@@ -34,7 +34,7 @@ evo_main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o 
 evo_cs_util.out : main_cs_util.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o
 	g++ -o evo_cs_util.out -O3 -fopenmp main_cs_util.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o
 	
-evo_bert_util.out : main_cs_util.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o
+evo_bert_util.out : main_bert_util.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o
 	g++ -o evo_bert_util.out -O3 -fopenmp main_bert_util.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o
 
 main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o
