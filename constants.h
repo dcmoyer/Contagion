@@ -45,6 +45,10 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define UTIL_CAP_CS 10.0
 #define UTIL_CAP_BERT 10.0
 
+//stochastic evolution things
+#define GAUSS_SCALE 0.1
+#define PI 3.14159265359
+
 //constants for alignment model
 #define SIGMA 1
 #define GAMMA .45

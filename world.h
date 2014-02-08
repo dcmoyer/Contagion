@@ -18,6 +18,7 @@
 #include "cell.h"
 #include "wall.h"
 #include "finch2.h"
+#include "evoprob.h"
 #include <vector>
 //#include "helper_fcns.h"
 #include <iostream>
@@ -30,7 +31,6 @@
 
 void ab4_update(agent smith);
 void euler_update(agent &smith);
-
 
 using std::vector;
 
@@ -64,7 +64,8 @@ public:
 	void repopulate1(void (* up)(agent*,agent*), std::ostream& gen_out);
 	void repopulate2(void (* up)(agent*,agent*), std::ostream& strm);
     void repopulate_CS_util(void (* up)(agent*, agent*), void (* util_up)(double , double , double , double, finch2* ), std::ostream& gen_out);
-    
+    void repopulate_prob(void (* up)(agent*, agent*), std::ostream& gen_out);
+    void repopulate_CS_util_prob(void (* up)(agent*, agent*), void (* util_up)(double , double , double , double, finch2* ), std::ostream& gen_out);
 
 	void run(std::ostream& strm, int print_every, int iterations);
 	void run_evolution(std::ostream& strm);

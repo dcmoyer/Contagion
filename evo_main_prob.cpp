@@ -64,7 +64,7 @@ for(int r = 0; r <= 75; r++)
 		std::cout << "Generation " << i << " initializing... \n";
 		
 		w.run_evolution(runtime);
-		w.repopulate1(finch1, strm);
+		w.repopulate_prob(finch1, strm);
 		w.add_boundary(wall_interaction);
 		w.populate_predator_rand(predator_size, predator_2012);
 

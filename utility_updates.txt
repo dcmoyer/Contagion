@@ -1,3 +1,19 @@
+020714 1032
+-----
+419 CS timepoints
+382 Bert timepoints
+
+
+020614 1834
+-----
+Variables 2, 5, 6, and 7 all converge for the predation model.
+Variables 2, 6, and 7 all converge for the CS model.
+Variables 2, 6, and 7 all converge for the bertozzi model (but for different values!)
+
+TODO:
+	MAKE PRETTIER PLOTS
+
+
 Structure:
 
 -Run Sim

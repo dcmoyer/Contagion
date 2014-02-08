@@ -1,3 +1,11 @@
+# Linux (default)
+CLANG_YN = g++
+UNAME_S := $(shell uname -s)
+# OS X
+ifeq "$(UNAME_S)" "Darwin"
+	CLANG_YN = clang++
+endif
+
 all : clean agent.o cell.o world.o helper_fcns.o main.out
 test: test_agent test_cell test_world
 
@@ -18,24 +26,38 @@ finch2.o : finch2.cpp finch.o
 
 cell.o : cell.cpp
 	g++ -o cell.o -c cell.cpp
+	
+evoprob.o : evoprob.cpp
+	g++ -o evoprob.o -c evoprob.cpp
 
-world.o : world.cpp predator.o helper_fcns.o finch2.o
+world.o : world.cpp predator.o helper_fcns.o finch2.o evoprob.o
 	g++ -o world.o -c world.cpp
 
 helper_fcns.o : helper_fcns.cpp predator.o wall.o finch.o finch2.o
 	g++ -o helper_fcns.o -c helper_fcns.cpp
+	
+
 
 #Trading_Thangs.BETA : Main_Interface.cpp cargo.2.o ship.o battle.o player.o mapgraph.o world.o
 #	g++ -o Trading_Thangs.BETA Main_Interface.cpp world.cpp mapgraph.cpp battle.cpp player.cpp ship.cpp cargo.2.cpp -framework OpenGL -framework GLUT
 
-evo_main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o
-	g++ -o evo_main.out -O3 -fopenmp evo_main.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o
+evo_main.out : evo_main.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o evoprob.o
+	g++ -o evo_main.out -O3 -fopenmp evo_main.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o evoprob.o
 
-evo_cs_util.out : main_cs_util.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o
-	g++ -o evo_cs_util.out -O3 -fopenmp main_cs_util.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o
+evo_cs_util.out : main_cs_util.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o evoprob.o
+	g++ -o evo_cs_util.out -O3 -fopenmp main_cs_util.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o evoprob.o
 	
-evo_bert_util.out : main_bert_util.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o
-	g++ -o evo_bert_util.out -O3 -fopenmp main_bert_util.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o
+evo_bert_util.out : main_bert_util.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o evoprob.o
+	g++ -o evo_bert_util.out -O3 -fopenmp main_bert_util.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o evoprob.o
+
+evo_main_prob.out : evo_main_prob.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o evoprob.o
+	g++ -o evo_main_prob.out -O3 -fopenmp evo_main_prob.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o evoprob.o
+	
+evo_cs_util_prob.out : main_cs_util_prob.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o evoprob.o
+	g++ -o evo_cs_util_prob.out -O3 -fopenmp main_cs_util_prob.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o evoprob.o
+	
+evo_bert_util_prob.out : main_bert_util_prob.cpp cell.o agent.o world.o helper_fcns.o predator.o finch.o finch2.o wall.o evoprob.o
+	g++ -o evo_bert_util_prob.out -O3 -fopenmp main_bert_util_prob.cpp helper_fcns.o world.o cell.o agent.o predator.o finch.o finch2.o wall.o evoprob.o
 
 main.out : main.cpp cell.o agent.o world.o helper_fcns.o predator.o
 	g++ main.cpp helper_fcns.o world.o cell.o agent.o predator.o

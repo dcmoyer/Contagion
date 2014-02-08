@@ -52,6 +52,7 @@ world::world()
     }
 	theLonelyIsland = new cell;
 	death_count = 0;
+    
 }
 
 //destructor
@@ -1487,6 +1488,271 @@ void world::repopulate_CS_util(void (* up)(agent*, agent*), void (* util_up)(dou
 
 		add_finch2(x, y, up, util_up, genes);
 	}
+    
+}
+
+void world::repopulate_prob(void (* up)(agent*, agent*), std::ostream& gen_out){
+	//TODO: use cell_node delete function (maybe)?
+	// Delete old cells
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		for(int j = 0; j < DOMAIN_DIM_2; j++){
+			delete cellList[i][j];
+		}
+	}
+	    
+	delete theLonelyIsland;
+	
+	//create new cells
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+    {
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+			cellList[i][j] = new cell;
+        }
+    }
+
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+    {
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+            vector<cell*> v(8);
+            v[0] = cellList[i-1][j-1];
+            v[1] = cellList[i][j-1];
+            v[2] = cellList[i+1][j-1];
+
+            v[3] = cellList[i-1][j];
+            v[4] = cellList[i+1][j];
+
+            v[5] = cellList[i-1][j+1];
+            v[6] = cellList[i][j+1];
+            v[7] = cellList[i+1][j+1];
+
+            if(i == 0)
+            {
+                v[0]=v[3]=v[5]=NULL;
+            }
+             if((i+1) == DOMAIN_DIM_1)
+            {
+                v[2]=v[4]=v[7]=NULL;
+            }
+            if(j == 0)
+            {
+                v[0]=v[1]=v[2]=NULL;
+            }
+             if((j+1) == DOMAIN_DIM_2)
+            {
+                v[5]=v[6]=v[7]=NULL;
+            }
+            
+            cellList[i][j]->set_neighbors(v);
+        }
+    }
+	theLonelyIsland = new cell;
+	death_count = 0;
+		
+
+	// Copy the values
+	unsigned char oldparams [STUDYSIZE][9];
+
+	int ams = agents_master.size();
+	int count = 0;
+	for(int i = 0; i < ams; i++) 
+	{
+		if (agents_master[i]->get_type() == 0 && agents_master[i]->is_alive()) 
+		{
+			count++;
+			finch* current = (finch*) agents_master[i];
+			for (int j = 0; j < 9; j++) 
+			{
+				int x = current->params[j];
+				oldparams[count-1][j] = x;
+				gen_out << x  << ", ";
+			}
+			gen_out << "\n";
+		}
+	}
+		
+	// Delete all the agents
+	for(int i = 0; i < ams; i++) 
+	{
+		delete agents_master[i];
+	}
+	
+	agents_master.clear();
+	
+    evo_prob(oldparams, count);
+    
+	for(int i  = 0; i < STUDYSIZE; i++)
+	{
+		//generate random (x,y) position
+		double x, y;
+		if(DOMAIN_DIM_1 % 2 == 0)
+		{
+			int padx = DOMAIN_DIM_1 / 2 - 1;
+			x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+		}
+		else 
+		{
+			int padx = DOMAIN_DIM_1 / 2;
+			x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+		}
+		if(DOMAIN_DIM_2 % 2 == 0)
+		{
+			int pady = DOMAIN_DIM_2 / 2 - 1;
+			y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+		}
+		else 
+		{
+			int pady = DOMAIN_DIM_2 / 2;
+			y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+		}
+		
+		//funky business with arrays, can reduce?
+		unsigned char genes[9];
+		for(int z = 0; z < 9; z++)
+		{
+			genes[z] = oldparams[i][z];
+		}
+
+		add_finch(x, y, up, genes);
+	}
+    
+}
+
+void world::repopulate_CS_util_prob(void (* up)(agent*, agent*), void (* util_up)(double , double , double , double, finch2* ), std::ostream& gen_out){
+    
+	for(int i = 0; i < DOMAIN_DIM_1; i++){
+		for(int j = 0; j < DOMAIN_DIM_2; j++){
+			delete cellList[i][j];
+		}
+	}
+	    
+	delete theLonelyIsland;
+	
+	//create new cells
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+    {
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+			cellList[i][j] = new cell;
+        }
+    }
+
+	for (int i = 0; i < DOMAIN_DIM_1; i++)
+    {
+		for(int j = 0; j < DOMAIN_DIM_2; j++) 
+        {
+            vector<cell*> v(8);
+            v[0] = cellList[i-1][j-1];
+            v[1] = cellList[i][j-1];
+            v[2] = cellList[i+1][j-1];
+
+            v[3] = cellList[i-1][j];
+            v[4] = cellList[i+1][j];
+
+            v[5] = cellList[i-1][j+1];
+            v[6] = cellList[i][j+1];
+            v[7] = cellList[i+1][j+1];
+
+            if(i == 0)
+            {
+                v[0]=v[3]=v[5]=NULL;
+            }
+             if((i+1) == DOMAIN_DIM_1)
+            {
+                v[2]=v[4]=v[7]=NULL;
+            }
+            if(j == 0)
+            {
+                v[0]=v[1]=v[2]=NULL;
+            }
+             if((j+1) == DOMAIN_DIM_2)
+            {
+                v[5]=v[6]=v[7]=NULL;
+            }
+            
+            cellList[i][j]->set_neighbors(v);
+        }
+    }
+	theLonelyIsland = new cell;
+    
+    int ams = agents_master.size();
+    unsigned char oldparams [STUDYSIZE][9];
+    
+    for(int i = 0; i < ams; i++){
+        if(agents_master[i]->get_type() != 0){
+            delete agents_master[i];
+            agents_master.erase(agents_master.begin() + i);
+            i--;
+            ams--;
+        }
+    }
+    
+    int SS_over2 = STUDYSIZE/2;
+    if(agents_master.size() == SS_over2){
+        exit(1);
+    }
+    
+    std::sort(agents_master.begin(), agents_master.end(), sort_func);
+    
+    for(int i = 0; i < SS_over2; i++){
+		finch2* current = (finch2*) agents_master[i];
+        int x = 0;
+		for (int j = 0; j < 9; j++) 
+		{
+			x = current->params[j];
+			oldparams[i][j] = x;
+			gen_out << x << ", ";
+		}
+		x = current->util;
+		gen_out << x;
+        
+		gen_out << "\n";
+    }
+    
+	for(int i = 0; i < STUDYSIZE; i++) 
+	{
+		delete agents_master[i];
+	}
+	
+	agents_master.clear();
+    
+    evo_prob(oldparams, SS_over2);
+
+    for(int i  = 0; i < STUDYSIZE; i++)
+    {
+    	//generate random (x,y) position
+    	double x, y;
+    	if(DOMAIN_DIM_1 % 2 == 0)
+    	{
+    		int padx = DOMAIN_DIM_1 / 2 - 1;
+    		x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+    	}
+    	else 
+    	{
+    		int padx = DOMAIN_DIM_1 / 2;
+    		x = padx*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+    	}
+    	if(DOMAIN_DIM_2 % 2 == 0)
+    	{
+    		int pady = DOMAIN_DIM_2 / 2 - 1;
+    		y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH*2);
+    	}
+    	else 
+    	{
+    		int pady = DOMAIN_DIM_2 / 2;
+    		y = pady*CELL_LENGTH + (double)rand() / RAND_MAX * (CELL_LENGTH);
+    	}
+	
+    	//funky business with arrays, can reduce?
+    	unsigned char genes[9];
+    	for(int z = 0; z < 9; z++)
+    	{
+    		genes[z] = oldparams[i][z];
+    	}
+
+    	add_finch2(x, y, up, util_up, genes);
+    }
     
 }
 

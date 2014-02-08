@@ -11,6 +11,8 @@ double h_gamma_r[256][76];
 double exp_hund[76];
 double exp_half[76];
 
+
+
 int main()
 {
 
@@ -37,17 +39,13 @@ for(int r = 0; r <= 75; r++)
 
 	std::cout << "WAIT! Did you change the filepath?";
 	system("read -p 'Press [Enter] key to start backup...'");
-
-	int predator_size = 5;
-
 	//Setup
 	std::ofstream strm, runtime;
 	time_t t = time(NULL);
 	srand(t);
 	world w = world();
 	w.add_boundary(velocity_wall_interaction);
-	w.populate_finches_rand(STUDYSIZE, finch1);
-	w.populate_predator_rand(predator_size, predator_2012);
+	w.populate_finches2_rand(STUDYSIZE ,finch_two, CS_util);
 	
 	std::stringstream timecheck;
   timecheck << t;
@@ -59,14 +57,13 @@ for(int r = 0; r <= 75; r++)
 	{
 		std::stringstream ss;
 		ss << i;
-		std::string filepath = "./data/" + timecheck.str() + "_" + ss.str() + ".txt";
+		std::string filepath = "./data/" + timecheck.str() + "_" + ss.str() + "_CS.txt";
 		strm.open(filepath.c_str());
 		std::cout << "Generation " << i << " initializing... \n";
 		
-		w.run_evolution(runtime);
-		w.repopulate1(finch1, strm);
+		w.run_evolution_2(runtime);
+		w.repopulate_CS_util_prob(finch_two, CS_util, strm);
 		w.add_boundary(wall_interaction);
-		w.populate_predator_rand(predator_size, predator_2012);
 
 		strm.close();
 		std::cout << "Generation " << i << " complete! Genome saved to " << filepath << ". \n";
