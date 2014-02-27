@@ -124,7 +124,7 @@
 
 	x_accel[0] =  2*motion_pdpy_ratio * x_accel_prey + (1- motion_pdpy_ratio) * x_accel_pred  + wall_accel_x;
 	y_accel[0] =  2*motion_pdpy_ratio * y_accel_prey + (1- motion_pdpy_ratio) * y_accel_pred + wall_accel_y;
-	q_change[0] = emote_pdpy_ratio * q_change_prey + (1 - emote_pdpy_ratio) *q_change_pred;
+	q_change[0] = empathy*(emote_pdpy_ratio * q_change_prey + (1 - emote_pdpy_ratio) *q_change_pred);
 
 	x_accel_prey =  0;
 	y_accel_prey = 0;

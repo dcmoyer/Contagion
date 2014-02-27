@@ -277,7 +277,7 @@ void swarm_attract(agent* me, agent* you)
 
 }
 
-
+ 
 void go_left_test(agent* me, agent* you){
 	if(you->get_type() == 2){
 		return;
@@ -604,13 +604,14 @@ void finch1(agent* me_cast, agent* you)
 			if (dq > 0)
 			{
 				
-				me->add_to_q_change(10*me->empathy*h2*dq);
+				me->add_to_q_change_prey(10*h2*dq);
 			}
 			else
 			{
 				
-				me->add_to_q_change_prey(10 * (1-me->empathy)*h2*dq);
+				me->add_to_q_change_prey(10*h2*dq);
 			}
+
 
 
 			me->iterate_NearestNeighbor();
@@ -693,11 +694,11 @@ void finch_two(agent* me_cast, agent* you){
             
             //calculate alignment forces
             double h1 = h_gamma_r[g_v][r_i];
-            double h2 = h_gamma_r[g_emo_prey][r_i];		
+            double h2 = h_gamma_r[g_emo_prey][r_i];
+            
             //update velocities
             //double fx = ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx;
-         //   double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;	
-
+         //   double fy = ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy;
             
             me->add_to_x_accel_prey(ugrad1*dx/r - 2*(1 - me->attr_align_ratio)*h1*dvx);
             me->add_to_y_accel_prey(ugrad1*dy/r - 2*(1 - me->attr_align_ratio)*h1*dvy);
@@ -705,12 +706,12 @@ void finch_two(agent* me_cast, agent* you){
 			if (dq > 0)
 			{
 				
-				me->add_to_q_change(10*me->empathy*h2*dq);
+				me->add_to_q_change_prey(10*h2*dq);
 			}
 			else
 			{
 				
-				me->add_to_q_change_prey(10 * (1-me->empathy)*h2*dq);
+				me->add_to_q_change_prey(10*h2*dq);
 			}
 
 
@@ -766,3 +767,4 @@ void Bert_DOrg_util(double x, double y, double v_x, double v_y, finch2* me){
     double r = sqrt(dx*dx + dy*dy);
     me->add_to_util(std::max(r + (1.0/r), UTIL_CAP_BERT));
 }
+m
