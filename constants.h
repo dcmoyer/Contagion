@@ -37,8 +37,8 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define BETA  .05  
 
 //Evolution simulation size
-#define STUDYSIZE 100
-#define STUDYLENGTH 50
+#define STUDYSIZE 1000
+#define STUDYLENGTH 500
 #define STEPS_PER_GEN 8000 //DETERMINED BY exp. 1390971257 (mean)
 
 //other evolution things
@@ -48,6 +48,9 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 //stochastic evolution things
 #define GAUSS_SCALE 0.1
 #define PI 3.14159265359
+
+//experiment things
+#define EMPATHY 1
 
 //constants for alignment model
 #define SIGMA 1

@@ -45,7 +45,8 @@
 		gamma_v = params[0] / 255.0;
 		adrenaline = params[1] / 255.0;
 		fear_decay = params[2] / 255.0;
-		empathy = params[3] / 255.0;
+		empathy = EMPATHY;
+        params[3] = (int) 255*empathy;
 		emote_pdpy_ratio = params[4] / 255.0;
 		motion_pdpy_ratio = params[5] / 255.0;
 		attr_align_ratio = params[6] / 255.0;
@@ -98,7 +99,8 @@
 		gamma_v = params[0] / 255.0;
 		adrenaline = params[1] / 255.0;
 		fear_decay = params[2] / 255.0;
-		empathy = params[3] / 255.0;
+		empathy = EMPATHY;
+        params[3] = (int) 255*empathy;
 		emote_pdpy_ratio = params[4] / 255.0;
 		motion_pdpy_ratio = params[5] / 255.0;
 		attr_align_ratio = params[6] / 255.0;

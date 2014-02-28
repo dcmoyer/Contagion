@@ -42,24 +42,23 @@ for(int r = 0; r <= 75; r++)
 
 	//Setup
 	std::ofstream strm, runtime;
-	time_t t = time(NULL);
-	srand(t);
+	srand(42);
 	world w = world();
 	w.add_boundary(velocity_wall_interaction);
 	w.populate_finches_rand(STUDYSIZE, finch1);
 	w.populate_predator_rand(predator_size, predator_2012);
 	
 	std::stringstream timecheck;
-  timecheck << t;
+  timecheck << EMPATHY;
   
-  std::string runtime_filepath = "./data/" + timecheck.str() + "_runtimes.txt";
+  std::string runtime_filepath = "./data/42_" + timecheck.str() + "_runtimes.txt";
   runtime.open(runtime_filepath.c_str());
 
 	for(int i = 1; i <= STUDYLENGTH; i++)
 	{
 		std::stringstream ss;
 		ss << i;
-		std::string filepath = "./data/" + timecheck.str() + "_" + ss.str() + ".txt";
+		std::string filepath = "./data/42_" + timecheck.str() + "_" + ss.str() + ".txt";
 		strm.open(filepath.c_str());
 		std::cout << "Generation " << i << " initializing... \n";
 		
