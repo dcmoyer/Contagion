@@ -767,4 +767,3 @@ void Bert_DOrg_util(double x, double y, double v_x, double v_y, finch2* me){
     double r = sqrt(dx*dx + dy*dy);
     me->add_to_util(std::max(r + (1.0/r), UTIL_CAP_BERT));
 }
-m

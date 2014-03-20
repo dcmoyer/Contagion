@@ -1,5 +1,5 @@
 #include "world.h"
-
+#include <sstream>
 
 //default constructor
 world::world()
@@ -499,6 +499,12 @@ void world::run_evolution(std::ostream& strm)
 		update_forward_velocs();
 		ab4_evolve();
 		move_to_cell_evo();
+        if(PRINT && i %40 == 0){
+            std::stringstream ss;
+            ss << i/40;
+            std::string str = ss.str();
+            print_csv(str);
+        }
 	}
   
   strm << i << "\n";

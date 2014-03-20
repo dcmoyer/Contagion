@@ -18,7 +18,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define CELL_LENGTH   75
 #define STEP_SIZE 0.005
 #define HIST_LENGTH 4
-
+#define PRINT true
 
 //strengths and lengths of attraction and repulsion
 //C_R > C_A
@@ -38,8 +38,8 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 //Evolution simulation size
 #define STUDYSIZE 100
-#define STUDYLENGTH 50
-#define STEPS_PER_GEN 8000 //DETERMINED BY exp. 1390971257 (mean)
+#define STUDYLENGTH 1
+#define STEPS_PER_GEN 80000 //DETERMINED BY exp. 1390971257 (mean)
 
 //other evolution things
 #define UTIL_CAP_CS 10.0
@@ -58,6 +58,9 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define PRED_2012_ACCEL .25
 //Probability of kill
 #define PRECISION .5
+
+#define EX false
+#define EMPATHY 0
 
 //Wall Power
 #define WALL_PWR 50
