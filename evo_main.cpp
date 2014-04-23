@@ -38,7 +38,7 @@ for(int r = 0; r <= 75; r++)
 	std::cout << "WAIT! Did you change the filepath?";
 	system("read -p 'Press [Enter] key to start backup...'");
 
-	int predator_size = 5;
+	int predator_size = 1;
 
 	//Setup
 	std::ofstream strm, runtime;

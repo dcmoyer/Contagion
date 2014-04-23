@@ -38,7 +38,7 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 
 //Evolution simulation size
 #define STUDYSIZE 100
-#define STUDYLENGTH 1
+#define STUDYLENGTH 100
 #define STEPS_PER_GEN 80000 //DETERMINED BY exp. 1390971257 (mean)
 
 //other evolution things
