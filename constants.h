@@ -37,9 +37,9 @@ This is a header for global constants for the Contagion Project, UCLA REU 2013.
 #define BETA  .05  
 
 //Evolution simulation size
-#define STUDYSIZE 200
+#define STUDYSIZE 500
 #define STUDYLENGTH 500
-#define STEPS_PER_GEN 40000 //DETERMINED BY exp. 1390971257 (mean)
+#define STEPS_PER_GEN 80000 //DETERMINED BY exp. 1390971257 (mean)
 
 //other evolution things
 #define UTIL_CAP_CS 10.0
