@@ -23,6 +23,7 @@
 //#include "helper_fcns.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <ctime>
 #include <cstdlib>
 #include <cstddef>
@@ -69,6 +70,7 @@ public:
 
 	void run(std::ostream& strm, int print_every, int iterations);
 	void run_evolution(std::ostream& strm);
+  void run_evolution_with_printing(std::ostream& strm, std::string dir_name, int gen_number);
     void run_evolution_2(std::ostream& strm);
 
     cell* get_cell(int i, int j);

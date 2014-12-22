@@ -484,7 +484,7 @@ void world::run(std::ostream& strm, int print_every, int iterations)
 
 void world::run_evolution(std::ostream& strm)
 {
-	int threshold = STUDYSIZE / 2;
+	//int threshold = STUDYSIZE / 2;
   int i;
 	for( i = 1; i <= 4; i++)
 	{
@@ -499,6 +499,53 @@ void world::run_evolution(std::ostream& strm)
 		update_forward_velocs();
 		ab4_evolve();
 		move_to_cell_evo();
+    if((double) death_count / STUDYSIZE > DEADLINE){
+      break;
+    }
+	}
+  
+  strm << i << "\n";
+}
+
+void world::run_evolution_with_printing(std::ostream& strm, std::string dir_name, int gen_number)
+{
+	//int threshold = STUDYSIZE / 2;
+  int i;
+  bool print = gen_number % PRINT_GEN_FREQ == 0;
+  std::string full_name;
+  if(print){
+    std::stringstream silly;
+    silly << gen_number;
+    full_name = dir_name + silly.str();
+    std::string cmd = "mkdir -p " + full_name;
+    system(cmd.c_str());
+  }
+	for( i = 1; i <= 4; i++)
+	{
+    update_forward_velocs();
+		euler_evolve();
+		move_to_cell_evo();
+    if(print && i % PRINT_ITER_FREQ == 0){
+      std::stringstream silly;
+      silly << (i/PRINT_ITER_FREQ);
+      print_csv(full_name + "/" + silly.str());
+    }
+  }
+
+	//solve using AB4
+	for(i ; i <= STEPS_PER_GEN; i++)
+	{
+		update_forward_velocs();
+		ab4_evolve();
+		move_to_cell_evo();
+    if((double) death_count / STUDYSIZE > DEADLINE){
+      break;
+    }
+    if(print && i % PRINT_ITER_FREQ == 0){
+      std::stringstream silly;
+      silly << (i/PRINT_ITER_FREQ);
+      print_csv(full_name + "/" + silly.str());
+    }
 	}
   
   strm << i << "\n";
@@ -506,7 +553,7 @@ void world::run_evolution(std::ostream& strm)
 
 void world::run_evolution_2(std::ostream& strm)
 {
-	int threshold = STUDYSIZE / 2;
+	//int threshold = STUDYSIZE / 2;
   int i;
 	for( i = 1; i <= 4; i++)
 	{
@@ -523,7 +570,7 @@ void world::run_evolution_2(std::ostream& strm)
 		ab4_evolve();
 		move_to_cell_evo();
         update_utility();
-	}
+  }
   
   strm << i << "\n";
 }

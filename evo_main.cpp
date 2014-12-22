@@ -55,7 +55,7 @@ for(int r = 0; r <= 75; r++)
   std::string runtime_filepath = "./data/" + timecheck.str() + "_runtimes.txt";
   runtime.open(runtime_filepath.c_str());
 
-	for(int i = 1; i <= STUDYLENGTH; i++)
+	for(int i = 0; i < STUDYLENGTH; ++i)
 	{
 		std::stringstream ss;
 		ss << i;
@@ -63,7 +63,7 @@ for(int r = 0; r <= 75; r++)
 		strm.open(filepath.c_str());
 		std::cout << "Generation " << i << " initializing... \n";
 		
-		w.run_evolution(runtime);
+		w.run_evolution_with_printing(runtime,"./data/", i);
 		w.repopulate1(finch1, strm);
 		w.add_boundary(wall_interaction);
 		w.populate_predator_rand(predator_size, predator_2012);
